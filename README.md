@@ -9,6 +9,9 @@ And also a handy class called **Mate** to easily explore all the modules and met
 
 
 # Installation
+Prerequisites:
+* [pynaoqi](http://doc.aldebaran.com/2-1/dev/python/install_guide.html) installed.
+
 Clone this repository somewhere and add the path of the main folder `pynaoqi_mate` to your `PYTHONPATH`. For example:
 
 ```bash
