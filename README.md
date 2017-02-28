@@ -11,7 +11,7 @@ And also a handy class called **Mate** to easily explore all the modules and met
 # Installation
 Clone this repository somewhere and add the path of the main folder `pynaoqi_mate` to your `PYTHONPATH`. For example:
 
-```
+```bash
 cd ~
 git clone https://github.com/uts-magic-lab/pynaoqi_mate
 export PYTHONPATH=$PYTHONPATH:~/pynaoqi_mate
