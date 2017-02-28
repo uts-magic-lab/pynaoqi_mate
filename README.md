@@ -25,6 +25,10 @@ You may probably want to append it to your `.bashrc`.
 And you may want to add it to your robot too if you want to run the scripts as they are from inside of the robot.
 
 # Usage
+Check out the video as an example of usage where I follow this README instructions:
+
+[![Video of the pynaoqi_mate](http://img.youtube.com/vi/ExDExxN7Qb4/0.jpg)](https://youtu.be/ExDExxN7Qb4)
+
 Explore with iPython:
 
 ```python
