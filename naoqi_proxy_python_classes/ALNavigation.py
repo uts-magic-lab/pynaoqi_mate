@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALNavigation")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALNavigation(object):
     def __init__(self):
@@ -26,15 +14,15 @@ class ALNavigation(object):
     def force_connect(self):
         self.proxy = ALProxy("ALNavigation")
 
-    @lazy_init
     def getSecurityDistance(self):
         """Distance in meters fromwhich the robot should stop if there is an obstacle.
 
         :returns float: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.getSecurityDistance()
 
-    @lazy_init
     def move(self, x, y, theta):
         """Makes the robot move at the given speed in S.I. units. This is a blocking call.
 
@@ -42,9 +30,10 @@ class ALNavigation(object):
         :param float y: The speed along y axis [m.s-1].
         :param float theta: The anglular speed around z axis [rad.s-1].
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.move(x, y, theta)
 
-    @lazy_init
     def move2(self, x, y, theta, moveConfig):
         """Makes the robot move at the given speed in S.I. units. This is a blocking call.
 
@@ -53,18 +42,20 @@ class ALNavigation(object):
         :param float theta: The anglular speed around z axis [rad.s-1].
         :param AL::ALValue moveConfig: An ALValue with custom move configuration.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.move(x, y, theta, moveConfig)
 
-    @lazy_init
     def moveAlong(self, trajectory):
         """.
 
         :param AL::ALValue trajectory: An ALValue describing a trajectory.
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.moveAlong(trajectory)
 
-    @lazy_init
     def moveTo(self, x, y, theta):
         """Makes the robot move at the given position.This is a blocking call.
 
@@ -72,9 +63,10 @@ class ALNavigation(object):
         :param float y: The position along y axis [m].
         :param float theta: The angle around z axis [rad].
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.moveTo(x, y, theta)
 
-    @lazy_init
     def moveTo2(self, x, y, theta, moveConfig):
         """Makes the robot move at the given position.This is a blocking call.
 
@@ -83,9 +75,10 @@ class ALNavigation(object):
         :param float theta: The angle around z axis [rad].
         :param AL::ALValue moveConfig: An ALValue with custom move configuration.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.moveTo(x, y, theta, moveConfig)
 
-    @lazy_init
     def moveToward(self, x, y, theta):
         """Makes the robot move at the given speed in normalized speed fraction. This is a blocking call.
 
@@ -93,9 +86,10 @@ class ALNavigation(object):
         :param float y: The speed along y axis [0.0-1.0].
         :param float theta: The anglular speed around z axis [0.0-1.0].
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.moveToward(x, y, theta)
 
-    @lazy_init
     def moveToward2(self, x, y, theta, moveConfig):
         """Makes the robot move at the given speed in normalized speed fraction. This is a blocking call.
 
@@ -104,9 +98,10 @@ class ALNavigation(object):
         :param float theta: The anglular speed around z axis [0.0-1.0].
         :param AL::ALValue moveConfig: An ALValue with custom move configuration.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.moveToward(x, y, theta, moveConfig)
 
-    @lazy_init
     def navigateTo(self, x, y):
         """Makes the robot navigate to a relative metrical target pose2D expressed in FRAME_ROBOT. The robot computes a path to avoid obstacles.
 
@@ -114,9 +109,10 @@ class ALNavigation(object):
         :param float y: The position along y axis [m].
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.navigateTo(x, y)
 
-    @lazy_init
     def navigateTo2(self, x, y, config):
         """Makes the robot navigate to a relative metrical target pose2D expressed in FRAME_ROBOT. The robot computes a path to avoid obstacles.
 
@@ -125,9 +121,10 @@ class ALNavigation(object):
         :param AL::ALValue config: Configuration ALValue. For example, [["SpeedFactor", 0.5]] sets speedFactor to 0.5
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.navigateTo(x, y, config)
 
-    @lazy_init
     def navigateTo3(self, x, y, theta):
         """Makes the robot navigate to a relative metrical target pose2D expressed in FRAME_ROBOT. The robot computes a path to avoid obstacles.
 
@@ -136,9 +133,10 @@ class ALNavigation(object):
         :param float theta: Orientation of the robot (rad).
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.navigateTo(x, y, theta)
 
-    @lazy_init
     def navigateTo4(self, x, y, theta, config):
         """Makes the robot navigate to a relative metrical target pose2D expressed in FRAME_ROBOT. The robot computes a path to avoid obstacles.
 
@@ -148,9 +146,10 @@ class ALNavigation(object):
         :param AL::ALValue config: Configuration ALValue. For example, [["SpeedFactor", 0.5]] sets speedFactor to 0.5
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.navigateTo(x, y, theta, config)
 
-    @lazy_init
     def onTouchChanged(self, arg1, arg2, arg3):
         """.
 
@@ -158,34 +157,40 @@ class ALNavigation(object):
         :param AL::ALValue arg2: arg
         :param str arg3: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.onTouchChanged(arg1, arg2, arg3)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.ping()
 
-    @lazy_init
     def setSecurityDistance(self, arg1):
         """Distance in meters fromwhich the robot should stop if there is an obstacle.
 
         :param float arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.setSecurityDistance(arg1)
 
-    @lazy_init
     def stopNavigateTo(self):
         """Stops the navigateTo.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.stopNavigateTo()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNavigation")
         return self.proxy.version()

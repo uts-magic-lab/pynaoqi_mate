@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALNotificationManager")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALNotificationManager(object):
     def __init__(self):
@@ -26,52 +14,58 @@ class ALNotificationManager(object):
     def force_connect(self):
         self.proxy = ALProxy("ALNotificationManager")
 
-    @lazy_init
     def add(self, notification):
         """Add a notification.
 
         :param AL::ALValue notification: Contain information for the notification
         :returns int: Notification ID.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNotificationManager")
         return self.proxy.add(notification)
 
-    @lazy_init
     def notification(self, notificationId):
         """Get one notification.
 
         :param int notificationId: Notification ID.
         :returns AL::ALValue: ALValue containing a Notification.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNotificationManager")
         return self.proxy.notification(notificationId)
 
-    @lazy_init
     def notifications(self):
         """Get the all array of pending notifications.
 
         :returns AL::ALValue: An array of pending notification.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNotificationManager")
         return self.proxy.notifications()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNotificationManager")
         return self.proxy.ping()
 
-    @lazy_init
     def remove(self, notificationId):
         """Remove a notification.
 
         :param int notificationId: Notification ID to remove.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNotificationManager")
         return self.proxy.remove(notificationId)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALNotificationManager")
         return self.proxy.version()

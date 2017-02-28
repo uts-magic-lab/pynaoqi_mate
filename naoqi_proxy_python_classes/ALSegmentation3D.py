@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALSegmentation3D")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALSegmentation3D(object):
     def __init__(self):
@@ -26,113 +14,125 @@ class ALSegmentation3D(object):
     def force_connect(self):
         self.proxy = ALProxy("ALSegmentation3D")
 
-    @lazy_init
     def getActiveCamera(self):
         """
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getActiveCamera()
 
-    @lazy_init
     def getBlobTrackingDistance(self):
         """Gets the distance (in meters) for the blob tracker
 
         :returns float: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getBlobTrackingDistance()
 
-    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getCurrentPeriod()
 
-    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
         :returns float: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getCurrentPrecision()
 
-    @lazy_init
     def getDeltaDepthThreshold(self):
         """Gets the value of the depth threshold (in meters) used for the segmentation
 
         :returns float: Current depth threshold (in meters)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getDeltaDepthThreshold()
 
-    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getEventList()
 
-    @lazy_init
     def getFrameRate(self):
         """
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getFrameRate()
 
-    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getMemoryKeyList()
 
-    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
         :param str name: Name of the module which has subscribed.
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getMyPeriod(name)
 
-    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
         :param str name: name of the module which has subscribed
         :returns float: precision of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getMyPrecision(name)
 
-    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
         :returns std::vector<std::string>: Array of values updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getOutputNames()
 
-    @lazy_init
     def getResolution(self):
         """
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getResolution()
 
-    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
         :returns AL::ALValue: Array of names and parameters of all subscribers.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getSubscribersInfo()
 
-    @lazy_init
     def getTopOfBlob(self, distance, frame, applyVerticalOffset):
         """Returns the position of the top of the blob most in the center of the depth image, at the given distance, in the given frame.
 
@@ -141,116 +141,130 @@ class ALSegmentation3D(object):
         :param bool applyVerticalOffset: True to apply the VerticalOffset when computing the position, False otherwise
         :returns AL::ALValue: Position of the top of the corresponding blob (if one is found) in the given frame (Format: [yaw,pitch,distance] in FRAME_IMAGE, [x,y,z] in the other frame).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getTopOfBlob(distance, frame, applyVerticalOffset)
 
-    @lazy_init
     def getVerticalOffset(self):
         """Sets the value of vertical offset (in meters) for the blob tracker
 
         :returns float: Current vertical offset of the blob tracker
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.getVerticalOffset()
 
-    @lazy_init
     def isBlobTrackingEnabled(self):
         """Gets the current status of the blob tracker. When the blob tracker is running, events containing the position of the top of the tracked blob are raised.
 
         :returns bool: True if the blob tracker is enabled, False otherwise.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.isBlobTrackingEnabled()
 
-    @lazy_init
     def isPaused(self):
         """
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.isPaused()
 
-    @lazy_init
     def isProcessing(self):
         """
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.isProcessing()
 
-    @lazy_init
     def pause(self, status):
         """
 
         :param bool status: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.pause(status)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.ping()
 
-    @lazy_init
     def setActiveCamera(self, cameraID):
         """
 
         :param int cameraID: 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.setActiveCamera(cameraID)
 
-    @lazy_init
     def setBlobTrackingDistance(self, distance):
         """Sets the distance (in meters) for the blob tracker
 
         :param float distance: New value (in meters)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.setBlobTrackingDistance(distance)
 
-    @lazy_init
     def setBlobTrackingEnabled(self, status):
         """Turn the blob tracker on or off. When the blob tracker is running, events containing the position of the top of the tracked blob are raised.
 
         :param bool status: True to turn it on, False to turn it off.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.setBlobTrackingEnabled(status)
 
-    @lazy_init
     def setDeltaDepthThreshold(self, value):
         """Sets the value of the depth threshold (in meters) used for the segmentation
 
         :param float value: New depth threshold (in meters) for the segmentation
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.setDeltaDepthThreshold(value)
 
-    @lazy_init
     def setFrameRate(self, value):
         """
 
         :param int value: 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.setFrameRate(value)
 
-    @lazy_init
     def setResolution(self, resolution):
         """
 
         :param int resolution: 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.setResolution(resolution)
 
-    @lazy_init
     def setVerticalOffset(self, value):
         """Sets the value of vertical offset (in meters) for the blob tracker
 
         :param float value: New vertical offset (in meters), added if positive, substracted if negative
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.setVerticalOffset(value)
 
-    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -258,46 +272,53 @@ class ALSegmentation3D(object):
         :param int period: Refresh period (in milliseconds) if relevant.
         :param float precision: Precision of the extractor if relevant.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.subscribe(name, period, precision)
 
-    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
         :param str name: Name of the module which subscribes.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.subscribe(name)
 
-    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
         :param str name: Name of the module which had subscribed.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.unsubscribe(name)
 
-    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param int period: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.updatePeriod(name, period)
 
-    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param float precision: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.updatePrecision(name, precision)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSegmentation3D")
         return self.proxy.version()

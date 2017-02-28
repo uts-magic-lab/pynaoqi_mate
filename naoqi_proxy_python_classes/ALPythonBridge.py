@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALPythonBridge")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALPythonBridge(object):
     def __init__(self):
@@ -26,45 +14,50 @@ class ALPythonBridge(object):
     def force_connect(self):
         self.proxy = ALProxy("ALPythonBridge")
 
-    @lazy_init
     def eval(self, stringToEvaluate):
         """eval script
 
         :param str stringToEvaluate: string to eval
         :returns str: if the evaluation has gone wrong
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPythonBridge")
         return self.proxy.eval(stringToEvaluate)
 
-    @lazy_init
     def evalFull(self, stringToEvaluate):
         """evaluates script and returns an informative array.
 
         :param str stringToEvaluate: string to eval
         :returns AL::ALValue: an array containing [return value, exceptions, stdout, stderr]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPythonBridge")
         return self.proxy.evalFull(stringToEvaluate)
 
-    @lazy_init
     def evalReturn(self, stringToEvaluate):
         """eval script and return result. evalReturn(2+2) will return 4
 
         :param str stringToEvaluate: string to eval
         :returns AL::ALValue: the result of the evaluation
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPythonBridge")
         return self.proxy.evalReturn(stringToEvaluate)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPythonBridge")
         return self.proxy.ping()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPythonBridge")
         return self.proxy.version()

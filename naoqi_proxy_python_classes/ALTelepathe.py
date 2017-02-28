@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALTelepathe")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALTelepathe(object):
     def __init__(self):
@@ -26,164 +14,183 @@ class ALTelepathe(object):
     def force_connect(self):
         self.proxy = ALProxy("ALTelepathe")
 
-    @lazy_init
     def associateUser(self, login, password):
         """Associates the robot to the given Aldebaran Robotics user. The associated user is recalled in ALMemory as ALTelepathe/User
 
         :param str login: A valid Aldebaran Robotics user name.
         :param str password: The matching password with the user name.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.associateUser(login, password)
 
-    @lazy_init
     def associatedUser(self):
         """Tells who is associated to the robot, if anyone. This simply accesses to the ALMemory key ALTelepathe/User
 
         :returns str: the name of the user, empty if none
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.associatedUser()
 
-    @lazy_init
     def connectNetwork(self):
         """Connects the robot to the messaging network. Returns once connected. Throws runtime error otherwise.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.connectNetwork()
 
-    @lazy_init
     def disconnectNetwork(self):
         """Disconnects the robot from the messaging network. Returns once disconnected. Does not throw.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.disconnectNetwork()
 
-    @lazy_init
     def dissociateUser(self):
         """Clears the login and password for accessing Aldebaran Robotics's network.Login can be tracked in the ALMemory key ALTelepathe/User
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.dissociateUser()
 
-    @lazy_init
     def enableAutoconnection(self, enabled):
         """Enables autoconnection to the network, using the saved user login information if present.
 
         :param bool enabled: Whether to connect automatically at startup.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.enableAutoconnection(enabled)
 
-    @lazy_init
     def enableRPC(self, enabled):
         """Enable / disable RPC handling for received messages.
 
         :param bool enabled: Whether to enable RPC
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.enableRPC(enabled)
 
-    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getCurrentPeriod()
 
-    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
         :returns float: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getCurrentPrecision()
 
-    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getEventList()
 
-    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getMemoryKeyList()
 
-    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
         :param str name: Name of the module which has subscribed.
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getMyPeriod(name)
 
-    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
         :param str name: name of the module which has subscribed
         :returns float: precision of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getMyPrecision(name)
 
-    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
         :returns std::vector<std::string>: Array of values updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getOutputNames()
 
-    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
         :returns AL::ALValue: Array of names and parameters of all subscribers.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.getSubscribersInfo()
 
-    @lazy_init
     def isAutoconnectionEnabled(self):
         """Says whether autoconnection is enabled or not.
 
         :returns bool: Whether autoconnection is enabled
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.isAutoconnectionEnabled()
 
-    @lazy_init
     def isCalling(self):
         """Says whether a media call is currently established.
 
         :returns bool: Whether ALTelepathe is calling or not.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.isCalling()
 
-    @lazy_init
     def isConnected(self):
         """Gets the current connection status. Value is the same as in the ALMemory key ALTelepathe/Connected
 
         :returns bool: Whether ALTelepathe is online or not.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.isConnected()
 
-    @lazy_init
     def isRPCEnabled(self):
         """Says whether RPC is enabled or not.
 
         :returns bool: Whether RPC is enabled
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.isRPCEnabled()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.ping()
 
-    @lazy_init
     def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timestamp, buffer):
         """enable/disable the printing of some debug information
 
@@ -192,9 +199,10 @@ class ALTelepathe(object):
         :param AL::ALValue timestamp: Provides the timestamp of the buffer.
         :param AL::ALValue buffer: Provides the audio buffer as an ALValue.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.processRemote(nbOfChannels, nbOfSamplesByChannel, timestamp, buffer)
 
-    @lazy_init
     def processSoundRemote(self, nbOfChannels, nbOfSamplesByChannel, buffer):
         """enable/disable the printing of some debug information
 
@@ -202,18 +210,20 @@ class ALTelepathe(object):
         :param int nbOfSamplesByChannel: Provides the number of samples by channel.
         :param AL::ALValue buffer: Provides the audio buffer as an ALValue.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.processSoundRemote(nbOfChannels, nbOfSamplesByChannel, buffer)
 
-    @lazy_init
     def sendMessage(self, destination, message):
         """Sends a text message to the chosen destination.
 
         :param str destination: The id of the destination contact.
         :param str message: The message to send to the contact.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.sendMessage(destination, message)
 
-    @lazy_init
     def sendRPC(self, destination, module, method, args, timeout):
         """Performs an Internet Remote Procedure Call. Returns once call has been received.Throws runtime error otherwise.
 
@@ -224,9 +234,10 @@ class ALTelepathe(object):
         :param int timeout: The timeout after which the call should be aborted
         :returns AL::ALValue: RPC return value
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.sendRPC(destination, module, method, args, timeout)
 
-    @lazy_init
     def sendRPC2(self, destination, module, method, args):
         """Performs an Internet Remote Procedure Call. Returns once call has been received.Throws runtime error otherwise.
 
@@ -236,17 +247,19 @@ class ALTelepathe(object):
         :param AL::ALValue args: The method arguments
         :returns AL::ALValue: RPC return value
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.sendRPC(destination, module, method, args)
 
-    @lazy_init
     def setDebugMode(self, bSetOrUnset):
         """enable/disable the printing of some debug information
 
         :param bool bSetOrUnset: enable the functionnality when true.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.setDebugMode(bSetOrUnset)
 
-    @lazy_init
     def startCall(self, contact, audio, video):
         """Starts a media call.Returns once the call is accepted remotely.Throws runtime error if the call can't be established.Timeouts after 30 seconds if call not accepted remotely.
 
@@ -254,15 +267,17 @@ class ALTelepathe(object):
         :param bool audio: Whether audio is enabled for the call.
         :param bool video: Whether video is enabled for the call.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.startCall(contact, audio, video)
 
-    @lazy_init
     def stopCall(self):
         """Stops the current media call.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.stopCall()
 
-    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -270,46 +285,53 @@ class ALTelepathe(object):
         :param int period: Refresh period (in milliseconds) if relevant.
         :param float precision: Precision of the extractor if relevant.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.subscribe(name, period, precision)
 
-    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
         :param str name: Name of the module which subscribes.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.subscribe(name)
 
-    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
         :param str name: Name of the module which had subscribed.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.unsubscribe(name)
 
-    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param int period: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.updatePeriod(name, period)
 
-    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param float precision: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.updatePrecision(name, precision)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
         return self.proxy.version()

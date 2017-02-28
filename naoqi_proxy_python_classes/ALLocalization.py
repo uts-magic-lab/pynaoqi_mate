@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALLocalization")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALLocalization(object):
     def __init__(self):
@@ -26,24 +14,25 @@ class ALLocalization(object):
     def force_connect(self):
         self.proxy = ALProxy("ALLocalization")
 
-    @lazy_init
     def clear(self, pDirectory):
         """Delete all panoramas in a directory.
 
         :param str pDirectory: Name of the directory
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.clear(pDirectory)
 
-    @lazy_init
     def getCurrentPanoramaDescriptor(self):
         """Get some information about the current panorama.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.getCurrentPanoramaDescriptor()
 
-    @lazy_init
     def getFrame(self, arg1, arg2):
         """Get a frame buffer.
 
@@ -51,85 +40,95 @@ class ALLocalization(object):
         :param str arg2: arg
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.getFrame(arg1, arg2)
 
-    @lazy_init
     def getMessageFromErrorCode(self, arg1):
         """
 
         :param int arg1: arg
         :returns str: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.getMessageFromErrorCode(arg1)
 
-    @lazy_init
     def getRobotOrientation(self):
         """Get the robot orientation.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.getRobotOrientation()
 
-    @lazy_init
     def getRobotOrientation2(self, arg1):
         """Get the robot orientation.
 
         :param bool arg1: arg
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.getRobotOrientation(arg1)
 
-    @lazy_init
     def getRobotPosition(self):
         """Get the robot position in world navigation.
 
         :returns std::vector<float>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.getRobotPosition()
 
-    @lazy_init
     def getRobotPosition2(self, arg1):
         """Get the robot position in world navigation.
 
         :param bool arg1: arg
         :returns std::vector<float>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.getRobotPosition(arg1)
 
-    @lazy_init
     def goToHome(self):
         """Go to the robot home.
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.goToHome()
 
-    @lazy_init
     def goToPosition(self, arg1):
         """Go to a given position.
 
         :param std::vector<float> arg1: arg
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.goToPosition(arg1)
 
-    @lazy_init
     def isDataAvailable(self):
         """
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.isDataAvailable()
 
-    @lazy_init
     def isInCurrentHome(self):
         """Is the robot in its home?
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.isInCurrentHome()
 
-    @lazy_init
     def isInGivenZone(self, arg1, arg2, arg3, arg4):
         """
 
@@ -139,60 +138,69 @@ class ALLocalization(object):
         :param float arg4: arg
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.isInGivenZone(arg1, arg2, arg3, arg4)
 
-    @lazy_init
     def isRelocalizationRequired(self):
         """
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.isRelocalizationRequired()
 
-    @lazy_init
     def learnHome(self):
         """Learn the robot home.
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.learnHome()
 
-    @lazy_init
     def load(self, pDirectory):
         """Loads panoramas from a directory in the default one.
 
         :param str pDirectory: Name of the directory
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.load(pDirectory)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.ping()
 
-    @lazy_init
     def save(self, pDirectory):
         """Save the temporary panoramas in a directory from the default one.
 
         :param str pDirectory: Name of the directory
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.save(pDirectory)
 
-    @lazy_init
     def stopAll(self):
         """Stop all robot movements.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.stopAll()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
         return self.proxy.version()

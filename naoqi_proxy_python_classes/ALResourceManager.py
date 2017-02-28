@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALResourceManager")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALResourceManager(object):
     def __init__(self):
@@ -26,7 +14,6 @@ class ALResourceManager(object):
     def force_connect(self):
         self.proxy = ALProxy("ALResourceManager")
 
-    @lazy_init
     def acquireResource(self, resourceName, moduleName, callbackName, timeoutSeconds):
         """Wait and acquire a resource
 
@@ -35,9 +22,10 @@ class ALResourceManager(object):
         :param str callbackName: callback name
         :param int timeoutSeconds: Timeout in seconds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.acquireResource(resourceName, moduleName, callbackName, timeoutSeconds)
 
-    @lazy_init
     def acquireResourcesTree(self, resourceName, moduleName, callbackName, timeoutSeconds):
         """Wait for resource tree. Parent and children are not in conflict. Local function
 
@@ -46,18 +34,20 @@ class ALResourceManager(object):
         :param str callbackName: callback name
         :param int timeoutSeconds: Timeout in seconds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.acquireResourcesTree(resourceName, moduleName, callbackName, timeoutSeconds)
 
-    @lazy_init
     def areResourcesFree(self, resourceNames):
         """True if all resources are free
 
         :param std::vector<std::string> resourceNames: Resource names
         :returns bool: True if all the specify resources are free
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.areResourcesFree(resourceNames)
 
-    @lazy_init
     def areResourcesOwnedBy(self, resourceNameList, ownerName):
         """True if all the specified resources are owned by the owner
 
@@ -65,62 +55,69 @@ class ALResourceManager(object):
         :param str ownerName: Owner pointer with hierarchy
         :returns bool: True if all the specify resources are owned by the owner
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.areResourcesOwnedBy(resourceNameList, ownerName)
 
-    @lazy_init
     def checkStateResourceFree(self, resourceName):
         """check if all the state resource in the list are free
 
         :param std::vector<std::string> resourceName: Resource name
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.checkStateResourceFree(resourceName)
 
-    @lazy_init
     def createResource(self, resourceName, parentResourceName):
         """Create a resource
 
         :param str resourceName: Resource name to create
         :param str parentResourceName: Parent resource name or empty string for root resource
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.createResource(resourceName, parentResourceName)
 
-    @lazy_init
     def createResourcesList(self, resourceGroupName, resourceName):
         """True if a resource is in another parent resource
 
         :param std::vector<std::string> resourceGroupName: Group name. Ex: Arm
         :param str resourceName: Resource name
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.createResourcesList(resourceGroupName, resourceName)
 
-    @lazy_init
     def deleteResource(self, resourceName, deleteChildResources):
         """Delete a root resource
 
         :param str resourceName: Resource name to delete
         :param bool deleteChildResources: DEPRECATED: Delete child resources if true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.deleteResource(resourceName, deleteChildResources)
 
-    @lazy_init
     def enableStateResource(self, resourceName, enabled):
         """Enable or disable a state resource
 
         :param str resourceName: The name of the resource that you wish enable of disable. e.g. Standing
         :param bool enabled: True to enable, false to disable
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.enableStateResource(resourceName, enabled)
 
-    @lazy_init
     def getResources(self):
         """Get tree of resources
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.getResources()
 
-    @lazy_init
     def isInGroup(self, resourceGroupName, resourceName):
         """True if a resource is in another parent resource
 
@@ -128,60 +125,67 @@ class ALResourceManager(object):
         :param str resourceName: Resource name
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.isInGroup(resourceGroupName, resourceName)
 
-    @lazy_init
     def isResourceFree(self, resourceNames):
         """True if the resource is free
 
         :param str resourceNames: Resource name
         :returns bool: True if the specify resources is free
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.isResourceFree(resourceNames)
 
-    @lazy_init
     def ownersGet(self):
         """The tree of the resources owners.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.ownersGet()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.ping()
 
-    @lazy_init
     def releaseResource(self, resourceName, ownerName):
         """Release resource
 
         :param str resourceName: Resource name
         :param str ownerName: Existing owner name
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.releaseResource(resourceName, ownerName)
 
-    @lazy_init
     def releaseResources(self, resourceNames, ownerName):
         """Release  resources list
 
         :param std::vector<std::string> resourceNames: Resource names
         :param str ownerName: Owner name
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.releaseResources(resourceNames, ownerName)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.version()
 
-    @lazy_init
     def waitForOptionalResourcesTree(self, arg1, arg2, arg3, arg4, arg5):
         """Wait resource
 
@@ -192,9 +196,10 @@ class ALResourceManager(object):
         :param std::vector<std::string> arg5: arg
         :returns std::vector<std::string>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.waitForOptionalResourcesTree(arg1, arg2, arg3, arg4, arg5)
 
-    @lazy_init
     def waitForResource(self, resourceName, ownerName, callbackName, timeoutSeconds):
         """Wait resource
 
@@ -203,9 +208,10 @@ class ALResourceManager(object):
         :param str callbackName: callback name
         :param int timeoutSeconds: Timeout in seconds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.waitForResource(resourceName, ownerName, callbackName, timeoutSeconds)
 
-    @lazy_init
     def waitForResourcesTree(self, resourceName, moduleName, callbackName, timeoutSeconds):
         """Wait for resource tree. Parent and children are not in conflict. Local function
 
@@ -214,4 +220,6 @@ class ALResourceManager(object):
         :param str callbackName: callback name
         :param int timeoutSeconds: Timeout in seconds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
         return self.proxy.waitForResourcesTree(resourceName, moduleName, callbackName, timeoutSeconds)

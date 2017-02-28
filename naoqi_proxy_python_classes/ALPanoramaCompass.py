@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALPanoramaCompass")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALPanoramaCompass(object):
     def __init__(self):
@@ -26,49 +14,53 @@ class ALPanoramaCompass(object):
     def force_connect(self):
         self.proxy = ALProxy("ALPanoramaCompass")
 
-    @lazy_init
     def clearAllPanoramas(self, arg1):
         """
 
         :param bool arg1: arg
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.clearAllPanoramas(arg1)
 
-    @lazy_init
     def clearAllPanoramas2(self):
         """Delete all panorama files in the current working directory
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.clearAllPanoramas()
 
-    @lazy_init
     def clearPanorama(self, pIdentity):
         """Delete all files related to a given panorama in the current working directory
 
         :param int pIdentity: Panorama identity
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.clearPanorama(pIdentity)
 
-    @lazy_init
     def getCurrentPanoramaDescriptor(self):
         """
 
         :returns AL::ALValue: Return an ALValue containing Panorama identity and contained Frames identity.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.getCurrentPanoramaDescriptor()
 
-    @lazy_init
     def getCurrentPosition(self):
         """Return the current orientation of the robot in the current panorama.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.getCurrentPosition()
 
-    @lazy_init
     def getFrame(self, id, arg2):
         """Return the Frame corresponding to the input identity. It have to be in the current Panorama
 
@@ -76,77 +68,86 @@ class ALPanoramaCompass(object):
         :param str arg2: arg
         :returns AL::ALValue: ALValue containing the Frame image part.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.getFrame(id, arg2)
 
-    @lazy_init
     def isDataAvailable(self):
         """Returns true if there is some panorama data
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.isDataAvailable()
 
-    @lazy_init
     def isInPanorama(self):
         """Check if the robot is in the current Panorama.
 
         :returns int: Error status.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.isInPanorama()
 
-    @lazy_init
     def isInPanorama2(self, arg1):
         """Check if the robot is in the current Panorama.
 
         :param int arg1: arg
         :returns int: Error status.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.isInPanorama(arg1)
 
-    @lazy_init
     def isRelocalizationRequired(self):
         """Is a relocalization movement required.
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.isRelocalizationRequired()
 
-    @lazy_init
     def loadPanorama(self, id):
         """Load the panorama corresponding to the input identity from the hard drive. It has to exist.
 
         :param int id: Identity of the requested Panorama.
         :returns int: Error status.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.loadPanorama(id)
 
-    @lazy_init
     def localize(self):
         """Localize the robot using the scan.
 
         :returns std::vector<float>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.localize()
 
-    @lazy_init
     def localize2(self, pMode):
         """Localize the robot using the scan.
 
         :param bool pMode: Localization mode
         :returns std::vector<float>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.localize(pMode)
 
-    @lazy_init
     def localize3(self, pMode):
         """Localize the robot using the scan.
 
         :param int pMode: Localization mode
         :returns std::vector<float>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.localize(pMode)
 
-    @lazy_init
     def localize4(self, pMode, arg2):
         """Localize the robot using the scan.
 
@@ -154,36 +155,42 @@ class ALPanoramaCompass(object):
         :param bool arg2: arg
         :returns std::vector<float>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.localize(pMode, arg2)
 
-    @lazy_init
     def localizeNoHint(self):
         """Localize the robot using the scan,without hint.
 
         :returns std::vector<float>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.localizeNoHint()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.ping()
 
-    @lazy_init
     def setupPanorama(self):
         """Shoot a panorama at the current position.
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.setupPanorama()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPanoramaCompass")
         return self.proxy.version()

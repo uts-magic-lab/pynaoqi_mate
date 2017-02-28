@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALRobotPose")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALRobotPose(object):
     def __init__(self):
@@ -26,34 +14,38 @@ class ALRobotPose(object):
     def force_connect(self):
         self.proxy = ALProxy("ALRobotPose")
 
-    @lazy_init
     def getActualPoseAndTime(self):
         """Get the actual robot pose and the time since this pose was activate.
 
         :returns AL::ALValue: A ALValue array of size 2. With first a string of the robot pose and  then a float with the time in second since this pose is activated.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPose")
         return self.proxy.getActualPoseAndTime()
 
-    @lazy_init
     def getPoseNames(self):
         """Get the full list of pose possibly return by this module.
 
         :returns AL::ALValue: A ALValue array of string containing the possible Poses.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPose")
         return self.proxy.getPoseNames()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPose")
         return self.proxy.ping()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPose")
         return self.proxy.version()

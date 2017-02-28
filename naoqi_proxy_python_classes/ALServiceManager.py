@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALServiceManager")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALServiceManager(object):
     def __init__(self):
@@ -26,71 +14,79 @@ class ALServiceManager(object):
     def force_connect(self):
         self.proxy = ALProxy("ALServiceManager")
 
-    @lazy_init
     def isServiceRunning(self, name):
         """Tell if a service is running or not
 
         :param str name: Service's name
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.isServiceRunning(name)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.ping()
 
-    @lazy_init
     def restartService(self, name):
         """Restart a service of a package
 
         :param str name: Service's name
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.restartService(name)
 
-    @lazy_init
     def serviceMemoryUsage(self, name):
         """Get the service's memory usage
 
         :param str name: Service's name
         :returns qi::uint32_t: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.serviceMemoryUsage(name)
 
-    @lazy_init
     def services(self):
         """Get all declared services
 
         :returns std::vector<AL::ALValue>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.services()
 
-    @lazy_init
     def startService(self, name):
         """Start a service of a package
 
         :param str name: Service's name
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.startService(name)
 
-    @lazy_init
     def stopService(self, name):
         """Stop a service of a package
 
         :param str name: Service's name
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.stopService(name)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALServiceManager")
         return self.proxy.version()

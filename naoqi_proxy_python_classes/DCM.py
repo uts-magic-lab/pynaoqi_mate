@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("DCM")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class DCM(object):
     def __init__(self):
@@ -26,49 +14,53 @@ class DCM(object):
     def force_connect(self):
         self.proxy = ALProxy("DCM")
 
-    @lazy_init
     def calibration(self, calibrationInput):
         """Calibration of a joint
 
         :param AL::ALValue calibrationInput: A complex ALValue. See red documentation
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.calibration(calibrationInput)
 
-    @lazy_init
     def createAlias(self, alias):
         """Create or change an alias (list of actuators)
 
         :param AL::ALValue alias: Alias name and description
         :returns AL::ALValue: Same as pParams, but with the name removed if the actuator is not found
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.createAlias(alias)
 
-    @lazy_init
     def getPrefix(self):
         """Return the STM base name
 
         :returns AL::ALValue: the STM base name for all device/sensors (1st string in the array) and all devices (2nd string in the array)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.getPrefix()
 
-    @lazy_init
     def getTime(self, offset):
         """Return the DCM time
 
         :param int offset: optional time in ms (signed) to add/remove
         :returns int: An integer (could be signed) with the DCM time
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.getTime(offset)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.ping()
 
-    @lazy_init
     def preferences(self, action, target, keyName, keyValue):
         """Save updated value from DCM in XML pref file
 
@@ -78,25 +70,28 @@ class DCM(object):
         :param AL::ALValue keyValue: The ALVAlue of the key to add
         :returns int: Nothing
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.preferences(action, target, keyName, keyValue)
 
-    @lazy_init
     def set(self, commands):
         """Call this function to send a timed-command list to an actuator
 
         :param AL::ALValue commands: AL::ALValue with all data
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.set(commands)
 
-    @lazy_init
     def setAlias(self, commands):
         """Call this function to send timed-command list to an alias (list of actuators)
 
         :param AL::ALValue commands: AL::ALValue with all data
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.setAlias(commands)
 
-    @lazy_init
     def setAlias2(self, name, time, commands):
         """Call this function to send timed-command list to an alias (list of actuators) with "ClearAll" merge startegy
 
@@ -104,20 +99,24 @@ class DCM(object):
         :param int time: time for the timed command
         :param std::vector<float> commands: std::vector<float> with all commands
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.setAlias(name, time, commands)
 
-    @lazy_init
     def special(self, result):
         """Special DCM commands
 
         :param str result: one string and could be Reset, Version, Chain, Diagnostic, Config
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.special(result)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("DCM")
         return self.proxy.version()

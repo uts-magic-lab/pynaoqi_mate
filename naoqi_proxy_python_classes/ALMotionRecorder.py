@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALMotionRecorder")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALMotionRecorder(object):
     def __init__(self):
@@ -26,7 +14,6 @@ class ALMotionRecorder(object):
     def force_connect(self):
         self.proxy = ALProxy("ALMotionRecorder")
 
-    @lazy_init
     def dataChanged(self, dataName, data, message):
         """Called by ALMemory when subcription data is updated. INTERNAL
 
@@ -34,17 +21,19 @@ class ALMotionRecorder(object):
         :param AL::ALValue data: Value of the the subscribed data
         :param str message: The message give when subscribing.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMotionRecorder")
         return self.proxy.dataChanged(dataName, data, message)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMotionRecorder")
         return self.proxy.ping()
 
-    @lazy_init
     def startInteractiveRecording(self, jointsToRecord, nbPoses, extensionAllowed, mode):
         """Start recording the motion in an interactive mode
 
@@ -53,9 +42,10 @@ class ALMotionRecorder(object):
         :param bool extensionAllowed: Set to true to ignore nbPoses and keep recording new poses as long as record is not manually stopped
         :param int mode: Indicates which interactive mode must be used. 1 : Use right bumper to enslave and left bumper to store the pose  (deprecated); 2 : Use chest button to store the pose
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMotionRecorder")
         return self.proxy.startInteractiveRecording(jointsToRecord, nbPoses, extensionAllowed, mode)
 
-    @lazy_init
     def startPeriodicRecording(self, jointsToRecord, nbPoses, extensionAllowed, timeStep, jointsToReplay, replayData):
         """Start recording the motion in a periodic mode
 
@@ -66,20 +56,24 @@ class ALMotionRecorder(object):
         :param std::vector<std::string> jointsToReplay: Names of joints that must be replayed
         :param AL::ALValue replayData: An ALValue holding data for replayed joints. It holds two ALValues. The first one is an ALValue where each line corresponds to a joint, and column elements are times of control points The second one is also an ALValue where each line corresponds to a joint, but column elements are arrays containing [float angle, Handle1, Handle2] elements, where Handle is [int InterpolationType, float dAngle, float dTime] describing the handle offsets relative to the angle and time of the point. The first bezier param describes the handle that controls the curve preceding the point, the second describes the curve following the point.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMotionRecorder")
         return self.proxy.startPeriodicRecording(jointsToRecord, nbPoses, extensionAllowed, timeStep, jointsToReplay, replayData)
 
-    @lazy_init
     def stopAndGetRecording(self):
         """Stop recording the motion and return data
 
         :returns AL::ALValue: Returns the recorded data as an ALValue: [[JointName1,[pos1, pos2, ...]], [JointName2,[pos1, pos2, ...]], ...]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMotionRecorder")
         return self.proxy.stopAndGetRecording()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMotionRecorder")
         return self.proxy.version()

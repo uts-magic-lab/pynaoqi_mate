@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALPreferences")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALPreferences(object):
     def __init__(self):
@@ -26,15 +14,15 @@ class ALPreferences(object):
     def force_connect(self):
         self.proxy = ALProxy("ALPreferences")
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferences")
         return self.proxy.ping()
 
-    @lazy_init
     def readPrefFile(self, fileName, autoGenerateMemoryNames):
         """Reads all preferences from an xml files and stores them in an ALValue.
 
@@ -42,34 +30,38 @@ class ALPreferences(object):
         :param bool autoGenerateMemoryNames: If true a memory name will be generated for each non-array preference.
         :returns AL::ALValue: array reprenting the whole file.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferences")
         return self.proxy.readPrefFile(fileName, autoGenerateMemoryNames)
 
-    @lazy_init
     def removePrefFile(self, fileName):
         """Remove the xml file.
 
         :param str fileName: Name of the module associated to the preference.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferences")
         return self.proxy.removePrefFile(fileName)
 
-    @lazy_init
     def saveToMemory(self, prefs):
         """Writes all preferences from ALValue to an xml file.
 
         :param AL::ALValue prefs: array representing the whole file.
         :returns bool: True upon success.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferences")
         return self.proxy.saveToMemory(prefs)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferences")
         return self.proxy.version()
 
-    @lazy_init
     def writePrefFile(self, fileName, prefs, ignoreMemoryNames):
         """Writes all preferences from ALValue to an xml file.
 
@@ -77,4 +69,6 @@ class ALPreferences(object):
         :param AL::ALValue prefs: array reprenting the whole file.
         :param bool ignoreMemoryNames: If true all memory names will be removed before saving.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferences")
         return self.proxy.writePrefFile(fileName, prefs, ignoreMemoryNames)

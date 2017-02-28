@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALPhotoCapture")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALPhotoCapture(object):
     def __init__(self):
@@ -26,127 +14,141 @@ class ALPhotoCapture(object):
     def force_connect(self):
         self.proxy = ALProxy("ALPhotoCapture")
 
-    @lazy_init
     def getCameraID(self):
         """Returns current camera ID.
 
         :returns int: Current camera ID.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.getCameraID()
 
-    @lazy_init
     def getCaptureInterval(self):
         """Returns current delay between captures.
 
         :returns int: Current delay (in ms) between two pictures.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.getCaptureInterval()
 
-    @lazy_init
     def getColorSpace(self):
         """Returns current color space.
 
         :returns int: Current color space.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.getColorSpace()
 
-    @lazy_init
     def getPictureFormat(self):
         """Returns current picture format.
 
         :returns str: Current picture format.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.getPictureFormat()
 
-    @lazy_init
     def getResolution(self):
         """Returns current resolution.
 
         :returns int: Current frame resolution.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.getResolution()
 
-    @lazy_init
     def halfPress(self):
         """Manually (un)subscribes to ALVideoDevice.
 
         :returns bool: True if eveything went well, False otherwise.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.halfPress()
 
-    @lazy_init
     def isHalfPressEnabled(self):
         """Returns True if the "half press" mode is on.
 
         :returns bool: True or False.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.isHalfPressEnabled()
 
-    @lazy_init
     def isHalfPressed(self):
         """Returns True if the "half press" mode is on.
 
         :returns bool: True or False.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.isHalfPressed()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.ping()
 
-    @lazy_init
     def setCameraID(self, cameraID):
         """Sets camera ID.
 
         :param int cameraID: ID of the camera to use.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.setCameraID(cameraID)
 
-    @lazy_init
     def setCaptureInterval(self, captureInterval):
         """Sets delay between two captures.
 
         :param int captureInterval: New delay (in ms) between two pictures.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.setCaptureInterval(captureInterval)
 
-    @lazy_init
     def setColorSpace(self, colorSpace):
         """Sets color space.
 
         :param int colorSpace: New color space.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.setColorSpace(colorSpace)
 
-    @lazy_init
     def setHalfPressEnabled(self, enable):
         """Enables or disables the half-press mode.
 
         :param bool enable: True to enable, false to disable.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.setHalfPressEnabled(enable)
 
-    @lazy_init
     def setPictureFormat(self, pictureFormat):
         """Sets picture extension.
 
         :param str pictureFormat: New extension used to save pictures.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.setPictureFormat(pictureFormat)
 
-    @lazy_init
     def setResolution(self, resolution):
         """Sets resolution.
 
         :param int resolution: New frame resolution.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.setResolution(resolution)
 
-    @lazy_init
     def takePicture(self, folderPath, fileName):
         """Takes one picture.
 
@@ -154,9 +156,10 @@ class ALPhotoCapture(object):
         :param str fileName: Filename used to save the picture.
         :returns AL::ALValue: Full file name of the picture saved on the disk: [filename]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.takePicture(folderPath, fileName)
 
-    @lazy_init
     def takePicture2(self, folderPath, fileName, overwrite):
         """Takes one picture.
 
@@ -165,9 +168,10 @@ class ALPhotoCapture(object):
         :param bool overwrite: If false and the filename already exists, an error is thrown.
         :returns AL::ALValue: Full file name of the picture saved on the disk: [filename]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.takePicture(folderPath, fileName, overwrite)
 
-    @lazy_init
     def takePictures(self, numberOfPictures, folderPath, fileName):
         """Takes several pictures as quickly as possible
 
@@ -176,9 +180,10 @@ class ALPhotoCapture(object):
         :param str fileName: Filename used to save the pictures.
         :returns AL::ALValue: List of all saved files: [[filename1, filename2...]]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.takePictures(numberOfPictures, folderPath, fileName)
 
-    @lazy_init
     def takePictures2(self, numberOfPictures, folderPath, fileName, overwrite):
         """Takes several pictures as quickly as possible
 
@@ -188,12 +193,15 @@ class ALPhotoCapture(object):
         :param bool overwrite: If false and the filename already exists, an error is thrown.
         :returns AL::ALValue: List of all saved files: [[filename1, filename2...]]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.takePictures(numberOfPictures, folderPath, fileName, overwrite)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
         return self.proxy.version()

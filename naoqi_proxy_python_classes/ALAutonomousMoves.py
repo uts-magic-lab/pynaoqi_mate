@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALAutonomousMoves")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALAutonomousMoves(object):
     def __init__(self):
@@ -26,62 +14,70 @@ class ALAutonomousMoves(object):
     def force_connect(self):
         self.proxy = ALProxy("ALAutonomousMoves")
 
-    @lazy_init
     def getBackgroundStrategy(self):
         """Gets the background strategy.
 
         :returns str: The autonomous background posture strategy. ("none" or "backToNeutral")
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.getBackgroundStrategy()
 
-    @lazy_init
     def getExpressiveListeningEnabled(self):
         """If expressive listening is enabled.
 
         :returns bool: The boolean value: true means it is enabled, false means it is disabled.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.getExpressiveListeningEnabled()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.ping()
 
-    @lazy_init
     def setBackgroundStrategy(self, strategy):
         """The background strategy.
 
         :param str strategy: The autonomous background posture strategy. ("none" or "backToNeutral")
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.setBackgroundStrategy(strategy)
 
-    @lazy_init
     def setExpressiveListeningEnabled(self, enable):
         """Enable or disable expressive listening.
 
         :param bool enable: The boolean value: true to enable, false to disable.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.setExpressiveListeningEnabled(enable)
 
-    @lazy_init
     def startSmallDisplacements(self):
         """DEPRECATED since 2.0: do ALBasicAwareness.setTrackingMode("MoveContextually") instead.Start small base moves.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.startSmallDisplacements()
 
-    @lazy_init
     def stopSmallDisplacements(self):
         """DEPRECATED since 2.0: do ALBasicAwareness.setTrackingMode instead.Stop small base moves.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.stopSmallDisplacements()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousMoves")
         return self.proxy.version()

@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALStore")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALStore(object):
     def __init__(self):
@@ -26,38 +14,43 @@ class ALStore(object):
     def force_connect(self):
         self.proxy = ALProxy("ALStore")
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALStore")
         return self.proxy.ping()
 
-    @lazy_init
     def status(self):
         """Get package status.
 
         :returns std::vector<AL::ALValue>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALStore")
         return self.proxy.status()
 
-    @lazy_init
     def stopUpdate(self):
         """Stop the update.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALStore")
         return self.proxy.stopUpdate()
 
-    @lazy_init
     def update(self):
         """Update applications
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALStore")
         return self.proxy.update()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALStore")
         return self.proxy.version()

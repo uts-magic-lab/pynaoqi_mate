@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALDiagnosis")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALDiagnosis(object):
     def __init__(self):
@@ -26,50 +14,56 @@ class ALDiagnosis(object):
     def force_connect(self):
         self.proxy = ALProxy("ALDiagnosis")
 
-    @lazy_init
     def getActiveDiagnosis(self):
         """The actual state of the active diagnosis.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALDiagnosis")
         return self.proxy.getActiveDiagnosis()
 
-    @lazy_init
     def getPassiveDiagnosis(self):
         """The actual state of the passive diagnosis.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALDiagnosis")
         return self.proxy.getPassiveDiagnosis()
 
-    @lazy_init
     def isNotificationEnabled(self):
         """Return true if notification is active.
 
         :returns bool: Return True if notifications is active.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALDiagnosis")
         return self.proxy.isNotificationEnabled()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALDiagnosis")
         return self.proxy.ping()
 
-    @lazy_init
     def setEnableNotification(self, enable):
         """Enable / Disable diagnosis notification.
 
         :param bool enable: If True enable diagnosis notification. If False disable diagnosis notification.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALDiagnosis")
         return self.proxy.setEnableNotification(enable)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALDiagnosis")
         return self.proxy.version()

@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALFileManager")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALFileManager(object):
     def __init__(self):
@@ -26,78 +14,87 @@ class ALFileManager(object):
     def force_connect(self):
         self.proxy = ALProxy("ALFileManager")
 
-    @lazy_init
     def dataFileExists(self, fileName):
         """Try to find if this file does exist on robot or not.
 
         :param str fileName: Name of the module associate to the preference.
         :returns bool: True upon success
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.dataFileExists(fileName)
 
-    @lazy_init
     def fileExists(self, fileName):
         """Try to find if this file does exist on robot or not.
 
         :param str fileName: Name of the module associate to the preference.
         :returns bool: True upon success
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.fileExists(fileName)
 
-    @lazy_init
     def getFileCompletePath(self, prefs):
         """Returns the complete path of the file if it does exist. Starts by looking in user's shared folder, then in system folder.
 
         :param str prefs: array reprenting the whole file.
         :returns str: True upon success
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.getFileCompletePath(prefs)
 
-    @lazy_init
     def getFileContents(self, prefs):
         """Returns the complete path of the file if it does exist. Starts by looking in user's shared folder, then in system folder.
 
         :param str prefs: array reprenting the whole file.
         :returns AL::ALValue: True upon success
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.getFileContents(prefs)
 
-    @lazy_init
     def getSystemSharedFolderPath(self):
         """Get the current system shared folder path.
 
         :returns str: System shared folder path string.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.getSystemSharedFolderPath()
 
-    @lazy_init
     def getUserSharedFolderPath(self):
         """Get the current user shared folder path.
 
         :returns str: User shared folder path string.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.getUserSharedFolderPath()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.ping()
 
-    @lazy_init
     def setUserSharedFolderPath(self, fileName):
         """Set a new value of the user shared folder path.
 
         :param str fileName: Name of the module associate to the preference.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.setUserSharedFolderPath(fileName)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
         return self.proxy.version()

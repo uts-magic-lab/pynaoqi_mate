@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALFaceDetection")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALFaceDetection(object):
     def __init__(self):
@@ -26,222 +14,247 @@ class ALFaceDetection(object):
     def force_connect(self):
         self.proxy = ALProxy("ALFaceDetection")
 
-    @lazy_init
     def clearDatabase(self):
         """Remove all faces from the database.
 
         :returns bool: true if the operation succeeds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.clearDatabase()
 
-    @lazy_init
     def enableRecognition(self, arg1):
         """deprecated
 
         :param bool arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.enableRecognition(arg1)
 
-    @lazy_init
     def enableTracking(self, arg1):
         """deprecated
 
         :param bool arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.enableTracking(arg1)
 
-    @lazy_init
     def forgetPerson(self, pId):
         """Delete from the database all faces instances of a person.
 
         :param str pId: The name of the person to forget
         :returns bool: true if the operation succeeds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.forgetPerson(pId)
 
-    @lazy_init
     def getActiveCamera(self):
         """Gets extractor active camera
 
         :returns int: Id of the current active camera of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getActiveCamera()
 
-    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getCurrentPeriod()
 
-    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
         :returns float: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getCurrentPrecision()
 
-    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getEventList()
 
-    @lazy_init
     def getFrameRate(self):
         """Gets extractor framerate
 
         :returns int: Current value of the framerate of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getFrameRate()
 
-    @lazy_init
     def getLearnedFacesList(self):
         """Returns the list of learned faces.
 
         :returns AL::ALValue: List of names
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getLearnedFacesList()
 
-    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getMemoryKeyList()
 
-    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
         :param str name: Name of the module which has subscribed.
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getMyPeriod(name)
 
-    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
         :param str name: name of the module which has subscribed
         :returns float: precision of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getMyPrecision(name)
 
-    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
         :returns std::vector<std::string>: Array of values updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getOutputNames()
 
-    @lazy_init
     def getResolution(self):
         """Gets extractor resolution
 
         :returns int: Current value of the resolution of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getResolution()
 
-    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
         :returns AL::ALValue: Array of names and parameters of all subscribers.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.getSubscribersInfo()
 
-    @lazy_init
     def importOldDatabase(self, policy):
         """Imports the content of an old face reco DB
 
         :param str policy: Merging policy if an imported entry has the same name as an existing one. It can be either: "overwrite" to replace the existing entry by the imported one, "merge" to merge data from both entries (if they don't relate to the same person, face recognition may fail), "keep" to keep the existing entry and skip the imported one.
         :returns bool: True if the import succeeded, false otherwise.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.importOldDatabase(policy)
 
-    @lazy_init
     def isPaused(self):
         """Gets extractor pause status
 
         :returns bool: True if the extractor is paused, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.isPaused()
 
-    @lazy_init
     def isProcessing(self):
         """Gets extractor running status
 
         :returns bool: True if the extractor is currently processing images, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.isProcessing()
 
-    @lazy_init
     def isRecognitionEnabled(self):
         """Returns if recognition is enabled.
 
         :returns bool: True/False
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.isRecognitionEnabled()
 
-    @lazy_init
     def isTrackingEnabled(self):
         """(BETA) Returns if tracking is enabled.
 
         :returns bool: True/False
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.isTrackingEnabled()
 
-    @lazy_init
     def learnFace(self, pId):
         """Add a new face in the database.
 
         :param str pId: The name of the person to save
         :returns bool: true if the operation succeeds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.learnFace(pId)
 
-    @lazy_init
     def pause(self, paused):
         """Changes the pause status of the extractor
 
         :param bool paused: New pause satus
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.pause(paused)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.ping()
 
-    @lazy_init
     def reLearnFace(self, pId):
         """use in a new learning process the latest images where a face has been wrongly recognized
 
         :param str pId: The name of the person to save
         :returns bool: true if the operation succeeds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.reLearnFace(pId)
 
-    @lazy_init
     def setActiveCamera(self, cameraId):
         """Sets extractor active camera
 
         :param int cameraId: Id of the camera that will become the active camera
         :returns bool: True if the update succeeded, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.setActiveCamera(cameraId)
 
-    @lazy_init
     def setFrameRate(self, subscriberName, framerate):
         """Sets the extractor framerate for a chosen subscriber
 
@@ -249,52 +262,58 @@ class ALFaceDetection(object):
         :param int framerate: New framerate
         :returns bool: True if the update succeeded, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.setFrameRate(subscriberName, framerate)
 
-    @lazy_init
     def setFrameRate2(self, framerate):
         """Sets the extractor framerate for all the subscribers
 
         :param int framerate: New framerate
         :returns bool: True if the update succeeded, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.setFrameRate(framerate)
 
-    @lazy_init
     def setParameter(self, paramName, value):
         """DEPRECATED: Sets pause and resolution
 
         :param str paramName: Name of the parameter to set
         :param AL::ALValue value: New value
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.setParameter(paramName, value)
 
-    @lazy_init
     def setRecognitionEnabled(self, enable):
         """enable/disable the recognition stageProcess will be faster when disabled when you don't need to recognize people
 
         :param bool enable: True/False
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.setRecognitionEnabled(enable)
 
-    @lazy_init
     def setResolution(self, resolution):
         """Sets extractor resolution
 
         :param int resolution: New resolution
         :returns bool: True if the update succeeded, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.setResolution(resolution)
 
-    @lazy_init
     def setTrackingEnabled(self, enable):
         """(BETA) Choose to enable or disable tracking. Enabling tracking usually allows you to follow a face for a longer period of time. However, it can lead to more false detections.
 
         :param bool enable: True/False
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.setTrackingEnabled(enable)
 
-    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -302,46 +321,53 @@ class ALFaceDetection(object):
         :param int period: Refresh period (in milliseconds) if relevant.
         :param float precision: Precision of the extractor if relevant.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.subscribe(name, period, precision)
 
-    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
         :param str name: Name of the module which subscribes.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.subscribe(name)
 
-    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
         :param str name: Name of the module which had subscribed.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.unsubscribe(name)
 
-    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param int period: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.updatePeriod(name, period)
 
-    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param float precision: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.updatePrecision(name, precision)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFaceDetection")
         return self.proxy.version()

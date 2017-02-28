@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALLogger")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALLogger(object):
     def __init__(self):
@@ -26,103 +14,115 @@ class ALLogger(object):
     def force_connect(self):
         self.proxy = ALProxy("ALLogger")
 
-    @lazy_init
     def debug(self, moduleName, message):
         """DEPRECATED. Use qiLogDebug instead.   Log a debug message.
 
         :param str moduleName: Name of the module.
         :param str message: Log Message.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.debug(moduleName, message)
 
-    @lazy_init
     def error(self, moduleName, message):
         """DEPRECATED. Use qiLogError instead.   Log an error.
 
         :param str moduleName: Name of the module.
         :param str message: Log Message.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.error(moduleName, message)
 
-    @lazy_init
     def fatal(self, moduleName, message):
         """DEPRECATED. Use qiLogFatal instead.   Log a fatal error.
 
         :param str moduleName: Name of the module.
         :param str message: Log Message.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.fatal(moduleName, message)
 
-    @lazy_init
     def info(self, moduleName, message):
         """DEPRECATED. Use qiLogInfo instead.   Log a info message.
 
         :param str moduleName: Name of the module.
         :param str message: Log Message.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.info(moduleName, message)
 
-    @lazy_init
     def logInFile(self, arg1):
         """Removed: not implemented anymore.
 
         :param str arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.logInFile(arg1)
 
-    @lazy_init
     def logInForwarder(self, arg1):
         """Removed: not implemented anymore.
 
         :param str arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.logInForwarder(arg1)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.ping()
 
-    @lazy_init
     def removeHandler(self, arg1):
         """Removed: not implemented anymore.
 
         :param str arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.removeHandler(arg1)
 
-    @lazy_init
     def setVerbosity(self, arg1):
         """Removed: not implemented anymore.
 
         :param str arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.setVerbosity(arg1)
 
-    @lazy_init
     def verbosity(self):
         """Removed: not implemented anymore.
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.verbosity()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.version()
 
-    @lazy_init
     def warn(self, moduleName, message):
         """DEPRECATED: use qiLogWarning instead. Log a warning.
 
         :param str moduleName: Name of the module.
         :param str message: Log Message.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLogger")
         return self.proxy.warn(moduleName, message)

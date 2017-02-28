@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALSystem")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALSystem(object):
     def __init__(self):
@@ -26,139 +14,156 @@ class ALSystem(object):
     def force_connect(self):
         self.proxy = ALProxy("ALSystem")
 
-    @lazy_init
     def changePassword(self, old, snew):
         """Change the user password.
 
         :param str old: password The current password of the user.
         :param str snew: password The new user password.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.changePassword(old, snew)
 
-    @lazy_init
     def diskFree(self, all):
         """Display free disk space
 
         :param bool all: Show all mount partions.
         :returns std::vector<AL::ALValue>: A vector with all partions' infos
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.diskFree(all)
 
-    @lazy_init
     def freeMemory(self):
         """Amount of available memory in heap
 
         :returns int: amount of available memory in heap
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.freeMemory()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.ping()
 
-    @lazy_init
     def previousSystemVersion(self):
         """Previous system version before software update (empty if this is not the 1st boot after a software update)
 
         :returns str: Previous system version before software update.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.previousSystemVersion()
 
-    @lazy_init
     def reboot(self):
         """Reboot robot
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.reboot()
 
-    @lazy_init
     def robotIcon(self):
         """Robot icon
 
         :returns AL::ALValue: icon of the robot
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.robotIcon()
 
-    @lazy_init
     def robotName(self):
         """System hostname
 
         :returns str: name of the robot
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.robotName()
 
-    @lazy_init
     def setRobotName(self, name):
         """Set system hostname
 
         :param str name: name to use
         :returns bool: whether the operation was successful
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.setRobotName(name)
 
-    @lazy_init
     def setTimezone(self, timezone):
         """Set current timezone
 
         :param str timezone: timezone to use
         :returns bool: whether the operation was successful
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.setTimezone(timezone)
 
-    @lazy_init
     def shutdown(self):
         """Shutdown robot
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.shutdown()
 
-    @lazy_init
     def systemInfo(self):
         """Running system version
 
         :returns AL::ALValue: information about the system version
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.systemInfo()
 
-    @lazy_init
     def systemVersion(self):
         """Running system version
 
         :returns str: running system version
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.systemVersion()
 
-    @lazy_init
     def timezone(self):
         """Current timezone
 
         :returns str: current timezone
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.timezone()
 
-    @lazy_init
     def totalMemory(self):
         """Amount of total memory in heap
 
         :returns int: amount of total memory in heap
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.totalMemory()
 
-    @lazy_init
     def upgrade(self, image, checksum):
         """Change the user password.
 
         :param str image: Local path to a valid image.
         :param str checksum: Local path to a md5 checksum file, or empty string for no verification
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.upgrade(image, checksum)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
         return self.proxy.version()

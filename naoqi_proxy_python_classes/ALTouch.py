@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALTouch")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALTouch(object):
     def __init__(self):
@@ -26,34 +14,38 @@ class ALTouch(object):
     def force_connect(self):
         self.proxy = ALProxy("ALTouch")
 
-    @lazy_init
     def getSensorList(self):
         """Return the list of sensors managed by touch module and return by TouchChangedevent.
 
         :returns std::vector<std::string>: A vector<std::string> of sensor names manage by ALTouch.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTouch")
         return self.proxy.getSensorList()
 
-    @lazy_init
     def getStatus(self):
         """Return the current status of all Touch groups.
 
         :returns AL::ALValue: A vector of pair [name, bool], similar to TouchChanged event.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTouch")
         return self.proxy.getStatus()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTouch")
         return self.proxy.ping()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALTouch")
         return self.proxy.version()

@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALRedBallTracker")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALRedBallTracker(object):
     def __init__(self):
@@ -26,62 +14,70 @@ class ALRedBallTracker(object):
     def force_connect(self):
         self.proxy = ALProxy("ALRedBallTracker")
 
-    @lazy_init
     def getPosition(self):
         """Return the position of the red ball in FRAME_TORSO.
 
         :returns std::vector<float>: An Array of float containing the red ball position [x, y, z].
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.getPosition()
 
-    @lazy_init
     def isActive(self):
         """Return true if the red Ball Tracker is running.
 
         :returns bool: true if the red Ball Tracker is running.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.isActive()
 
-    @lazy_init
     def isNewData(self):
         """Return true if a new Red Ball was detected since the last getPosition().
 
         :returns bool: true if a new Red Ball was detected since the last getPosition().
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.isNewData()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.ping()
 
-    @lazy_init
     def setWholeBodyOn(self, pWholeBodyOn):
         """If true, the tracking will be through a Whole Body Process.
 
         :param bool pWholeBodyOn: The whole Body state
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.setWholeBodyOn(pWholeBodyOn)
 
-    @lazy_init
     def startTracker(self):
         """Start the tracker by Subscribing to Event redBallDetected from ALRedBallDetection module. Then Wait Event redBallDetected from ALRedBallDetection module. And finally send information to motion for head tracking. NOTE: Stiffness of Head must be set to 1.0 to move!
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.startTracker()
 
-    @lazy_init
     def stopTracker(self):
         """Stop the tracker by Unsubscribing to Event redBallDetected from ALRedBallDetection module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.stopTracker()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRedBallTracker")
         return self.proxy.version()

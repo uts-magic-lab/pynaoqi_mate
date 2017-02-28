@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALMecaLogger")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALMecaLogger(object):
     def __init__(self):
@@ -26,15 +14,15 @@ class ALMecaLogger(object):
     def force_connect(self):
         self.proxy = ALProxy("ALMecaLogger")
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMecaLogger")
         return self.proxy.ping()
 
-    @lazy_init
     def toDoWhenRobotHasFallen(self, arg1, arg2, arg3):
         """Increment the number of falls
 
@@ -42,18 +30,22 @@ class ALMecaLogger(object):
         :param AL::ALValue arg2: arg
         :param AL::ALValue arg3: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMecaLogger")
         return self.proxy.toDoWhenRobotHasFallen(arg1, arg2, arg3)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMecaLogger")
         return self.proxy.version()
 
-    @lazy_init
     def writeFiles(self):
         """Write results on disk
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMecaLogger")
         return self.proxy.writeFiles()

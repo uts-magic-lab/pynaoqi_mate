@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALRobotPosture")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALRobotPosture(object):
     def __init__(self):
@@ -26,7 +14,6 @@ class ALRobotPosture(object):
     def force_connect(self):
         self.proxy = ALProxy("ALRobotPosture")
 
-    @lazy_init
     def applyPosture(self, postureName, maxSpeedFraction):
         """Set the angle of the joints of the  robot to the choosen posture.
 
@@ -34,41 +21,46 @@ class ALRobotPosture(object):
         :param float maxSpeedFraction: A fraction.
         :returns bool: Returns if the posture was reached or not.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.applyPosture(postureName, maxSpeedFraction)
 
-    @lazy_init
     def getPosture(self):
         """Determine posture.
 
         :returns str: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.getPosture()
 
-    @lazy_init
     def getPostureFamily(self):
         """Returns the posture family for example Standing, LyingBelly,...
 
         :returns str: Returns the posture family, e.g. Standing.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.getPostureFamily()
 
-    @lazy_init
     def getPostureFamilyList(self):
         """Get the list of posture family names available.
 
         :returns std::vector<std::string>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.getPostureFamilyList()
 
-    @lazy_init
     def getPostureList(self):
         """Get the list of posture names available.
 
         :returns std::vector<std::string>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.getPostureList()
 
-    @lazy_init
     def goToPosture(self, postureName, maxSpeedFraction):
         """Make the robot go to the choosenposture.
 
@@ -76,34 +68,40 @@ class ALRobotPosture(object):
         :param float maxSpeedFraction: A fraction.
         :returns bool: Returns if the posture was reached or not.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.goToPosture(postureName, maxSpeedFraction)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.ping()
 
-    @lazy_init
     def setMaxTryNumber(self, pMaxTryNumber):
         """Set maximum of tries ongoToPosture fail.
 
         :param int pMaxTryNumber: Number of retry if goToPosture fail.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.setMaxTryNumber(pMaxTryNumber)
 
-    @lazy_init
     def stopMove(self):
         """Stop the posture move.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.stopMove()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotPosture")
         return self.proxy.version()

@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALPreferenceManager")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALPreferenceManager(object):
     def __init__(self):
@@ -26,15 +14,15 @@ class ALPreferenceManager(object):
     def force_connect(self):
         self.proxy = ALProxy("ALPreferenceManager")
 
-    @lazy_init
     def getDomainList(self):
         """Get available preferences domain
 
         :returns std::vector<std::string>: a list containing all the available domain names
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.getDomainList()
 
-    @lazy_init
     def getValue(self, domain, setting):
         """Get specified preference
 
@@ -42,18 +30,20 @@ class ALPreferenceManager(object):
         :param str setting: Preference setting
         :returns AL::ALValue: corresponding preferences value
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.getValue(domain, setting)
 
-    @lazy_init
     def getValueList(self, domain):
         """Get preferences names and values for a given domain
 
         :param str domain: Preference domain
         :returns std::vector<std::vector<AL::ALValue> >: a list of preferences names and values associated to the domain
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.getValueList(domain)
 
-    @lazy_init
     def importPrefFile(self, domain, applicationName, filename, override):
         """Import a preferences XML file
 
@@ -62,34 +52,38 @@ class ALPreferenceManager(object):
         :param str filename: Preference XML filename
         :param bool override: Set this to true if you want to override preferences that already exist with preferences in imported XML file
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.importPrefFile(domain, applicationName, filename, override)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.ping()
 
-    @lazy_init
     def removeDomainValues(self, domain):
         """Remove an entire preference domain
 
         :param str domain: Preference domain
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.removeDomainValues(domain)
 
-    @lazy_init
     def removeValue(self, domain, setting):
         """Remove specified preference
 
         :param str domain: Preference domain
         :param str setting: Preference setting
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.removeValue(domain, setting)
 
-    @lazy_init
     def setValue(self, domain, setting, value):
         """Set specified preference
 
@@ -97,18 +91,22 @@ class ALPreferenceManager(object):
         :param str setting: Preference setting
         :param AL::ALValue value: Preference value
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.setValue(domain, setting, value)
 
-    @lazy_init
     def update(self):
         """Synchronizes local preferences with preferences stored on a server.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.update()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALPreferenceManager")
         return self.proxy.version()

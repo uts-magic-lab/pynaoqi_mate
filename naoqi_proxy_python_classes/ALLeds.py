@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALLeds")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALLeds(object):
     def __init__(self):
@@ -26,16 +14,16 @@ class ALLeds(object):
     def force_connect(self):
         self.proxy = ALProxy("ALLeds")
 
-    @lazy_init
     def createGroup(self, groupName, ledNames):
         """Makes a group name for ease of setting multiple LEDs.
 
         :param str groupName: The name of the group.
         :param std::vector<std::string> ledNames: A vector of the names of the LEDs in the group.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.createGroup(groupName, ledNames)
 
-    @lazy_init
     def earLedsSetAngle(self, degrees, duration, leaveOnAtEnd):
         """An animation to show a direction with the ears.
 
@@ -43,9 +31,10 @@ class ALLeds(object):
         :param float duration: The duration in seconds of the animation.
         :param bool leaveOnAtEnd: If true the last led is left on at the end of the animation.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.earLedsSetAngle(degrees, duration, leaveOnAtEnd)
 
-    @lazy_init
     def fade(self, name, intensity, duration):
         """Sets the intensity of a LED or Group of LEDs within a given time.
 
@@ -53,9 +42,10 @@ class ALLeds(object):
         :param float intensity: The intensity of the LED or Group (a value between 0 and 1).
         :param float duration: The duration of the fade in seconds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.fade(name, intensity, duration)
 
-    @lazy_init
     def fadeListRGB(self, name, rgbList, timeList):
         """Chain a list of color for a device, as the motion.doMove command.
 
@@ -63,9 +53,10 @@ class ALLeds(object):
         :param AL::ALValue rgbList: List of RGB led value, RGB as seen in hexa-decimal: 0x00RRGGBB.
         :param AL::ALValue timeList: List of time to go to given intensity.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.fadeListRGB(name, rgbList, timeList)
 
-    @lazy_init
     def fadeRGB(self, name, red, green, blue, duration):
         """Sets the color of an RGB led.
 
@@ -75,9 +66,10 @@ class ALLeds(object):
         :param float blue: the intensity of blue channel (0-1).
         :param float duration: Time used to fade in seconds.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.fadeRGB(name, red, green, blue, duration)
 
-    @lazy_init
     def fadeRGB2(self, name, colorName, duration):
         """Sets the color of an RGB led.
 
@@ -85,9 +77,10 @@ class ALLeds(object):
         :param str colorName: the name of the color (supported colors: "white", "red", "green", "blue", "yellow", "magenta", "cyan")
         :param float duration: Time used to fade in seconds.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.fadeRGB(name, colorName, duration)
 
-    @lazy_init
     def fadeRGB3(self, name, rgb, duration):
         """Sets the color of an RGB led.
 
@@ -95,100 +88,112 @@ class ALLeds(object):
         :param int rgb: The RGB value led, RGB as seen in hexa-decimal: 0x00RRGGBB.
         :param float duration: Time used to fade in seconds.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.fadeRGB(name, rgb, duration)
 
-    @lazy_init
     def getIntensity(self, name):
         """Gets the intensity of a LED or device
 
         :param str name: The name of the LED or Group.
         :returns AL::ALValue: The intensity of the LED or Group.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.getIntensity(name)
 
-    @lazy_init
     def listGroup(self, groupName):
         """Lists the devices in the group.
 
         :param str groupName: The name of the Group.
         :returns std::vector<std::string>: A vector of string device names.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.listGroup(groupName)
 
-    @lazy_init
     def listGroups(self):
         """Lists available group names.
 
         :returns std::vector<std::string>: A vector of group names.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.listGroups()
 
-    @lazy_init
     def listLED(self, name):
         """Lists the devices aliased by a short LED name.
 
         :param str name: The name of the LED to list
         :returns std::vector<std::string>: A vector of device names.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.listLED(name)
 
-    @lazy_init
     def listLEDs(self):
         """Lists the short LED names.
 
         :returns std::vector<std::string>: A vector of LED names.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.listLEDs()
 
-    @lazy_init
     def off(self, name):
         """Switch to a minimum intensity a LED or Group of LEDs.
 
         :param str name: The name of the LED or Group.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.off(name)
 
-    @lazy_init
     def on(self, name):
         """Switch to a maximum intensity a LED or Group of LEDs.
 
         :param str name: The name of the LED or Group.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.on(name)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.ping()
 
-    @lazy_init
     def randomEyes(self, duration):
         """Launch a random animation in eyes
 
         :param float duration: Approximate duration of the animation in seconds.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.randomEyes(duration)
 
-    @lazy_init
     def rasta(self, duration):
         """Launch a green/yellow/red rasta animation on all body.
 
         :param float duration: Approximate duration of the animation in seconds.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.rasta(duration)
 
-    @lazy_init
     def reset(self, name):
         """Resets the state of the leds to default (for ex, eye LEDs are white and fully on by default).
 
         :param str name: The name of the LED or Group (for now, only "AllLeds" are implemented).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.reset(name)
 
-    @lazy_init
     def rotateEyes(self, rgb, timeForRotation, totalDuration):
         """Launch a rotation using the leds of the eyes.
 
@@ -196,21 +201,25 @@ class ALLeds(object):
         :param float timeForRotation: Approximate time to make one turn.
         :param float totalDuration: Approximate duration of the animation in seconds.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.rotateEyes(rgb, timeForRotation, totalDuration)
 
-    @lazy_init
     def setIntensity(self, name, intensity):
         """Sets the intensity of a LED or Group of LEDs.
 
         :param str name: The name of the LED or Group.
         :param float intensity: The intensity of the LED or Group (a value between 0 and 1).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.setIntensity(name, intensity)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
         return self.proxy.version()

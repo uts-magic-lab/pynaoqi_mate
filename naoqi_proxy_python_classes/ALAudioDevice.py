@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALAudioDevice")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALAudioDevice(object):
     def __init__(self):
@@ -26,138 +14,155 @@ class ALAudioDevice(object):
     def force_connect(self):
         self.proxy = ALProxy("ALAudioDevice")
 
-    @lazy_init
     def closeAudioInputs(self):
         """Closes the audio device for capture. You can call this method if you want to have access to the alsa input buffers in another program than naoqi while naoqi is running (with arecord for example)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.closeAudioInputs()
 
-    @lazy_init
     def closeAudioOutputs(self):
         """Closes the audio device for playback. close the audio device for capture. You can call this method if you want to send sound to alsa in another program than naoqi while naoqi is running (with aplay for example)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.closeAudioOutputs()
 
-    @lazy_init
     def disableEnergyComputation(self):
         """Disables the computation of the energy of each microphone signal
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.disableEnergyComputation()
 
-    @lazy_init
     def enableEnergyComputation(self):
         """Enables the computation of the energy of each microphone signal
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.enableEnergyComputation()
 
-    @lazy_init
     def flushAudioOutputs(self):
         """Flush the audio device for playback. close the audio device for capture. You can call this method if you want to send sound to alsa in another program than naoqi while naoqi is running (with aplay for example)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.flushAudioOutputs()
 
-    @lazy_init
     def getFrontMicEnergy(self):
         """Returns the energy of the front microphone signal
 
         :returns float: energy of the front microphone signal
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.getFrontMicEnergy()
 
-    @lazy_init
     def getLeftMicEnergy(self):
         """Returns the energy of the left microphone signal
 
         :returns float: energy of the left microphone signal
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.getLeftMicEnergy()
 
-    @lazy_init
     def getOutputVolume(self):
         """Gets the output sound level of the system.
 
         :returns int: outputVolume of the system
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.getOutputVolume()
 
-    @lazy_init
     def getParameter(self, pParamName):
         """This method returns the specified internal parameter ('outputSampleRate' or 'inputBufferSize'). The value -1 is returned if the specified parameter is not valid.
 
         :param str pParamName: Name of the parameter to get ('outputSampleRate' or 'inputBufferSize').
         :returns int: value of the specified parameter
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.getParameter(pParamName)
 
-    @lazy_init
     def getRearMicEnergy(self):
         """Returns the energy of the rear microphone signal
 
         :returns float: energy of the rear microphone signal
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.getRearMicEnergy()
 
-    @lazy_init
     def getRightMicEnergy(self):
         """Returns the energy of the right microphone signal
 
         :returns float: energy of the right microphone signal
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.getRightMicEnergy()
 
-    @lazy_init
     def isAudioOutMuted(self):
         """check if loudspeakers are muted
 
         :returns bool: 1 if true / 0 otherwise
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.isAudioOutMuted()
 
-    @lazy_init
     def isInputClosed(self):
         """Allows to know if audio inputs are closed or not
 
         :returns bool: True if audio inputs are closed / False otherwise
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.isInputClosed()
 
-    @lazy_init
     def isOutputClosed(self):
         """Allows to know if audio ouputs are closed or not
 
         :returns bool: True if audio outputs are closed / False otherwise
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.isOutputClosed()
 
-    @lazy_init
     def muteAudioOut(self, arg1):
         """mute the loudspeakers
 
         :param bool arg1: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.muteAudioOut(arg1)
 
-    @lazy_init
     def openAudioInputs(self):
         """Opens the audio device for capture. If you closed the audio inputs with the closeAudioInputs method, you must call this method to be able to access to the sound data of the nao's microphones.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.openAudioInputs()
 
-    @lazy_init
     def openAudioOutputs(self):
         """Opens the audio device for playback. If you closed the audio outputs with the closeAudioOutputs method, you must call this method to ear or send sound onto the nao's loudspeakers.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.openAudioOutputs()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.ping()
 
-    @lazy_init
     def playSine(self, frequence, gain, pan, duration):
         """Play a sine wave which specified caracteristics.
 
@@ -166,9 +171,10 @@ class ALAudioDevice(object):
         :param int pan: Stereo Pan set to either {-1,0,+1}
         :param float duration: Duration of the sine wave in seconds
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.playSine(frequence, gain, pan, duration)
 
-    @lazy_init
     def sendLocalBufferToOutput(self, nbOfFrames, pBuffer):
         """This function allows a local module to send sound onto the nao's loudpseakers You must pass to this function a pointer to the stereo buffer to send, and the number of frames per channel. The buffer must contain 16bits stereo interleaved samples, and the number of frames does not exceed 16384
 
@@ -176,9 +182,10 @@ class ALAudioDevice(object):
         :param int pBuffer: Buffer to send
         :returns bool: True if the operation is successfull - False otherwise
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.sendLocalBufferToOutput(nbOfFrames, pBuffer)
 
-    @lazy_init
     def sendRemoteBufferToOutput(self, nbOfFrames, pBuffer):
         """This function allows a remote module to send sound onto the nao's loudpseakers You must pass to this function the stereo buffer you want to send as an ALValue converted to binary, and the number of frames per channel. The number of frames does not exceed 16384. For more information please see the red documentation
 
@@ -186,9 +193,10 @@ class ALAudioDevice(object):
         :param AL::ALValue pBuffer: Buffer to send
         :returns bool: True if the operation is successfull - False otherwise
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.sendRemoteBufferToOutput(nbOfFrames, pBuffer)
 
-    @lazy_init
     def setClientPreferences(self, name, sampleRate, channelsVector, deinterleaved, timeStamp):
         """Set AudioDevice Client preferences. This function is deprecated, the use of the alternate 4 arguments setClientPreferences() is now prefered.
 
@@ -198,9 +206,10 @@ class ALAudioDevice(object):
         :param int deinterleaved: indicates if the microphones data sent to the processSound or processSoundRemote functions are interleaved or not - 0 : interleaved - 1 : deinterleaved
         :param int timeStamp: parameter indicating if audio timestamps are sent to the processSound or processSoundRemote functions - 0 : no - 1 : yes
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.setClientPreferences(name, sampleRate, channelsVector, deinterleaved, timeStamp)
 
-    @lazy_init
     def setClientPreferences2(self, name, sampleRate, channelsConfiguration, deinterleaved):
         """Set AudioDevice Client preferences
 
@@ -209,67 +218,77 @@ class ALAudioDevice(object):
         :param int channelsConfiguration: An int (defined in ALSoundExtractor) indicating which microphones data will be send to the process function. ALLCHANNELS, LEFTCHANNEL, RIGHTCHANNEL, FRONTCHANNEL, REARCHANNEL are the configuration currently supported.
         :param int deinterleaved: indicates if the microphones data sent to the process function are interleaved or not - 0 : interleaved - 1 : deinterleaved
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.setClientPreferences(name, sampleRate, channelsConfiguration, deinterleaved)
 
-    @lazy_init
     def setFileAsInput(self, pFileName):
         """This method allows to send sound samples contained in a sound file at the input of ALAudioDevice, instead of the nao's microphones sound data. The sound file must be a .wav file containing 16bits / 4 channels / interleaved samples. Once the file has been read, microphones sound data will again taken as input
 
         :param str pFileName: Name of the input file.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.setFileAsInput(pFileName)
 
-    @lazy_init
     def setOutputVolume(self, volume):
         """Sets the output sound level of the system.
 
         :param int volume: Volume [0-100].
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.setOutputVolume(volume)
 
-    @lazy_init
     def setParameter(self, pParamName, pParamValue):
         """This method sets the specified internal parameter ('outputSampleRate' or 'inputBufferSize') inputBufferSize can bet set to 8192 or 16384. Warning: when speech recognition is running, a buffer size of 8192 is used. Don't change it during the recognition process. outputSampleRate can bet set to 16000 Hz, 22050 Hz, 44100 Hz or 48000 Hz. Warning: if speech synthesis is running, a sample rate of 16000 Hz or 22050 Hz is used (depending of the language). Don't change it during the synthesis process
 
         :param str pParamName: Name of the parameter to set ('outputSampleRate' or 'inputBufferSize').
         :param int pParamValue: The value to which the specified parameter should be set.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.setParameter(pParamName, pParamValue)
 
-    @lazy_init
     def startMicrophonesRecording(self, pFileName):
         """This method allows to record the signal collected on the nao's microphones. You can choose to record only the front microphone in a ogg file, or the 4 microphones in a wav file. In this last case the format of the file is 4 channels, 16 bits little endian, 48 KHz
 
         :param str pFileName: Name of the file where to record the sound.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.startMicrophonesRecording(pFileName)
 
-    @lazy_init
     def stopMicrophonesRecording(self):
         """This method stops the recording of the sound collected by the microphones.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.stopMicrophonesRecording()
 
-    @lazy_init
     def subscribe(self, pModule):
         """This function allows a module to subscribe to the ALAudioDevice module.For more informations see the audio part of the red documentation
 
         :param str pModule: Name of the module
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.subscribe(pModule)
 
-    @lazy_init
     def unsubscribe(self, pModule):
         """This function allows a module to subscribe to the ALAudioDevice module.For more informations see the audio part of the red documentation
 
         :param str pModule: Name of the module
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.unsubscribe(pModule)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioDevice")
         return self.proxy.version()

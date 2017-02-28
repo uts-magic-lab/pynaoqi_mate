@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALChoregrapheRecorder")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALChoregrapheRecorder(object):
     def __init__(self):
@@ -26,7 +14,6 @@ class ALChoregrapheRecorder(object):
     def force_connect(self):
         self.proxy = ALProxy("ALChoregrapheRecorder")
 
-    @lazy_init
     def dataChanged(self, dataName, data, message):
         """Called by ALMemory when subcription data is updated.
 
@@ -34,34 +21,40 @@ class ALChoregrapheRecorder(object):
         :param AL::ALValue data: Value of the the subscribed data
         :param str message: The message give when subscribing.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALChoregrapheRecorder")
         return self.proxy.dataChanged(dataName, data, message)
 
-    @lazy_init
     def motionRecorderStopped(self):
         """Triggers recording stop and data importation
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALChoregrapheRecorder")
         return self.proxy.motionRecorderStopped()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALChoregrapheRecorder")
         return self.proxy.ping()
 
-    @lazy_init
     def sendReplayedToStep(self, frame):
         """Send replayed motors to a frame
 
         :param int frame: Target frame number
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALChoregrapheRecorder")
         return self.proxy.sendReplayedToStep(frame)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALChoregrapheRecorder")
         return self.proxy.version()

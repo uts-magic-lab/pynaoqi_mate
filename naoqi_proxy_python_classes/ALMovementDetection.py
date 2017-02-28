@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALMovementDetection")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALMovementDetection(object):
     def __init__(self):
@@ -26,194 +14,216 @@ class ALMovementDetection(object):
     def force_connect(self):
         self.proxy = ALProxy("ALMovementDetection")
 
-    @lazy_init
     def getActiveCamera(self):
         """Gets extractor active camera
 
         :returns int: Id of the current active camera of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getActiveCamera()
 
-    @lazy_init
     def getColorSensitivity(self):
         """Gets the value of the color sensitivity
 
         :returns float: Current color sensitivity (between 0 and 1)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getColorSensitivity()
 
-    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getCurrentPeriod()
 
-    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
         :returns float: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getCurrentPrecision()
 
-    @lazy_init
     def getDepthSensitivity(self):
         """gets the value of the depth sensitivity (in meters)
 
         :returns float: Current depth sensitivity (in meters)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getDepthSensitivity()
 
-    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getEventList()
 
-    @lazy_init
     def getFrameRate(self):
         """Gets extractor framerate
 
         :returns int: Current value of the framerate of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getFrameRate()
 
-    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getMemoryKeyList()
 
-    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
         :param str name: Name of the module which has subscribed.
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getMyPeriod(name)
 
-    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
         :param str name: name of the module which has subscribed
         :returns float: precision of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getMyPrecision(name)
 
-    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
         :returns std::vector<std::string>: Array of values updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getOutputNames()
 
-    @lazy_init
     def getResolution(self):
         """Gets extractor resolution
 
         :returns int: Current value of the resolution of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getResolution()
 
-    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
         :returns AL::ALValue: Array of names and parameters of all subscribers.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.getSubscribersInfo()
 
-    @lazy_init
     def isPaused(self):
         """Gets extractor pause status
 
         :returns bool: True if the extractor is paused, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.isPaused()
 
-    @lazy_init
     def isProcessing(self):
         """Gets extractor running status
 
         :returns bool: True if the extractor is currently processing images, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.isProcessing()
 
-    @lazy_init
     def pause(self, status):
         """Changes the pause status of the extractor
 
         :param bool status: New pause satus
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.pause(status)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.ping()
 
-    @lazy_init
     def resetDetection(self):
         """Enables to reset the movement detection when desired
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.resetDetection()
 
-    @lazy_init
     def setActiveCamera(self, cameraId):
         """Sets extractor active camera
 
         :param int cameraId: Id of the camera that will become the active camera
         :returns bool: True if the update succeeded, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.setActiveCamera(cameraId)
 
-    @lazy_init
     def setColorSensitivity(self, sensitivity):
         """Sets the value of the color sensitivity used for the 2D detection  of moving pixels in the image.
 
         :param float sensitivity: New color sensitivity (between 0 and 1)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.setColorSensitivity(sensitivity)
 
-    @lazy_init
     def setDepthSensitivity(self, sensitivity):
         """Sets the value of the depth sensitivity (in meters) used for the detection 3D of moving pixels in the image.
 
         :param float sensitivity: New depth sensitivity (in meters)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.setDepthSensitivity(sensitivity)
 
-    @lazy_init
     def setFrameRate(self, value):
         """Sets extractor framerate
 
         :param int value: New framerate
         :returns bool: True if the update succeeded, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.setFrameRate(value)
 
-    @lazy_init
     def setResolution(self, resolution):
         """Sets extractor resolution
 
         :param int resolution: New resolution
         :returns bool: True if the update succeeded, False if not
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.setResolution(resolution)
 
-    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -221,46 +231,53 @@ class ALMovementDetection(object):
         :param int period: Refresh period (in milliseconds) if relevant.
         :param float precision: Precision of the extractor if relevant.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.subscribe(name, period, precision)
 
-    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
         :param str name: Name of the module which subscribes.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.subscribe(name)
 
-    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
         :param str name: Name of the module which had subscribed.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.unsubscribe(name)
 
-    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param int period: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.updatePeriod(name, period)
 
-    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param float precision: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.updatePrecision(name, precision)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
         return self.proxy.version()

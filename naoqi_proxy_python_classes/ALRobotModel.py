@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALRobotModel")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALRobotModel(object):
     def __init__(self):
@@ -26,26 +14,29 @@ class ALRobotModel(object):
     def force_connect(self):
         self.proxy = ALProxy("ALRobotModel")
 
-    @lazy_init
     def getConfig(self):
         """Return the RobotConfig key/value pairs serialized in xml format
 
         :returns str: the RobotConfig key/value pairs in xml format
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotModel")
         return self.proxy.getConfig()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotModel")
         return self.proxy.ping()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALRobotModel")
         return self.proxy.version()

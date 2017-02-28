@@ -81,18 +81,6 @@ header_skeleton = """#!/usr/bin/env python
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("PROXYCLASSNAME")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 """
 
 class_skeleton = """
@@ -105,10 +93,11 @@ class PROXYCLASSNAME(object):
 """
 
 method_skeleton = '''
-    @lazy_init
     def METHOD_NAME(METHOD_ARGS):
         """DOCSTRING
         """
+        if not self.proxy:
+            self.proxy = ALProxy("PROXYCLASSNAME")
         return self.proxy.ORIGINAL_NAME_OF_METHOD(CALL_ARGS)
 '''
 
@@ -168,6 +157,7 @@ def create_python_class(header_file, class_name, methods, path,
                 method_code = method_code.replace('CALL_ARGS', params_str)
                 method_args = "self, " + params_str
                 method_code = method_code.replace('METHOD_ARGS', method_args)
+            method_code = method_code.replace('PROXYCLASSNAME', class_name)
 
             t = m['returns']
             typ = t if t != 'std::string' else "str"

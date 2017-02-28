@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALSpeechRecognition")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALSpeechRecognition(object):
     def __init__(self):
@@ -26,33 +14,35 @@ class ALSpeechRecognition(object):
     def force_connect(self):
         self.proxy = ALProxy("ALSpeechRecognition")
 
-    @lazy_init
     def activateAllRules(self, contextName):
         """Activate all rules contained in the specified context.
 
         :param str contextName: Name of the context to modify.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.activateAllRules(contextName)
 
-    @lazy_init
     def activateRule(self, contextName, ruleName):
         """Activate a rule contained in the specified context.
 
         :param str contextName: Name of the context to modify.
         :param str ruleName: Name of the rule to activate.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.activateRule(contextName, ruleName)
 
-    @lazy_init
     def addContext(self, pathToLCFFile, contextName):
         """Add a context from a LCF file.
 
         :param str pathToLCFFile: Path to a LCF file. This LCF file contains the set of rules that should be recognized by the speech recognition engine.
         :param str contextName: Name of the context of your choice.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.addContext(pathToLCFFile, contextName)
 
-    @lazy_init
     def addWordListToSlot(self, contextName, slotName, wordList):
         """Add a list of words in a slot. A slot is a part of a context which can be modified. You can add a list of words that should be recognized by the speech recognition engine
 
@@ -60,9 +50,10 @@ class ALSpeechRecognition(object):
         :param str slotName: Name of the slot to modify.
         :param std::vector<std::string> wordList: List of words to insert in the slot.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.addWordListToSlot(contextName, slotName, wordList)
 
-    @lazy_init
     def compile(self, arg1, arg2, arg3):
         """
 
@@ -70,50 +61,56 @@ class ALSpeechRecognition(object):
         :param str arg2: arg
         :param str arg3: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.compile(arg1, arg2, arg3)
 
-    @lazy_init
     def deactivateAllRules(self, contextName):
         """Deactivate all rules contained in the specified context.
 
         :param str contextName: Name of the context to modify.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.deactivateAllRules(contextName)
 
-    @lazy_init
     def deactivateRule(self, contextName, ruleName):
         """Deactivate a rule contained in the specified context.
 
         :param str contextName: Name of the context to modify.
         :param str ruleName: Name of the rule to deactivate.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.deactivateRule(contextName, ruleName)
 
-    @lazy_init
     def eraseContextSet(self, saveName):
         """Erase a saved context set of the speech recognition engine
 
         :param str saveName: Name under which the context set is saved
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.eraseContextSet(saveName)
 
-    @lazy_init
     def getAudioExpression(self):
         """To check if audio expression is enabled or disabled.
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getAudioExpression()
 
-    @lazy_init
     def getAvailableLanguages(self):
         """Returns the list of the languages installed on the system.
 
         :returns std::vector<std::string>: Array of strings that contains the list of the installed languages.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getAvailableLanguages()
 
-    @lazy_init
     def getContextParam(self, contextName, paramName):
         """Get the given parameter for the specified context.
 
@@ -121,84 +118,94 @@ class ALSpeechRecognition(object):
         :param str paramName: Name of the parameter to get
         :returns float: Value of the fetched parameter
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getContextParam(contextName, paramName)
 
-    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getCurrentPeriod()
 
-    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
         :returns float: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getCurrentPrecision()
 
-    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getEventList()
 
-    @lazy_init
     def getLanguage(self):
         """Returns the current language used by the speech recognition system.
 
         :returns str: Current language used by the speech recognition engine.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getLanguage()
 
-    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
         :returns std::vector<std::string>: Array of events updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getMemoryKeyList()
 
-    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
         :param str name: Name of the module which has subscribed.
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getMyPeriod(name)
 
-    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
         :param str name: name of the module which has subscribed
         :returns float: precision of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getMyPrecision(name)
 
-    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
         :returns std::vector<std::string>: Array of values updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getOutputNames()
 
-    @lazy_init
     def getParameter(self, paramName):
         """Gets a parameter of the speech recognition engine. Note that when the ASR engine language is set to Chinese, no parameter can be retrieved
 
         :param str paramName: Name of the parameter.
         :returns float: Value of the parameter.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getParameter(paramName)
 
-    @lazy_init
     def getRules(self, contextName, typeName):
         """Get all rules contained for a specific context.
 
@@ -206,101 +213,114 @@ class ALSpeechRecognition(object):
         :param str typeName: Type of the required rules.
         :returns std::vector<std::string>: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getRules(contextName, typeName)
 
-    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
         :returns AL::ALValue: Array of names and parameters of all subscribers.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.getSubscribersInfo()
 
-    @lazy_init
     def loadContextSet(self, saveName):
         """Load a saved context set of the speech recognition engine
 
         :param str saveName: Name under which the context set is saved
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.loadContextSet(saveName)
 
-    @lazy_init
     def loadVocabulary(self, vocabularyFile):
         """Loads the vocabulary to recognized contained in a .lxd file. This method is not available with the ASR engine language set to Chinese. For more informations see the red documentation
 
         :param str vocabularyFile: Name of the lxd file containing the vocabulary
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.loadVocabulary(vocabularyFile)
 
-    @lazy_init
     def pause(self, pause):
         """Stops and restarts the speech recognition engine according to the input parameter This can be used to add contexts, activate or deactivate rules of a contex, add a words to a slot.
 
         :param bool pause: Boolean to enable or disable pause of the speech recognition engine.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.pause(pause)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.ping()
 
-    @lazy_init
     def popContexts(self):
         """Disable current contexts and restore saved contexts of the speech recognition engine.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.popContexts()
 
-    @lazy_init
     def pushContexts(self):
         """Disable current contexts of the speech recognition engine and save them in a  stack.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.pushContexts()
 
-    @lazy_init
     def removeAllContext(self):
         """Remove all contexts from the speech recognition engine.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.removeAllContext()
 
-    @lazy_init
     def removeContext(self, contextName):
         """Remove one context from the speech recognition engine.
 
         :param str contextName: Name of the context to remove from the speech recognition engine.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.removeContext(contextName)
 
-    @lazy_init
     def removeWordListFromSlot(self, contextName, slotName):
         """Remove all words from a slot.
 
         :param str contextName: Name of the context to modify.
         :param str slotName: Name of the slot to modify.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.removeWordListFromSlot(contextName, slotName)
 
-    @lazy_init
     def saveContextSet(self, saveName):
         """Save current context set of the speech recognition engine
 
         :param str saveName: Name under which to save
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.saveContextSet(saveName)
 
-    @lazy_init
     def setAudioExpression(self, setOrNot):
         """Enables or disables the playing of sounds indicating the state of the recognition engine. If this option is enabled, a sound is played at the beginning of the recognition process (after a call to the subscribe method), and a sound is played when the user call the unsubscribe method
 
         :param bool setOrNot: Enable (true) or disable it (false).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setAudioExpression(setOrNot)
 
-    @lazy_init
     def setContextParam(self, contextName, paramName, value):
         """Set the given parameter for the specified context.
 
@@ -308,68 +328,76 @@ class ALSpeechRecognition(object):
         :param str paramName: Name of the parameter to change
         :param float value: New parameter value
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setContextParam(contextName, paramName, value)
 
-    @lazy_init
     def setLanguage(self, languageName):
         """Sets the language used by the speech recognition engine. The list of the available languages can be collected through the getAvailableLanguages method. If you want to set a language as the default language (loading automatically at module launch), please refer to the web page of the robot.
 
         :param str languageName: Name of the language in English.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setLanguage(languageName)
 
-    @lazy_init
     def setParameter(self, paramName, paramValue):
         """Sets a parameter of the speech recognition engine. Note that when the ASR engine language is set to Chinese, no parameter can be set. The parameters that can be set and the corresponding values are: "Sensitivity" - Values : range is [0.0; 1.0]. "Timeout" - Values :  default values 3000 ms. Timeout for the remote recognition "MinimumTrailingSilence" : Values : 0 (no) or 1 (yes) - Applies a High-Pass filter on the input signal - default value is 0.
 
         :param str paramName: Name of the parameter.
         :param float paramValue: Value of the parameter.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setParameter(paramName, paramValue)
 
-    @lazy_init
     def setParameter2(self, paramName, paramValue):
         """Sets a parameter of the speech recognition engine. Note that when the ASR engine language is set to Chinese, no parameter can be set. The parameters that can be set and the corresponding values are: "Sensitivity" - Values : range is [0.0; 1.0]. "Timeout" - Values :  default values 3000 ms. Timeout for the remote recognition "MinimumTrailingSilence" : Values : 0 (no) or 1 (yes) - Applies a High-Pass filter on the input signal - default value is 0.
 
         :param str paramName: Name of the parameter.
         :param bool paramValue: Value of the parameter.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setParameter(paramName, paramValue)
 
-    @lazy_init
     def setVisualExpression(self, setOrNot):
         """Enables or disables the leds animations showing the state of the recognition engine during the recognition process.
 
         :param bool setOrNot: Enable (true) or disable it (false).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setVisualExpression(setOrNot)
 
-    @lazy_init
     def setVisualExpressionMode(self, mode):
         """Sets the LED animation mode
 
         :param int mode: animation mode: 0: deactivated, 1: eyes, 2: ears, 3: full
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setVisualExpressionMode(mode)
 
-    @lazy_init
     def setVocabulary(self, vocabulary, enabledWordSpotting):
         """Sets the list of words (vocabulary) that should be recognized by the speech recognition engine.
 
         :param std::vector<std::string> vocabulary: List of words that should be recognized
         :param bool enabledWordSpotting: If disabled, the engine expects to hear one of the specified words, nothing more, nothing less. If enabled, the specified words can be pronounced in the middle of a whole speech stream, the engine will try to spot them.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setVocabulary(vocabulary, enabledWordSpotting)
 
-    @lazy_init
     def setWordListAsVocabulary(self, vocabulary):
         """Sets the list of words (vocabulary) that should be recognized by the speech recognition engine.
 
         :param std::vector<std::string> vocabulary: List of words that should be recognized
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.setWordListAsVocabulary(vocabulary)
 
-    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -377,46 +405,53 @@ class ALSpeechRecognition(object):
         :param int period: Refresh period (in milliseconds) if relevant.
         :param float precision: Precision of the extractor if relevant.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.subscribe(name, period, precision)
 
-    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
         :param str name: Name of the module which subscribes.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.subscribe(name)
 
-    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
         :param str name: Name of the module which had subscribed.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.unsubscribe(name)
 
-    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param int period: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.updatePeriod(name, period)
 
-    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param float precision: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.updatePrecision(name, precision)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALSpeechRecognition")
         return self.proxy.version()

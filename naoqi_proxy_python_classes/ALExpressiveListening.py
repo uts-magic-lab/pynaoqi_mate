@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALExpressiveListening")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALExpressiveListening(object):
     def __init__(self):
@@ -26,108 +14,122 @@ class ALExpressiveListening(object):
     def force_connect(self):
         self.proxy = ALProxy("ALExpressiveListening")
 
-    @lazy_init
     def getParameter(self, parameter):
         """Get the specified parameter.
 
         :param str parameter: Name of the parameter.  "MinTimeBeforeFirstNod" : Minimum time (in seconds) before first nod.  "MaxTimeBeforeFirstNod" : Maximum time (in seconds) before first nod.  "MinTimeBetweenNods" : Minimum time (in seconds) between two nods.  "MaxTimeBetweenNods" : Maximum time (in seconds) between two nods.  "SpeedNods" : Speed of head moves when nodding  "SpeedServoing" : Speed of head moves when servoing.  "FrameRateTracking3D" : 3D tracking's framerate.  "FrameRateTracking2D" : 2D tracking's framerate.  "NobodyFoundTimeOut" : timeout to send peopleLeft event when no blob isfound  "AmplitudeNod" : amplitude of the nod (angle made by Up and Down positions), in degree  "AmplitudeYawTracking" : max absolute value for head yaw in tracking, in degrees
         :returns AL::ALValue: ALValue format for required parameter
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.getParameter(parameter)
 
-    @lazy_init
     def isListening(self):
         """Get the status (started or not) of the module.
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.isListening()
 
-    @lazy_init
     def isNoddingEnabled(self):
         """Get status enabled/disabled for Nodding
 
         :returns bool: Boolean value for status enabled/disabled
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.isNoddingEnabled()
 
-    @lazy_init
     def isPaused(self):
         """Get the pause status of the module.
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.isPaused()
 
-    @lazy_init
     def isTracking3DEnabled(self):
         """Get status enabled/disabled for tracking.
 
         :returns bool: Boolean value for status enabled/disabled
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.isTracking3DEnabled()
 
-    @lazy_init
     def pauseListening(self):
         """Pause Expressive Listening.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.pauseListening()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.ping()
 
-    @lazy_init
     def resumeListening(self):
         """Resume Expressive Listening.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.resumeListening()
 
-    @lazy_init
     def setNoddingEnabled(self, enable):
         """Enable/Disable nodding.
 
         :param bool enable: Boolean value: true to enable, false to disable.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.setNoddingEnabled(enable)
 
-    @lazy_init
     def setParameter(self, parameter, value):
         """Set the specified parameter.
 
         :param str parameter: Name of the parameter.  "MinTimeBeforeFirstNod" : Minimum time (in seconds) before first nod.  "MaxTimeBeforeFirstNod" : Maximum time (in seconds) before first nod.  "MinTimeBetweenNods" : Minimum time (in seconds) between two nods.  "MaxTimeBetweenNods" : Maximum time (in seconds) between two nods.  "SpeedNods" : Speed of head moves when nodding  "SpeedServoing" : Speed of head moves when servoing.  "FrameRateTracking3D" : 3D tracking's framerate.  "FrameRateTracking2D" : 2D tracking's framerate.  "NobodyFoundTimeOut" : timeout to send peopleLeft event when no blob isfound  "AmplitudeNod" : amplitude of the nod (angle made by Up and Down positions), in degree  "AmplitudeYawTracking" : max absolute value for head yaw in tracking, in degrees
         :param AL::ALValue value: "MinTimeBeforeFirstNod" : Float in range [0;5]  "MaxTimeBeforeFirstNod" : Float in range [0;5]  "MinTimeBetweenNods" : Float in range [0;5]  "MaxTimeBetweenNods" : Float in range [0;5]  "SpeedNods" : Float in range [0;1]  "SpeedServoing" : Float in range [0;1]  "FrameRateTracking3D" : Float in range [0.1;30]  "FrameRateTracking2D" : Float in range [0.1;30]  "NobodyFoundTimeOut" : Float > 0  "AmplitudeNod" : Float in range [0;45]  "AmplitudeYawTracking" : Float in range [10;120]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.setParameter(parameter, value)
 
-    @lazy_init
     def setTracking3DEnabled(self, enable):
         """Enable/Disable tracking.
 
         :param bool enable: Boolean value: true to enable, false to disable.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.setTracking3DEnabled(enable)
 
-    @lazy_init
     def startListening(self):
         """Start Expressive Listening.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.startListening()
 
-    @lazy_init
     def stopListening(self):
         """Stop Expressive Listening.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.stopListening()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
         return self.proxy.version()

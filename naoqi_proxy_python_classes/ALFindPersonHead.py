@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALFindPersonHead")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALFindPersonHead(object):
     def __init__(self):
@@ -26,70 +14,79 @@ class ALFindPersonHead(object):
     def force_connect(self):
         self.proxy = ALProxy("ALFindPersonHead")
 
-    @lazy_init
     def getTrackingDistance(self):
         """Gets the distance (in meters) for the tracking
 
         :returns float: Current tracking distance (in meters)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.getTrackingDistance()
 
-    @lazy_init
     def getVerticalOffset(self):
         """Sets the value of vertical offset (in meters) for the blob tracker
 
         :returns float: Current vertical offset of the blob tracker
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.getVerticalOffset()
 
-    @lazy_init
     def isSearching(self):
         """Tells if the module is running or not.
 
         :returns bool: True if the module is running, False if not.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.isSearching()
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.ping()
 
-    @lazy_init
     def setTrackingDistance(self, distance):
         """Sets the distance (in meters) for the tracking
 
         :param float distance: New value (in meters)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.setTrackingDistance(distance)
 
-    @lazy_init
     def setVerticalOffset(self, value):
         """Sets the value of vertical offset (in meters) for the blob tracker
 
         :param float value: New vertical offset (in meters), added if positive, substracted if negative
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.setVerticalOffset(value)
 
-    @lazy_init
     def startSearch(self):
         """Starts the module's process, the events are then raised.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.startSearch()
 
-    @lazy_init
     def stopSearch(self):
         """Stops the module's process, the events are not raised anymore.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.stopSearch()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALFindPersonHead")
         return self.proxy.version()

@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALInfrared")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALInfrared(object):
     def __init__(self):
@@ -26,37 +14,40 @@ class ALInfrared(object):
     def force_connect(self):
         self.proxy = ALProxy("ALInfrared")
 
-    @lazy_init
     def confRemoteRecordSave(self):
         """Rewrite the LIRC daemon configuration file (lircd.conf) with everyremotes configuration concatenated, and reload it in LIRC daemons
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.confRemoteRecordSave()
 
-    @lazy_init
     def initReception(self, RepeatThreshold):
         """Init IR reception (connect as a client to the LIRC daemon).
 
         :param int RepeatThreshold: Give the keep-pressing threshold after which the repetition of a key is taken into consideration.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.initReception(RepeatThreshold)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.ping()
 
-    @lazy_init
     def send32(self, Data_IR):
         """Send 4 octets by IR.
 
         :param str Data_IR: 4 octets to send through IR.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.send32(Data_IR)
 
-    @lazy_init
     def send322(self, Octet1, Octet2, Octet3, Octet4):
         """Send 4 octets by IR.
 
@@ -65,34 +56,38 @@ class ALInfrared(object):
         :param int Octet3: Octet 3 to send through IR.
         :param int Octet4: Octet 4 to send through IR.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.send32(Octet1, Octet2, Octet3, Octet4)
 
-    @lazy_init
     def send8(self, Octet):
         """Send 1 octet by IR.
 
         :param int Octet: octet to send through IR.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.send8(Octet)
 
-    @lazy_init
     def sendIpAddress(self, IP):
         """Send an IP by IR.
 
         :param str IP: IP adress to send through IR.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.sendIpAddress(IP)
 
-    @lazy_init
     def sendRemoteKey(self, Remote, Key):
         """Simulate a remote control (Nao as a remote control).
 
         :param str Remote: IR remote control name.
         :param str Key: IR remote control key name.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.sendRemoteKey(Remote, Key)
 
-    @lazy_init
     def sendRemoteKeyWithTime(self, Remote, Key, pTimeMs):
         """Simulate a remote control (Nao as a remote control).
 
@@ -100,12 +95,15 @@ class ALInfrared(object):
         :param str Key: IR remote control key name.
         :param int pTimeMs: The time in ms when the remote key must be send. 0 deals like sendRemoteKey
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.sendRemoteKeyWithTime(Remote, Key, pTimeMs)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALInfrared")
         return self.proxy.version()

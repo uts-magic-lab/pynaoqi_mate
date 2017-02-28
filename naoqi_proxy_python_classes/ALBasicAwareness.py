@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALBasicAwareness")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALBasicAwareness(object):
     def __init__(self):
@@ -26,121 +14,136 @@ class ALBasicAwareness(object):
     def force_connect(self):
         self.proxy = ALProxy("ALBasicAwareness")
 
-    @lazy_init
     def engagePerson(self, engagePerson):
         """Force Engage Person.
 
         :param int engagePerson: ID of the person as found in PeoplePerception.
         :returns bool: true if the robot succeeded to engage the person, else false.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.engagePerson(engagePerson)
 
-    @lazy_init
     def getEngagementMode(self):
         """Set engagement mode.
 
         :returns str: Name of current engagement mode as a string
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.getEngagementMode()
 
-    @lazy_init
     def getParameter(self, paramName):
         """Get the specified parameter.
 
         :param str paramName: "ServoingSpeed" : Speed of servoing head moves, as fraction of max speed  "LookStimulusSpeed" : Speed of head moves when looking at a stimulus, as fraction of max speed  "LookBackSpeed" : Speed of head moves when looking back to previous position, as fraction of max speed  "LookDownSpeed" : Speed of head moves when looking down to check for children, as fraction of max speed  "NobodyFoundTimeOut" : timeout to send HumanLost event when no blob is found, in seconds  "MinTimeTracking" : Minimum Time for the robot to be focused on someone, without listening to other stimuli, in seconds  "TimeSleepBeforeResumeMS" : Slept time before automatically resuming BasicAwareness when an automatic pause has been made, in milliseconds  "TimeOutResetHead" : Timeout to reset the head, in seconds  "AmplitudeYawTracking" : max absolute value for head yaw in tracking, in degrees  "PeoplePerceptionPeriod" : Period for people perception, in milliseconds  "SlowPeoplePerceptionPeriod" : Period for people perception in FullyEngaged mode, in milliseconds  "HeadThreshold" : Yaw threshold for tracking, in degrees  "BodyRotationThreshold" : Angular threshold for BodyRotation tracking mode, in degrees  "BodyRotationThresholdNao" : Angular threshold for BodyRotation tracking mode on Nao, in degrees  "MoveDistanceX" : X Distance for the Move tracking mode, in meters  "MoveDistanceY" : Y Distance for the Move tracking mode, in meters  "MoveAngleTheta" : Angle for the Move tracking mode, in degrees  "MoveThresholdX" : Threshold for the Move tracking mode, in meters  "MoveThresholdY" : Threshold for the Move tracking mode, in meters  "MoveThresholdTheta" : Theta Threshold for the Move tracking mode, in degrees  "MaxDistanceFullyEngaged" : Maximum distance for someone to be tracked for FullyEngaged mode, in meters  "MaxDistanceNotFullyEngaged" : Maximum distance for someone to be tracked for modes different from FullyEngaged, in meters  "MaxHumanSearchTime" : Maximum time to find a human after observing stimulous, in seconds  "DeltaPitchComfortZone" : Pitch width of the comfort zone, in degree  "CenterPitchComfortZone" : Pitch center of the confort zone, in degree  "SoundHeight" : Default Height for sound detection, in meters  "MoveSpeed" : Speed of the robot moves  "MC_Interactive_MinTime" : Minimum time between 2 contextual moves (when the robot is tracking somebody)  "MC_Interactive_MaxOffsetTime" : Maximum time that we can add to MC_Interactive_MinTime (when the robot is tracking somebody)  "MC_Interactive_DistanceXY" : Maximum offset distance in X and Y that the robot can apply when he tracks somebody  "MC_Interactive_MinTheta" : Minimum theta that the robot can apply when he tracks somebody  "MC_Interactive_MaxTheta" : Maximum theta that the robot can apply when he tracks somebody  "MC_Interactive_DistanceHumanRobot" : Distance between the human and the robot  "MC_Interactive_MaxDistanceHumanRobot" : Maximum distance human robot to allow the robot to move (in MoveContextually mode)
         :returns AL::ALValue: ALValue format for required parameter
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.getParameter(paramName)
 
-    @lazy_init
     def getTrackingMode(self):
         """Set tracking mode.
 
         :returns str: Name of current tracking mode as a string
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.getTrackingMode()
 
-    @lazy_init
     def isAwarenessRunning(self):
         """Get the status (started or not) of the module.
 
         :returns bool: Boolean value, true if running else false
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.isAwarenessRunning()
 
-    @lazy_init
     def isStimulusDetectionEnabled(self, stimulusName):
         """Get status enabled/disabled for Stimulus Detection.
 
         :param str stimulusName: Name of the stimulus to check
         :returns bool: Boolean value for status enabled/disabled
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.isStimulusDetectionEnabled(stimulusName)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.ping()
 
-    @lazy_init
     def resetAllParameters(self):
         """Reset all parameters, including enabled/disabled stimulus.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.resetAllParameters()
 
-    @lazy_init
     def setEngagementMode(self, modeName):
         """Set engagement mode.
 
         :param str modeName: Name of the mode
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.setEngagementMode(modeName)
 
-    @lazy_init
     def setParameter(self, paramName, newVal):
         """Set the specified parameter
 
         :param str paramName: "ServoingSpeed" : Speed of servoing head moves, as fraction of max speed  "LookStimulusSpeed" : Speed of head moves when looking at a stimulus, as fraction of max speed  "LookBackSpeed" : Speed of head moves when looking back to previous position, as fraction of max speed  "LookDownSpeed" : Speed of head moves when looking down to check for children, as fraction of max speed  "NobodyFoundTimeOut" : timeout to send HumanLost event when no blob is found, in seconds  "MinTimeTracking" : Minimum Time for the robot to be focused on someone, without listening to other stimuli, in seconds  "TimeSleepBeforeResumeMS" : Slept time before automatically resuming BasicAwareness when an automatic pause has been made, in milliseconds  "TimeOutResetHead" : Timeout to reset the head, in seconds  "AmplitudeYawTracking" : max absolute value for head yaw in tracking, in degrees  "PeoplePerceptionPeriod" : Period for people perception, in milliseconds  "SlowPeoplePerceptionPeriod" : Period for people perception in FullyEngaged mode, in milliseconds  "HeadThreshold" : Yaw threshold for tracking, in degrees  "BodyRotationThreshold" : Angular threshold for BodyRotation tracking mode, in degrees  "BodyRotationThresholdNao" : Angular threshold for BodyRotation tracking mode on Nao, in degrees  "MoveDistanceX" : X Distance for the Move tracking mode, in meters  "MoveDistanceY" : Y Distance for the Move tracking mode, in meters  "MoveAngleTheta" : Angle for the Move tracking mode, in degrees  "MoveThresholdX" : Threshold for the Move tracking mode, in meters  "MoveThresholdY" : Threshold for the Move tracking mode, in meters  "MoveThresholdTheta" : Theta Threshold for the Move tracking mode, in degrees  "MaxDistanceFullyEngaged" : Maximum distance for someone to be tracked for FullyEngaged mode, in meters  "MaxDistanceNotFullyEngaged" : Maximum distance for someone to be tracked for modes different from FullyEngaged, in meters  "MaxHumanSearchTime" : Maximum time to find a human after observing stimulous, in seconds  "DeltaPitchComfortZone" : Pitch width of the comfort zone, in degree  "CenterPitchComfortZone" : Pitch center of the confort zone, in degree  "SoundHeight" : Default Height for sound detection, in meters  "MoveSpeed" : Speed of the robot moves  "MC_Interactive_MinTime" : Minimum time between 2 contextual moves (when the robot is tracking somebody)  "MC_Interactive_MaxOffsetTime" : Maximum time that we can add to MC_Interactive_MinTime (when the robot is tracking somebody)  "MC_Interactive_DistanceXY" : Maximum offset distance in X and Y that the robot can apply when he tracks somebody  "MC_Interactive_MinTheta" : Minimum theta that the robot can apply when he tracks somebody  "MC_Interactive_MaxTheta" : Maximum theta that the robot can apply when he tracks somebody  "MC_Interactive_DistanceHumanRobot" : Distance between the human and the robot  "MC_Interactive_MaxDistanceHumanRobot" : Maximum distance human robot to allow the robot to move (in MoveContextually mode)
         :param AL::ALValue newVal: "ServoingSpeed" : Float in range [0.01;1]  "LookStimulusSpeed" : Float in range [0.01;1]  "LookBackSpeed" : Float in range [0.01;1]  "LookDownSpeed" : Float in range [0.01;1]  "NobodyFoundTimeOut" : Float > 0  "MinTimeTracking" : Float in range [0;20]  "TimeSleepBeforeResumeMS" : Int > 0  "TimeOutResetHead" : Float in range [0;30]  "AmplitudeYawTracking" : Float in range [10;120]  "PeoplePerceptionPeriod" : Int > 1  "SlowPeoplePerceptionPeriod" : Int > 1  "HeadThreshold" : Float in range [0;180]  "BodyRotationThreshold" : Float in range [-180;180]  "BodyRotationThresholdNao" : Float in range [-180;180]  "MoveDistanceX" : Float in range [-5;5]  "MoveDistanceY" : Float in range [-5;5]  "MoveAngleTheta" : Float in range [-180;180]  "MoveThresholdX" : Float in range [0;5]  "MoveThresholdY" : Float in range [0;5]  "MoveThresholdTheta" : Float in range [-180;180]  "MaxDistanceFullyEngaged" : Float in range [0.5;5]  "MaxDistanceNotFullyEngaged" : Float in range [0.5;5]  "MaxHumanSearchTime" : Float in range [0.1;10]  "DeltaPitchComfortZone" : Float in range [0;90]  "CenterPitchComfortZone" : Float in range [-90;90]  "SoundHeight" : Float in range [0;2]  "MoveSpeed" : Float in range [0.1;0.55]  "MC_Interactive_MinTime" : Int in range [0;100]  "MC_Interactive_MaxOffsetTime" : Int in range [0;100]  "MC_Interactive_DistanceXY" : Float in range [0;1]  "MC_Interactive_MinTheta" : Float in range [-40;0]  "MC_Interactive_MaxTheta" : Float in range [0;40]  "MC_Interactive_DistanceHumanRobot" : Float in range [0.1;2]  "MC_Interactive_MaxDistanceHumanRobot" : Float in range [0.1;3]
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.setParameter(paramName, newVal)
 
-    @lazy_init
     def setStimulusDetectionEnabled(self, stimulusName, isStimulusDetectionEnabled):
         """Enable/Disable Stimulus Detection.
 
         :param str stimulusName: Name of the stimulus to enable/disable
         :param bool isStimulusDetectionEnabled: Boolean value: true to enable, false to disable.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.setStimulusDetectionEnabled(stimulusName, isStimulusDetectionEnabled)
 
-    @lazy_init
     def setTrackingMode(self, modeName):
         """Set tracking mode.
 
         :param str modeName: Name of the mode
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.setTrackingMode(modeName)
 
-    @lazy_init
     def startAwareness(self):
         """Start Basic Awareness.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.startAwareness()
 
-    @lazy_init
     def stopAwareness(self):
         """Stop Basic Awareness.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.stopAwareness()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALBasicAwareness")
         return self.proxy.version()

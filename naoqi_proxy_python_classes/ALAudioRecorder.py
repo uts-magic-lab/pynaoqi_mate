@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALAudioRecorder")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALAudioRecorder(object):
     def __init__(self):
@@ -26,15 +14,15 @@ class ALAudioRecorder(object):
     def force_connect(self):
         self.proxy = ALProxy("ALAudioRecorder")
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioRecorder")
         return self.proxy.ping()
 
-    @lazy_init
     def startMicrophonesRecording(self, filename, type, samplerate, channels):
         """This method allows to record the signal collected on the nao's microphones. You can choose to record only the front microphone in a ogg file, or the 4 microphones in a wav file.
 
@@ -43,18 +31,22 @@ class ALAudioRecorder(object):
         :param int samplerate: Required sample rate.
         :param AL::ALValue channels: vector of booleans.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioRecorder")
         return self.proxy.startMicrophonesRecording(filename, type, samplerate, channels)
 
-    @lazy_init
     def stopMicrophonesRecording(self):
         """This method stops the recording of the sound collected by the microphones.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioRecorder")
         return self.proxy.stopMicrophonesRecording()
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioRecorder")
         return self.proxy.version()

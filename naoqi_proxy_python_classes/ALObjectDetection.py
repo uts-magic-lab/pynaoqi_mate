@@ -6,18 +6,6 @@
 from naoqi import ALProxy
 
 
-# To not instance network connections until we actually want to
-# do a proxy call
-def lazy_init(fn):
-    def init_if_needed(self, *args, **kwargs):
-        if not self.proxy:
-            self.proxy = ALProxy("ALObjectDetection")
-        return fn(self, *args, **kwargs)
-    # Preserve method name and docs
-    init_if_needed.__name__ = fn.__name__
-    init_if_needed.__doc__ = fn.__doc__
-    return init_if_needed
-
 
 class ALObjectDetection(object):
     def __init__(self):
@@ -26,279 +14,311 @@ class ALObjectDetection(object):
     def force_connect(self):
         self.proxy = ALProxy("ALObjectDetection")
 
-    @lazy_init
     def analyzeFile(self, strImageFilename):
         """Detect things from image file, using previously set cascade
 
         :param str strImageFilename: filename containing file
         :returns AL::ALValue: list of found area: [[x,y,w,h],neighbours,[headX,headY],(strCreatedCroppedFilename, empty or None if not applicable),(opencv image pointer (not dev)(empty or NONE))] neighbours give an idea of the confidence, it's an int roughly in [0..60]. strCreatedCroppedFilename: filename created containing objects (see saveDetected).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.analyzeFile(strImageFilename)
 
-    @lazy_init
     def getActiveCamera(self):
         """
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getActiveCamera()
 
-    @lazy_init
     def getCascadeFile(self):
         """Returns the filename of the cascade file used for detection.
 
         :returns AL::ALValue: Name of the cascade file.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getCascadeFile()
 
-    @lazy_init
     def getCropMargin(self):
         """Returns the crop margins currently set for saving the detected objects' images.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getCropMargin()
 
-    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getCurrentPeriod()
 
-    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
         :returns float: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getCurrentPrecision()
 
-    @lazy_init
     def getFrameRate(self):
         """
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getFrameRate()
 
-    @lazy_init
     def getMinNeighbors(self):
         """Returns the minimum number of neighbors set for the algorithm.
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getMinNeighbors()
 
-    @lazy_init
     def getMinSize(self):
         """Returns the minimum object size currently set for detection
 
         :returns AL::ALValue: Minimum horizontal and vertical size
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getMinSize()
 
-    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
         :param str name: Name of the module which has subscribed.
         :returns int: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getMyPeriod(name)
 
-    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
         :param str name: name of the module which has subscribed
         :returns float: precision of the extractor
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getMyPrecision(name)
 
-    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
         :returns std::vector<std::string>: Array of values updated by this extractor in ALMemory
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getOutputNames()
 
-    @lazy_init
     def getResolution(self):
         """
 
         :returns int: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getResolution()
 
-    @lazy_init
     def getSavePath(self):
         """Returns the path currently set for saving the detected objects' images.
 
         :returns AL::ALValue: Path where to save images.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getSavePath()
 
-    @lazy_init
     def getScaleFactor(self):
         """Returns used scale factor.
 
         :returns AL::ALValue: Used scale factor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getScaleFactor()
 
-    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
         :returns AL::ALValue: Array of names and parameters of all subscribers.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.getSubscribersInfo()
 
-    @lazy_init
     def isDebugEnabled(self):
         """Returns true if debug is enabled, else returns false
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.isDebugEnabled()
 
-    @lazy_init
     def isPaused(self):
         """
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.isPaused()
 
-    @lazy_init
     def isProcessing(self):
         """
 
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.isProcessing()
 
-    @lazy_init
     def isSavingEnabled(self):
         """Returns true if saving is enabled, else returns false
 
         :returns AL::ALValue: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.isSavingEnabled()
 
-    @lazy_init
     def pause(self, status):
         """
 
         :param bool status: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.pause(status)
 
-    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
         :returns bool: returns true
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.ping()
 
-    @lazy_init
     def setActiveCamera(self, cameraID):
         """
 
         :param int cameraID: arg
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setActiveCamera(cameraID)
 
-    @lazy_init
     def setCascadeFile(self, strCascadeFilename):
         """set the cascade file to use
 
         :param str strCascadeFilename: arg
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setCascadeFile(strCascadeFilename)
 
-    @lazy_init
     def setCropMargin(self, nCropWidthMargin, nCropHeightMargin):
         """Set the crop margins for saving the detected objects' images.
 
         :param int nCropWidthMargin: Margin around object (default: 16)
         :param int nCropHeightMargin: (default:40)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setCropMargin(nCropWidthMargin, nCropHeightMargin)
 
-    @lazy_init
     def setDebugEnabled(self, bNewState):
         """Enable some outputting, helping testing and understanding.
 
         :param bool bNewState: true to enable debug mode.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setDebugEnabled(bNewState)
 
-    @lazy_init
     def setFrameRate(self, value):
         """
 
         :param int value: arg
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setFrameRate(value)
 
-    @lazy_init
     def setMinNeighbors(self, nMinNeighbors):
         """Sets the minimum number of underlying detections (acts like a confidence threshold)
 
         :param int nMinNeighbors: new parameter to use (default: 2)
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setMinNeighbors(nMinNeighbors)
 
-    @lazy_init
     def setMinSize(self, nMinSizeX, nMinSizeY):
         """Sets the minimum object size for detection
 
         :param int nMinSizeX: Horizontal size
         :param int nMinSizeY: Vertical size
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setMinSize(nMinSizeX, nMinSizeY)
 
-    @lazy_init
     def setResolution(self, resolution):
         """
 
         :param int resolution: arg
         :returns bool: 
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setResolution(resolution)
 
-    @lazy_init
     def setSavePath(self, strDestinationPath):
         """Set the path where to save the detected objects' images.
 
         :param str strDestinationPath: Path where to save images.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setSavePath(strDestinationPath)
 
-    @lazy_init
     def setSavingEnabled(self, bNewState):
         """Enable or disable the saving of each detected object's image.
 
         :param bool bNewState: true to enable saving images.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setSavingEnabled(bNewState)
 
-    @lazy_init
     def setScaleFactor(self, rScaleFactor):
         """change some cascade parameter(s) (will be updated on the fly on next frame)
 
         :param float rScaleFactor: new parameter to use
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.setScaleFactor(rScaleFactor)
 
-    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData(\"keyName\"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -306,46 +326,53 @@ class ALObjectDetection(object):
         :param int period: Refresh period (in milliseconds) if relevant.
         :param float precision: Precision of the extractor if relevant.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.subscribe(name, period, precision)
 
-    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData(\"keyName\"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
         :param str name: Name of the module which subscribes.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.subscribe(name)
 
-    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
         :param str name: Name of the module which had subscribed.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.unsubscribe(name)
 
-    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param int period: Refresh period (in milliseconds).
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.updatePeriod(name, period)
 
-    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
         :param str name: Name of the module which has subscribed.
         :param float precision: Precision of the extractor.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.updatePrecision(name, precision)
 
-    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
         return self.proxy.version()
