@@ -171,4 +171,4 @@ And has the methods (ignoring constructors and destructors):
                            ...
 ```
 
-Note that [some methods are "blacklisted"](https://github.com/uts-magic-lab/pynaoqi_mate/blob/master/generate_python_classes.py#L192-L205) in the generator as they have no use in Python or are relatively dangerous to be used by accident.
+Note that [some methods are "blacklisted"](https://github.com/uts-magic-lab/pynaoqi_mate/blob/master/generate_python_classes.py#L195-L208) in the generator as they have no use in Python or are relatively dangerous to be used by accident.
