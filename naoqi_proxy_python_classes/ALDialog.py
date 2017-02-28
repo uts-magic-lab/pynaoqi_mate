@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALDialog")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALDialog(object):
     def __init__(self):
-        self.proxy = ALProxy("ALDialog")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def activateTag(self, arg1, arg2):
         """activate a tag
 
@@ -25,6 +32,7 @@ class ALDialog(object):
         """
         return self.proxy.activateTag(arg1, arg2)
 
+    @lazy_init
     def activateTopic(self, arg1):
         """Activate a topic
 
@@ -32,6 +40,7 @@ class ALDialog(object):
         """
         return self.proxy.activateTopic(arg1)
 
+    @lazy_init
     def addBlockingEvent(self, arg1):
         """Callback when speech recognition recognized a word
 
@@ -39,6 +48,7 @@ class ALDialog(object):
         """
         return self.proxy.addBlockingEvent(arg1)
 
+    @lazy_init
     def applicationBlackList(self, arg1):
         """Black list a list of application
 
@@ -46,16 +56,19 @@ class ALDialog(object):
         """
         return self.proxy.applicationBlackList(arg1)
 
+    @lazy_init
     def clearConcepts(self):
         """clear concepts in DB
         """
         return self.proxy.clearConcepts()
 
+    @lazy_init
     def closeSession(self):
         """Close the session
         """
         return self.proxy.closeSession()
 
+    @lazy_init
     def compilationFinished(self, arg1, arg2, arg3):
         """compilationFinished
 
@@ -65,11 +78,13 @@ class ALDialog(object):
         """
         return self.proxy.compilationFinished(arg1, arg2, arg3)
 
+    @lazy_init
     def compileAll(self):
         """compile all for ASR
         """
         return self.proxy.compileAll()
 
+    @lazy_init
     def connectionChanged(self, arg1, arg2, arg3):
         """Callback when remote connection changes
 
@@ -79,6 +94,7 @@ class ALDialog(object):
         """
         return self.proxy.connectionChanged(arg1, arg2, arg3)
 
+    @lazy_init
     def controlEngine(self, arg1, arg2):
         """controlEngine
 
@@ -88,6 +104,7 @@ class ALDialog(object):
         """
         return self.proxy.controlEngine(arg1, arg2)
 
+    @lazy_init
     def deactivateTag(self, arg1, arg2):
         """deactivate a tag
 
@@ -96,6 +113,7 @@ class ALDialog(object):
         """
         return self.proxy.deactivateTag(arg1, arg2)
 
+    @lazy_init
     def deactivateTopic(self, arg1):
         """Activate a topic
 
@@ -103,11 +121,13 @@ class ALDialog(object):
         """
         return self.proxy.deactivateTopic(arg1)
 
+    @lazy_init
     def deleteSerializationFiles(self):
         """delete serializations files .ser .ini .bnf .lcf
         """
         return self.proxy.deleteSerializationFiles()
 
+    @lazy_init
     def enableCategory(self, arg1):
         """enableCategory
 
@@ -115,6 +135,7 @@ class ALDialog(object):
         """
         return self.proxy.enableCategory(arg1)
 
+    @lazy_init
     def enableLogAudio(self, arg1):
         """enable sending log audio (recorded conversation) to the cloud
 
@@ -122,6 +143,7 @@ class ALDialog(object):
         """
         return self.proxy.enableLogAudio(arg1)
 
+    @lazy_init
     def enableSendingLogToCloud(self, arg1):
         """let the robot send log the cloud
 
@@ -129,6 +151,7 @@ class ALDialog(object):
         """
         return self.proxy.enableSendingLogToCloud(arg1)
 
+    @lazy_init
     def enableTriggerSentences(self, arg1):
         """enableTriggerSentences
 
@@ -136,6 +159,7 @@ class ALDialog(object):
         """
         return self.proxy.enableTriggerSentences(arg1)
 
+    @lazy_init
     def endOfUtteranceCallback(self):
         """End of utterance callback
 
@@ -143,6 +167,7 @@ class ALDialog(object):
         """
         return self.proxy.endOfUtteranceCallback()
 
+    @lazy_init
     def eventReceived(self, arg1, arg2, arg3):
         """Callback when dialog received a event
 
@@ -152,11 +177,7 @@ class ALDialog(object):
         """
         return self.proxy.eventReceived(arg1, arg2, arg3)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def forceInput(self, arg1):
         """Give a sentence to the dialog and get the answer
 
@@ -164,11 +185,13 @@ class ALDialog(object):
         """
         return self.proxy.forceInput(arg1)
 
+    @lazy_init
     def forceOutput(self):
         """Get a proposal
         """
         return self.proxy.forceOutput()
 
+    @lazy_init
     def generateSentences(self, arg1, arg2, arg3):
         """Generate sentences
 
@@ -178,6 +201,7 @@ class ALDialog(object):
         """
         return self.proxy.generateSentences(arg1, arg2, arg3)
 
+    @lazy_init
     def getASRConfidenceThreshold(self):
         """Get the minimum confidence required to recognize words
 
@@ -185,6 +209,7 @@ class ALDialog(object):
         """
         return self.proxy.getASRConfidenceThreshold()
 
+    @lazy_init
     def getActivatedTopics(self):
         """Get activated topics
 
@@ -192,6 +217,7 @@ class ALDialog(object):
         """
         return self.proxy.getActivatedTopics()
 
+    @lazy_init
     def getAllLoadedTopics(self):
         """Load precompiled file
 
@@ -199,13 +225,7 @@ class ALDialog(object):
         """
         return self.proxy.getAllLoadedTopics()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
@@ -213,6 +233,7 @@ class ALDialog(object):
         """
         return self.proxy.getCurrentPeriod()
 
+    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
@@ -220,6 +241,7 @@ class ALDialog(object):
         """
         return self.proxy.getCurrentPrecision()
 
+    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
@@ -227,6 +249,7 @@ class ALDialog(object):
         """
         return self.proxy.getEventList()
 
+    @lazy_init
     def getFocus(self):
         """Give focus to a dialog
 
@@ -234,6 +257,7 @@ class ALDialog(object):
         """
         return self.proxy.getFocus()
 
+    @lazy_init
     def getLoadedTopics(self, arg1):
         """Load precompiled file
 
@@ -242,6 +266,7 @@ class ALDialog(object):
         """
         return self.proxy.getLoadedTopics(arg1)
 
+    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
@@ -249,28 +274,7 @@ class ALDialog(object):
         """
         return self.proxy.getMemoryKeyList()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
@@ -279,6 +283,7 @@ class ALDialog(object):
         """
         return self.proxy.getMyPeriod(name)
 
+    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
@@ -287,6 +292,7 @@ class ALDialog(object):
         """
         return self.proxy.getMyPrecision(name)
 
+    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
@@ -294,6 +300,7 @@ class ALDialog(object):
         """
         return self.proxy.getOutputNames()
 
+    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
@@ -301,14 +308,7 @@ class ALDialog(object):
         """
         return self.proxy.getSubscribersInfo()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getUserData(self, arg1, arg2):
         """get user data from dialog database
 
@@ -318,6 +318,7 @@ class ALDialog(object):
         """
         return self.proxy.getUserData(arg1, arg2)
 
+    @lazy_init
     def getUserDataList(self, arg1):
         """get user data list from dialog database
 
@@ -326,6 +327,7 @@ class ALDialog(object):
         """
         return self.proxy.getUserDataList(arg1)
 
+    @lazy_init
     def getUserList(self):
         """get user list from dialog database
 
@@ -333,6 +335,7 @@ class ALDialog(object):
         """
         return self.proxy.getUserList()
 
+    @lazy_init
     def gotoTag(self, arg1, arg2):
         """Callback when ASR status changes
 
@@ -341,6 +344,7 @@ class ALDialog(object):
         """
         return self.proxy.gotoTag(arg1, arg2)
 
+    @lazy_init
     def gotoTopic(self, arg1):
         """Set the focus to a topic and make a proposal
 
@@ -348,6 +352,7 @@ class ALDialog(object):
         """
         return self.proxy.gotoTopic(arg1)
 
+    @lazy_init
     def insertUserData(self, arg1, arg2, arg3):
         """insert user data into dialog database
 
@@ -357,6 +362,7 @@ class ALDialog(object):
         """
         return self.proxy.insertUserData(arg1, arg2, arg3)
 
+    @lazy_init
     def isContentNeedsUpdate(self):
         """True if new content was installed
 
@@ -364,14 +370,7 @@ class ALDialog(object):
         """
         return self.proxy.isContentNeedsUpdate()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isSendingLogToCloud(self):
         """check if the robot is sending the log to the cloud
 
@@ -379,6 +378,7 @@ class ALDialog(object):
         """
         return self.proxy.isSendingLogToCloud()
 
+    @lazy_init
     def loadTopic(self, arg1):
         """Load a topic
 
@@ -387,6 +387,7 @@ class ALDialog(object):
         """
         return self.proxy.loadTopic(arg1)
 
+    @lazy_init
     def noPick(self, arg1):
         """noPick
 
@@ -394,6 +395,7 @@ class ALDialog(object):
         """
         return self.proxy.noPick(arg1)
 
+    @lazy_init
     def openSession(self, arg1):
         """Open a session
 
@@ -401,13 +403,7 @@ class ALDialog(object):
         """
         return self.proxy.openSession(arg1)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def packageInstalled(self, arg1, arg2, arg3):
         """packageInstalled
 
@@ -417,6 +413,7 @@ class ALDialog(object):
         """
         return self.proxy.packageInstalled(arg1, arg2, arg3)
 
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -424,11 +421,13 @@ class ALDialog(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def releaseEngine(self):
         """releaseEngine
         """
         return self.proxy.releaseEngine()
 
+    @lazy_init
     def removeUserData(self, arg1):
         """remove a user from the database
 
@@ -436,16 +435,19 @@ class ALDialog(object):
         """
         return self.proxy.removeUserData(arg1)
 
+    @lazy_init
     def resetAll(self):
         """fallback
         """
         return self.proxy.resetAll()
 
+    @lazy_init
     def runDialog(self):
         """run main dialog
         """
         return self.proxy.runDialog()
 
+    @lazy_init
     def setASRConfidenceThreshold(self, arg1):
         """Set the minimum confidence required to recognize words
 
@@ -453,6 +455,7 @@ class ALDialog(object):
         """
         return self.proxy.setASRConfidenceThreshold(arg1)
 
+    @lazy_init
     def setAnimatedSpeechConfiguration(self, arg1):
         """Set the configuration of animated speech for the current dialog.
 
@@ -460,6 +463,7 @@ class ALDialog(object):
         """
         return self.proxy.setAnimatedSpeechConfiguration(arg1)
 
+    @lazy_init
     def setConcept(self, conceptName, language, content):
         """Set the content of a dynamic concept
 
@@ -469,6 +473,7 @@ class ALDialog(object):
         """
         return self.proxy.setConcept(conceptName, language, content)
 
+    @lazy_init
     def setConcept2(self, conceptName, language, content, store):
         """Set the content of a dynamic concept
 
@@ -479,6 +484,7 @@ class ALDialog(object):
         """
         return self.proxy.setConcept(conceptName, language, content, store)
 
+    @lazy_init
     def setConceptKeepInCache(self, arg1, arg2, arg3):
         """set the content of a dynamic concept
 
@@ -488,6 +494,7 @@ class ALDialog(object):
         """
         return self.proxy.setConceptKeepInCache(arg1, arg2, arg3)
 
+    @lazy_init
     def setDelay(self, arg1, arg2):
         """change event's delay
 
@@ -496,6 +503,7 @@ class ALDialog(object):
         """
         return self.proxy.setDelay(arg1, arg2)
 
+    @lazy_init
     def setFocus(self, arg1):
         """Give focus to a dialog
 
@@ -503,6 +511,7 @@ class ALDialog(object):
         """
         return self.proxy.setFocus(arg1)
 
+    @lazy_init
     def setLanguage(self, arg1):
         """setLanguage
 
@@ -510,6 +519,7 @@ class ALDialog(object):
         """
         return self.proxy.setLanguage(arg1)
 
+    @lazy_init
     def setNumberOfScopes(self, arg1):
         """Set how many scopes remains open
 
@@ -517,6 +527,7 @@ class ALDialog(object):
         """
         return self.proxy.setNumberOfScopes(arg1)
 
+    @lazy_init
     def setPushMode(self, arg1):
         """Set push mode
 
@@ -524,6 +535,7 @@ class ALDialog(object):
         """
         return self.proxy.setPushMode(arg1)
 
+    @lazy_init
     def setVariablePath(self, arg1, arg2, arg3):
         """setVariablePath
 
@@ -533,6 +545,7 @@ class ALDialog(object):
         """
         return self.proxy.setVariablePath(arg1, arg2, arg3)
 
+    @lazy_init
     def startApp(self, arg1, arg2, arg3):
         """startUpdate
 
@@ -542,11 +555,13 @@ class ALDialog(object):
         """
         return self.proxy.startApp(arg1, arg2, arg3)
 
+    @lazy_init
     def startPush(self):
         """Start push mode
         """
         return self.proxy.startPush()
 
+    @lazy_init
     def startUpdate(self, arg1, arg2, arg3):
         """startUpdate
 
@@ -556,6 +571,7 @@ class ALDialog(object):
         """
         return self.proxy.startUpdate(arg1, arg2, arg3)
 
+    @lazy_init
     def statusChanged(self, arg1, arg2, arg3):
         """Callback when ASR status changes
 
@@ -565,23 +581,19 @@ class ALDialog(object):
         """
         return self.proxy.statusChanged(arg1, arg2, arg3)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopDialog(self):
         """stop main dialog
         """
         return self.proxy.stopDialog()
 
+    @lazy_init
     def stopPush(self):
         """Stop push mode
         """
         return self.proxy.stopPush()
 
+    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -591,6 +603,7 @@ class ALDialog(object):
         """
         return self.proxy.subscribe(name, period, precision)
 
+    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -598,6 +611,7 @@ class ALDialog(object):
         """
         return self.proxy.subscribe(name)
 
+    @lazy_init
     def tell(self, arg1):
         """Give a sentence to the dialog and get the answer
 
@@ -605,6 +619,7 @@ class ALDialog(object):
         """
         return self.proxy.tell(arg1)
 
+    @lazy_init
     def unloadTopic(self, arg1):
         """unload a dialog
 
@@ -612,6 +627,7 @@ class ALDialog(object):
         """
         return self.proxy.unloadTopic(arg1)
 
+    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
@@ -619,6 +635,7 @@ class ALDialog(object):
         """
         return self.proxy.unsubscribe(name)
 
+    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
@@ -627,6 +644,7 @@ class ALDialog(object):
         """
         return self.proxy.updatePeriod(name, period)
 
+    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
@@ -635,6 +653,7 @@ class ALDialog(object):
         """
         return self.proxy.updatePrecision(name, precision)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
@@ -642,15 +661,7 @@ class ALDialog(object):
         """
         return self.proxy.version()
 
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)
-
+    @lazy_init
     def wordRecognized(self, arg1, arg2, arg3):
         """Callback when speech recognition recognized a word
 
@@ -660,6 +671,7 @@ class ALDialog(object):
         """
         return self.proxy.wordRecognized(arg1, arg2, arg3)
 
+    @lazy_init
     def wordsRecognizedCallback(self, arg1, arg2):
         """Get loaded dialog list
 

@@ -80,15 +80,29 @@ header_skeleton = """#!/usr/bin/env python
 
 from naoqi import ALProxy
 
+
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("PROXYCLASSNAME")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
 """
 
 class_skeleton = """
 class PROXYCLASSNAME(object):
     def __init__(self):
-        self.proxy = ALProxy("PROXYCLASSNAME")
+        self.proxy = None
 """
 
 method_skeleton = '''
+    @lazy_init
     def METHOD_NAME(METHOD_ARGS):
         """DOCSTRING
         """
@@ -96,9 +110,11 @@ method_skeleton = '''
 '''
 
 
-def create_python_class(header_file, class_name, methods, path):
+def create_python_class(header_file, class_name, methods, path,
+                        ignore_method_names=[]):
     with open(path + class_name + ".py", 'w') as f:
         header = header_skeleton.replace('HEADERFILE', header_file)
+        header = header.replace('PROXYCLASSNAME', class_name)
         f.write(header)
 
         class_code = class_skeleton.replace('PROXYCLASSNAME', class_name)
@@ -106,6 +122,8 @@ def create_python_class(header_file, class_name, methods, path):
 
         method_names = []
         for m in methods:
+            if m['name'] in ignore_method_names:
+                continue
             # Deal with same-name methods
             # because of different number or type of params
             # adding method_nameX where X is a number starting on 2
@@ -171,6 +189,22 @@ if len(sys.argv) > 1:
 else:
     path = './'
 
+methods_to_ignore = [
+    'exit',  # Unloads the class form the system
+    'getBrokerName',  # Not implemented
+    'getGenericProxy',  # C++ only
+    'getMethodHelp',  # C++ only
+    'getMethodList',  # Returns a list with methods we can't call from Python
+    'getModuleHelp',  # Does nothing
+    'getUsage',  # Only for C++ methods
+    'isRunning',  # Need a task ID to check MAYBE THIS SHOULD STAY
+    'pCall',  # C++ thing
+    'stop',  # C++
+    'proxy',  # C++
+    'wait',  # C++ MAYBE SHOULD STAY?
+]
+
+
 # Actually go and parse all the files
 header_files = glob.glob(path + '*proxy.h')
 for h in header_files:
@@ -232,4 +266,5 @@ for h in header_files:
             methods_list_of_dicts.append(method_dict)
 
     create_python_class(header_file=h, class_name=remote_class_name,
-                        methods=methods_list_of_dicts, path=path)
+                        methods=methods_list_of_dicts, path=path,
+                        ignore_method_names=methods_to_ignore)

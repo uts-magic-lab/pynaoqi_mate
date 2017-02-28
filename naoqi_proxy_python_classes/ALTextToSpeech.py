@@ -6,32 +6,36 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALTextToSpeech")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALTextToSpeech(object):
     def __init__(self):
-        self.proxy = ALProxy("ALTextToSpeech")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def disableNotifications(self):
         """Disables the notifications puted in ALMemory during the synthesis (TextStarted, TextDone, CurrentBookMark, CurrentWord, ...)
         """
         return self.proxy.disableNotifications()
 
+    @lazy_init
     def enableNotifications(self):
         """Enables the notifications puted in ALMemory during the synthesis (TextStarted, TextDone, CurrentBookMark, CurrentWord, ...)
         """
         return self.proxy.enableNotifications()
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def getAvailableLanguages(self):
         """Outputs the languages installed on the system.
 
@@ -39,6 +43,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getAvailableLanguages()
 
+    @lazy_init
     def getAvailableVoices(self):
         """Outputs the available voices. The returned list contains the voice IDs.
 
@@ -46,13 +51,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getAvailableVoices()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getLanguage(self):
         """Returns the language currently used by the text-to-speech engine.
 
@@ -60,6 +59,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getLanguage()
 
+    @lazy_init
     def getLanguageEncoding(self, pLanguage):
         """Returns the encoding that should be used with the specified language.
 
@@ -68,28 +68,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getLanguageEncoding(pLanguage)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getParameter(self, pParameterName):
         """Returns the value of one of the voice parameters. The available parameters are: "pitchShift", "doubleVoice","doubleVoiceLevel" and "doubleVoiceTimeShift"
 
@@ -98,6 +77,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getParameter(pParameterName)
 
+    @lazy_init
     def getSupportedLanguages(self):
         """Outputs all the languages supported (may be installed or not).
 
@@ -105,14 +85,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getSupportedLanguages()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getVoice(self):
         """Returns the voice currently used by the text-to-speech engine.
 
@@ -120,6 +93,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getVoice()
 
+    @lazy_init
     def getVolume(self):
         """Fetches the current volume the text to speech.
 
@@ -127,14 +101,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.getVolume()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def loadVoicePreference(self, pPreferenceName):
         """Loads a set of voice parameters defined in a xml file contained in the preferences folder.The name of the xml file must begin with ALTextToSpeech_Voice_
 
@@ -142,6 +109,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.loadVoicePreference(pPreferenceName)
 
+    @lazy_init
     def locale(self):
         """Get the locale associate to the current language.
 
@@ -149,13 +117,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.locale()
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -163,11 +125,13 @@ class ALTextToSpeech(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def resetSpeed(self):
         """Changes the parameters of the voice. For now, it is only possible to reset the voice speed.
         """
         return self.proxy.resetSpeed()
 
+    @lazy_init
     def say(self, stringToSay):
         """Performs the text-to-speech operations : it takes a std::string as input and outputs a sound in both speakers. String encoding must be UTF8.
 
@@ -175,6 +139,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.say(stringToSay)
 
+    @lazy_init
     def say2(self, stringToSay, language):
         """Performs the text-to-speech operations in a specific language: it takes a std::string as input and outputs a sound in both speakers. String encoding must be UTF8. Once the text is said, the language is set back to its initial value.
 
@@ -183,6 +148,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.say(stringToSay, language)
 
+    @lazy_init
     def sayToFile(self, pStringToSay, pFileName):
         """Performs the text-to-speech operations: it takes a std::string as input and outputs the corresponding audio signal in the specified file.
 
@@ -191,6 +157,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.sayToFile(pStringToSay, pFileName)
 
+    @lazy_init
     def sayToFileAndPlay(self, pStringToSay):
         """This method performs the text-to-speech operations: it takes a std::string, outputs the synthesis resulting audio signal in a file, and then plays the audio file. The file is deleted afterwards. It is useful when you want to perform a short synthesis, when few CPU is available. Do not use it if you want a low-latency synthesis or to synthesize a long std::string.
 
@@ -198,6 +165,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.sayToFileAndPlay(pStringToSay)
 
+    @lazy_init
     def setLanguage(self, pLanguage):
         """Changes the language used by the Text-to-Speech engine. It automatically changes the voice used since each of them is related to a unique language. If you want that change to take effect automatically after reboot of your robot, refer to the robot web page (setting page).
 
@@ -205,6 +173,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.setLanguage(pLanguage)
 
+    @lazy_init
     def setLanguageDefaultVoice(self, Language, Voice):
         """Sets a voice as the default voice for the corresponding language
 
@@ -213,6 +182,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.setLanguageDefaultVoice(Language, Voice)
 
+    @lazy_init
     def setParameter(self, pEffectName, pEffectValue):
         """Changes the parameters of the voice. The available parameters are:   	 pitchShift: applies a pitch shifting to the voice. The value indicates the ratio between the new fundamental frequencies and the old ones (examples: 2.0: an octave above, 1.5: a quint above). Correct range is (1.0 -- 4), or 0 to disable effect.  	 doubleVoice: adds a second voice to the first one. The value indicates the ratio between the second voice fundamental frequency and the first one. Correct range is (1.0 -- 4), or 0 to disable effect   	 doubleVoiceLevel: the corresponding value is the level of the double voice (1.0: equal to the main voice one). Correct range is (0 -- 4).   	 doubleVoiceTimeShift: the corresponding value is the delay between the double voice and the main one. Correct range is (0 -- 0.5)   If the effect value is not available, the effect parameter remains unchanged.
 
@@ -221,6 +191,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.setParameter(pEffectName, pEffectValue)
 
+    @lazy_init
     def setVoice(self, pVoiceID):
         """Changes the voice used by the text-to-speech engine. The voice identifier must belong to the installed voices, that can be listed using the 'getAvailableVoices' method. If the voice is not available, it remains unchanged. No exception is thrown in this case. For the time being, only two voices are available by default : Kenny22Enhanced (English voice) and Julie22Enhanced (French voice)
 
@@ -228,6 +199,7 @@ class ALTextToSpeech(object):
         """
         return self.proxy.setVoice(pVoiceID)
 
+    @lazy_init
     def setVolume(self, volume):
         """Sets the volume of text-to-speech output.
 
@@ -235,30 +207,16 @@ class ALTextToSpeech(object):
         """
         return self.proxy.setVolume(volume)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopAll(self):
         """This method stops the current and all the pending tasks immediately.
         """
         return self.proxy.stopAll()
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

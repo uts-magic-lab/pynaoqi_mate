@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALMotion")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALMotion(object):
     def __init__(self):
-        self.proxy = ALProxy("ALMotion")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def angleInterpolation(self, names, angleLists, timeLists, isAbsolute):
         """Interpolates one or multiple joints to a target angle or along timed trajectories. This is a blocking call.
 
@@ -27,6 +34,7 @@ class ALMotion(object):
         """
         return self.proxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
 
+    @lazy_init
     def angleInterpolationBezier(self, jointNames, times, controlPoints):
         """Interpolates a sequence of timed angles for several motors using bezier control points. This is a blocking call.
 
@@ -36,6 +44,7 @@ class ALMotion(object):
         """
         return self.proxy.angleInterpolationBezier(jointNames, times, controlPoints)
 
+    @lazy_init
     def angleInterpolationWithSpeed(self, names, targetAngles, maxSpeedFraction):
         """Interpolates one or multiple joints to a target angle, using a fraction of max speed. Only one target angle is allowed for each joint. This is a blocking call.
 
@@ -45,6 +54,7 @@ class ALMotion(object):
         """
         return self.proxy.angleInterpolationWithSpeed(names, targetAngles, maxSpeedFraction)
 
+    @lazy_init
     def areNotificationsEnabled(self):
         """Return true if notifications are active.
 
@@ -52,6 +62,7 @@ class ALMotion(object):
         """
         return self.proxy.areNotificationsEnabled()
 
+    @lazy_init
     def areResourcesAvailable(self, resourceNames):
         """Returns true if all the desired resources are available. Only motion API's' blocking call takes resources.
 
@@ -60,6 +71,7 @@ class ALMotion(object):
         """
         return self.proxy.areResourcesAvailable(resourceNames)
 
+    @lazy_init
     def changeAngles(self, names, changes, fractionMaxSpeed):
         """Changes Angles. This is a non-blocking call.
 
@@ -69,6 +81,7 @@ class ALMotion(object):
         """
         return self.proxy.changeAngles(names, changes, fractionMaxSpeed)
 
+    @lazy_init
     def changePosition(self, effectorName, space, positionChange, fractionMaxSpeed, axisMask):
         """DEPRECATED. Use setPositions function instead.
 
@@ -80,6 +93,7 @@ class ALMotion(object):
         """
         return self.proxy.changePosition(effectorName, space, positionChange, fractionMaxSpeed, axisMask)
 
+    @lazy_init
     def changeTransform(self, chainName, space, transform, fractionMaxSpeed, axisMask):
         """DEPRECATED. Use setTransforms function instead.
 
@@ -91,6 +105,7 @@ class ALMotion(object):
         """
         return self.proxy.changeTransform(chainName, space, transform, fractionMaxSpeed, axisMask)
 
+    @lazy_init
     def closeHand(self, handName):
         """NAO stiffens the motors of desired hand. Then, he closes the hand, then cuts motor current to conserve energy. This is a blocking call.
 
@@ -98,11 +113,7 @@ class ALMotion(object):
         """
         return self.proxy.closeHand(handName)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def getAngles(self, names, useSensors):
         """Gets the angles of the joints
 
@@ -112,6 +123,7 @@ class ALMotion(object):
         """
         return self.proxy.getAngles(names, useSensors)
 
+    @lazy_init
     def getBodyNames(self, name):
         """Gets the names of all the joints and actuators in the collection.
 
@@ -120,6 +132,7 @@ class ALMotion(object):
         """
         return self.proxy.getBodyNames(name)
 
+    @lazy_init
     def getBreathConfig(self):
         """This function gets the current breathing configuration. bpm is the breathing frequency in beats per minute. amplitude is the normalized amplitude of the breathing animation, between 0 and 1.
 
@@ -127,6 +140,7 @@ class ALMotion(object):
         """
         return self.proxy.getBreathConfig()
 
+    @lazy_init
     def getBreathEnabled(self, pChain):
         """This function gets the status of breathing animation on a chain. Chain name can be "Body", "Arms", "LArm", "RArm", "Legs" or "Head".
 
@@ -135,13 +149,7 @@ class ALMotion(object):
         """
         return self.proxy.getBreathEnabled(pChain)
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCOM(self, pName, pSpace, pUseSensorValues):
         """Gets the COM of a joint, chain, "Body" or "Joints".
 
@@ -152,6 +160,7 @@ class ALMotion(object):
         """
         return self.proxy.getCOM(pName, pSpace, pUseSensorValues)
 
+    @lazy_init
     def getChainClosestObstaclePosition(self, pName, space):
         """Gets chain closest obstacle Position .
 
@@ -161,6 +170,7 @@ class ALMotion(object):
         """
         return self.proxy.getChainClosestObstaclePosition(pName, space)
 
+    @lazy_init
     def getCollisionProtectionEnabled(self, pChainName):
         """Allow to know if the collision protection is activated on the given chain.
 
@@ -169,6 +179,7 @@ class ALMotion(object):
         """
         return self.proxy.getCollisionProtectionEnabled(pChainName)
 
+    @lazy_init
     def getDiagnosisEffectEnabled(self):
         """Give the state of the diagnosis effect.
 
@@ -176,6 +187,7 @@ class ALMotion(object):
         """
         return self.proxy.getDiagnosisEffectEnabled()
 
+    @lazy_init
     def getExternalCollisionProtectionEnabled(self, pName):
         """Allow to know if the external collision protection is activated on the given name.
 
@@ -184,6 +196,7 @@ class ALMotion(object):
         """
         return self.proxy.getExternalCollisionProtectionEnabled(pName)
 
+    @lazy_init
     def getFallManagerEnabled(self):
         """Give the state of the fall manager.
 
@@ -191,6 +204,7 @@ class ALMotion(object):
         """
         return self.proxy.getFallManagerEnabled()
 
+    @lazy_init
     def getFootGaitConfig(self, config):
         """DEPRECATED. Use getMoveConfig function instead. Gets the foot Gait config ("MaxStepX", "MaxStepY", "MaxStepTheta",  "MaxStepFrequency", "StepHeight", "TorsoWx", "TorsoWy")
 
@@ -199,6 +213,7 @@ class ALMotion(object):
         """
         return self.proxy.getFootGaitConfig(config)
 
+    @lazy_init
     def getFootSteps(self):
         """Get the foot steps. This is a non-blocking call.
 
@@ -206,6 +221,7 @@ class ALMotion(object):
         """
         return self.proxy.getFootSteps()
 
+    @lazy_init
     def getIdlePostureEnabled(self, pChain):
         """This function gets the status of idle posture management on a chain. Chain name can be "Body", "Arms", "LArm", "RArm", "Legs" or "Head".
 
@@ -214,6 +230,7 @@ class ALMotion(object):
         """
         return self.proxy.getIdlePostureEnabled(pChain)
 
+    @lazy_init
     def getJointNames(self, name):
         """DEPRECATED. Use getBodyNames function instead.
 
@@ -222,6 +239,7 @@ class ALMotion(object):
         """
         return self.proxy.getJointNames(name)
 
+    @lazy_init
     def getLimits(self, name):
         """Get the minAngle (rad), maxAngle (rad), and maxVelocity (rad.s-1) for a given joint or actuator in the body.
 
@@ -230,6 +248,7 @@ class ALMotion(object):
         """
         return self.proxy.getLimits(name)
 
+    @lazy_init
     def getMass(self, pName):
         """Gets the mass of a joint, chain, "Body" or "Joints".
 
@@ -238,28 +257,7 @@ class ALMotion(object):
         """
         return self.proxy.getMass(pName)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getMotionCycleTime(self):
         """Get the motion cycle time in milliseconds.
 
@@ -267,6 +265,7 @@ class ALMotion(object):
         """
         return self.proxy.getMotionCycleTime()
 
+    @lazy_init
     def getMoveArmsEnabled(self, chainName):
         """Gets if Arms Motions are enabled during the Move Process.
 
@@ -275,6 +274,7 @@ class ALMotion(object):
         """
         return self.proxy.getMoveArmsEnabled(chainName)
 
+    @lazy_init
     def getMoveConfig(self, config):
         """Gets the move config.
 
@@ -283,6 +283,7 @@ class ALMotion(object):
         """
         return self.proxy.getMoveConfig(config)
 
+    @lazy_init
     def getNextRobotPosition(self):
         """Gets the World Absolute next Robot Position. In fact in the walk algorithm some foot futur foot step are incompressible due to preview control, so this function give the next robot position which is incompressible. If the robot doesn't walk this function is equivalent to getRobotPosition(false)
 
@@ -290,6 +291,7 @@ class ALMotion(object):
         """
         return self.proxy.getNextRobotPosition()
 
+    @lazy_init
     def getOrthogonalSecurityDistance(self):
         """Gets the current orthogonal security distance.
 
@@ -297,6 +299,7 @@ class ALMotion(object):
         """
         return self.proxy.getOrthogonalSecurityDistance()
 
+    @lazy_init
     def getPosition(self, name, space, useSensorValues):
         """Gets a Position relative to the FRAME. Axis definition: the x axis is positive toward Nao's front, the y from right to left and the z is vertical. The angle convention of Position6D is Rot_z(wz).Rot_y(wy).Rot_x(wx).
 
@@ -307,6 +310,7 @@ class ALMotion(object):
         """
         return self.proxy.getPosition(name, space, useSensorValues)
 
+    @lazy_init
     def getPushRecoveryEnabled(self):
         """Give the state of the push recovery.
 
@@ -314,6 +318,7 @@ class ALMotion(object):
         """
         return self.proxy.getPushRecoveryEnabled()
 
+    @lazy_init
     def getRobotConfig(self):
         """Get the robot configuration.
 
@@ -321,6 +326,7 @@ class ALMotion(object):
         """
         return self.proxy.getRobotConfig()
 
+    @lazy_init
     def getRobotPosition(self, useSensors):
         """Gets the World Absolute Robot Position.
 
@@ -329,6 +335,7 @@ class ALMotion(object):
         """
         return self.proxy.getRobotPosition(useSensors)
 
+    @lazy_init
     def getRobotVelocity(self):
         """Gets the World Absolute Robot Velocity.
 
@@ -336,6 +343,7 @@ class ALMotion(object):
         """
         return self.proxy.getRobotVelocity()
 
+    @lazy_init
     def getSensorNames(self):
         """Gets the list of sensors supported on your robot.
 
@@ -343,6 +351,7 @@ class ALMotion(object):
         """
         return self.proxy.getSensorNames()
 
+    @lazy_init
     def getSmartStiffnessEnabled(self):
         """Give the state of the smart Stiffness.
 
@@ -350,6 +359,7 @@ class ALMotion(object):
         """
         return self.proxy.getSmartStiffnessEnabled()
 
+    @lazy_init
     def getStiffnesses(self, jointName):
         """Gets stiffness of a joint or group of joints
 
@@ -358,6 +368,7 @@ class ALMotion(object):
         """
         return self.proxy.getStiffnesses(jointName)
 
+    @lazy_init
     def getSummary(self):
         """Returns a string representation of the Model's state
 
@@ -365,6 +376,7 @@ class ALMotion(object):
         """
         return self.proxy.getSummary()
 
+    @lazy_init
     def getTangentialSecurityDistance(self):
         """Gets the current tangential security distance.
 
@@ -372,6 +384,7 @@ class ALMotion(object):
         """
         return self.proxy.getTangentialSecurityDistance()
 
+    @lazy_init
     def getTaskList(self):
         """Gets an ALValue structure describing the tasks in the Task List
 
@@ -379,6 +392,7 @@ class ALMotion(object):
         """
         return self.proxy.getTaskList()
 
+    @lazy_init
     def getTransform(self, name, space, useSensorValues):
         """Gets an Homogenous Transform relative to the FRAME. Axis definition: the x axis is positive toward Nao's front, the y from right to left and the z is vertical.
 
@@ -389,14 +403,7 @@ class ALMotion(object):
         """
         return self.proxy.getTransform(name, space, useSensorValues)
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getWalkArmsEnabled(self):
         """DEPRECATED. Gets if Arms Motions are enabled during the Walk Process.
 
@@ -404,6 +411,7 @@ class ALMotion(object):
         """
         return self.proxy.getWalkArmsEnabled()
 
+    @lazy_init
     def isCollision(self, pChainName):
         """Give the collision state of a chain. If a chain has a collision state "none" or "near", it could be desactivated.
 
@@ -412,24 +420,19 @@ class ALMotion(object):
         """
         return self.proxy.isCollision(pChainName)
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def killAll(self):
         """Kills all tasks.
         """
         return self.proxy.killAll()
 
+    @lazy_init
     def killMove(self):
         """Emergency Stop on Move task: This method will end the move task brutally, without attempting to return to a balanced state. The robot could easily fall.
         """
         return self.proxy.killMove()
 
+    @lazy_init
     def killTask(self, motionTaskID):
         """Kills a motion task.
 
@@ -438,6 +441,7 @@ class ALMotion(object):
         """
         return self.proxy.killTask(motionTaskID)
 
+    @lazy_init
     def killTasksUsingResources(self, resourceNames):
         """Kills all tasks that use any of the resources given. Only motion API's' blocking call takes resources and can be killed. Use getBodyNames("Body") to have the list of the available joint for your robot.
 
@@ -445,11 +449,13 @@ class ALMotion(object):
         """
         return self.proxy.killTasksUsingResources(resourceNames)
 
+    @lazy_init
     def killWalk(self):
         """DEPRECATED. Use killMove function instead.
         """
         return self.proxy.killWalk()
 
+    @lazy_init
     def move(self, x, y, theta):
         """Makes the robot move at the given velocity. This is a non-blocking call.
 
@@ -459,6 +465,7 @@ class ALMotion(object):
         """
         return self.proxy.move(x, y, theta)
 
+    @lazy_init
     def move2(self, x, y, theta, moveConfig):
         """Makes the robot move at the given velocity. This is a non-blocking call.
 
@@ -469,11 +476,13 @@ class ALMotion(object):
         """
         return self.proxy.move(x, y, theta, moveConfig)
 
+    @lazy_init
     def moveInit(self):
         """Initialize the move process. Check the robot pose and take a right posture. This is blocking called.
         """
         return self.proxy.moveInit()
 
+    @lazy_init
     def moveIsActive(self):
         """Check if the move process is actif.
 
@@ -481,6 +490,7 @@ class ALMotion(object):
         """
         return self.proxy.moveIsActive()
 
+    @lazy_init
     def moveTo(self, x, y, theta):
         """Makes the robot move at the given position. This is a non-blocking call.
 
@@ -490,6 +500,7 @@ class ALMotion(object):
         """
         return self.proxy.moveTo(x, y, theta)
 
+    @lazy_init
     def moveTo2(self, x, y, theta, time):
         """Makes the robot move at the given position in fixed time. This is a non-blocking call.
 
@@ -500,6 +511,7 @@ class ALMotion(object):
         """
         return self.proxy.moveTo(x, y, theta, time)
 
+    @lazy_init
     def moveTo3(self, x, y, theta, moveConfig):
         """Makes the robot move at the given position. This is a non-blocking call.
 
@@ -510,6 +522,7 @@ class ALMotion(object):
         """
         return self.proxy.moveTo(x, y, theta, moveConfig)
 
+    @lazy_init
     def moveTo4(self, x, y, theta, time, moveConfig):
         """Makes the robot move at the given position in fixed time. This is a non-blocking call.
 
@@ -521,6 +534,7 @@ class ALMotion(object):
         """
         return self.proxy.moveTo(x, y, theta, time, moveConfig)
 
+    @lazy_init
     def moveTo5(self, controlPoint):
         """Makes the robot move to the given relative positions. This is a blocking call.
 
@@ -528,6 +542,7 @@ class ALMotion(object):
         """
         return self.proxy.moveTo(controlPoint)
 
+    @lazy_init
     def moveTo6(self, controlPoint, moveConfig):
         """Makes the robot move to the given relative positions. This is a blocking call.
 
@@ -536,6 +551,7 @@ class ALMotion(object):
         """
         return self.proxy.moveTo(controlPoint, moveConfig)
 
+    @lazy_init
     def moveToward(self, x, y, theta):
         """Makes the robot move at the given normalized velocity. This is a non-blocking call.
 
@@ -545,6 +561,7 @@ class ALMotion(object):
         """
         return self.proxy.moveToward(x, y, theta)
 
+    @lazy_init
     def moveToward2(self, x, y, theta, moveConfig):
         """Makes the robot move at the given normalized velocity. This is a non-blocking call.
 
@@ -555,6 +572,7 @@ class ALMotion(object):
         """
         return self.proxy.moveToward(x, y, theta, moveConfig)
 
+    @lazy_init
     def openHand(self, handName):
         """NAO stiffens the motors of desired hand. Then, he opens the hand, then cuts motor current to conserve energy. This is a blocking call.
 
@@ -562,13 +580,7 @@ class ALMotion(object):
         """
         return self.proxy.openHand(handName)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -576,6 +588,7 @@ class ALMotion(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def positionInterpolation(self, chainName, space, path, axisMask, durations, isAbsolute):
         """DEPRECATED. Use positionInterpolations function instead.
 
@@ -588,6 +601,7 @@ class ALMotion(object):
         """
         return self.proxy.positionInterpolation(chainName, space, path, axisMask, durations, isAbsolute)
 
+    @lazy_init
     def positionInterpolations(self, effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes, isAbsolute):
         """DEPRECATED. Use the other positionInterpolations function instead.
 
@@ -600,6 +614,7 @@ class ALMotion(object):
         """
         return self.proxy.positionInterpolations(effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes, isAbsolute)
 
+    @lazy_init
     def positionInterpolations2(self, effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes):
         """Moves end-effectors to the given positions and orientations over time. This is a blocking call.
 
@@ -611,11 +626,13 @@ class ALMotion(object):
         """
         return self.proxy.positionInterpolations(effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes)
 
+    @lazy_init
     def rest(self):
         """The robot will rest: go to a relax and safe position and set Motor OFF
         """
         return self.proxy.rest()
 
+    @lazy_init
     def rest2(self, arg1):
         """The robot will rest: go to a relax and safe position on the chain and set Motor OFF
 
@@ -623,6 +640,7 @@ class ALMotion(object):
         """
         return self.proxy.rest(arg1)
 
+    @lazy_init
     def robotIsWakeUp(self):
         """return true if the robot is already wakeUp
 
@@ -630,6 +648,7 @@ class ALMotion(object):
         """
         return self.proxy.robotIsWakeUp()
 
+    @lazy_init
     def setAngles(self, names, angles, fractionMaxSpeed):
         """Sets angles. This is a non-blocking call.
 
@@ -639,6 +658,7 @@ class ALMotion(object):
         """
         return self.proxy.setAngles(names, angles, fractionMaxSpeed)
 
+    @lazy_init
     def setBreathConfig(self, pConfig):
         """This function configures the breathing animation.
 
@@ -646,6 +666,7 @@ class ALMotion(object):
         """
         return self.proxy.setBreathConfig(pConfig)
 
+    @lazy_init
     def setBreathEnabled(self, pChain, pIsEnabled):
         """This function starts or stops breathing animation on a chain. Chain name can be "Body", "Arms", "LArm", "RArm", "Legs" or "Head". Head breathing animation will work only if Leg animation is active.
 
@@ -654,6 +675,7 @@ class ALMotion(object):
         """
         return self.proxy.setBreathEnabled(pChain, pIsEnabled)
 
+    @lazy_init
     def setCollisionProtectionEnabled(self, pChainName, pEnable):
         """Enable Anticollision protection of the arms of the robot. Use api isCollision to know if a chain is in collision and can be disactivated.
 
@@ -663,6 +685,7 @@ class ALMotion(object):
         """
         return self.proxy.setCollisionProtectionEnabled(pChainName, pEnable)
 
+    @lazy_init
     def setDiagnosisEffectEnabled(self, pEnable):
         """Enable or disable the diagnosis effect into ALMotion
 
@@ -670,6 +693,7 @@ class ALMotion(object):
         """
         return self.proxy.setDiagnosisEffectEnabled(pEnable)
 
+    @lazy_init
     def setEnableNotifications(self, enable):
         """Enable / Disable notifications.
 
@@ -677,6 +701,7 @@ class ALMotion(object):
         """
         return self.proxy.setEnableNotifications(enable)
 
+    @lazy_init
     def setExternalCollisionProtectionEnabled(self, pName, pEnable):
         """Enable Anticollision protection of the arms and base move  of the robot with external environment.
 
@@ -685,6 +710,7 @@ class ALMotion(object):
         """
         return self.proxy.setExternalCollisionProtectionEnabled(pName, pEnable)
 
+    @lazy_init
     def setFallManagerEnabled(self, pEnable):
         """Enable The fall manager protection for the robot. When a fall is detected the robot adopt a joint configuration to protect himself and cut the stiffness. . An memory event called "robotHasFallen" is generated when the fallManager have been activated.
 
@@ -692,6 +718,7 @@ class ALMotion(object):
         """
         return self.proxy.setFallManagerEnabled(pEnable)
 
+    @lazy_init
     def setFootSteps(self, legName, footSteps, timeList, clearExisting):
         """Makes Nao do foot step planner. This is a non-blocking call.
 
@@ -702,6 +729,7 @@ class ALMotion(object):
         """
         return self.proxy.setFootSteps(legName, footSteps, timeList, clearExisting)
 
+    @lazy_init
     def setFootStepsWithSpeed(self, legName, footSteps, fractionMaxSpeed, clearExisting):
         """Makes Nao do foot step planner with speed. This is a blocking call.
 
@@ -712,6 +740,7 @@ class ALMotion(object):
         """
         return self.proxy.setFootStepsWithSpeed(legName, footSteps, fractionMaxSpeed, clearExisting)
 
+    @lazy_init
     def setIdlePostureEnabled(self, pChain, pIsEnabled):
         """Starts or stops idle posture management on a chain. Chain name can be "Body", "Arms", "LArm", "RArm", "Legs" or "Head".
 
@@ -720,6 +749,7 @@ class ALMotion(object):
         """
         return self.proxy.setIdlePostureEnabled(pChain, pIsEnabled)
 
+    @lazy_init
     def setMotionConfig(self, config):
         """Internal Use.
 
@@ -727,6 +757,7 @@ class ALMotion(object):
         """
         return self.proxy.setMotionConfig(config)
 
+    @lazy_init
     def setMoveArmsEnabled(self, leftArmEnabled, rightArmEnabled):
         """Sets if Arms Motions are enabled during the Move Process.
 
@@ -735,6 +766,7 @@ class ALMotion(object):
         """
         return self.proxy.setMoveArmsEnabled(leftArmEnabled, rightArmEnabled)
 
+    @lazy_init
     def setOrthogonalSecurityDistance(self, securityDistance):
         """Defines the orthogonal security distance used with external collision protection "Move".
 
@@ -742,6 +774,7 @@ class ALMotion(object):
         """
         return self.proxy.setOrthogonalSecurityDistance(securityDistance)
 
+    @lazy_init
     def setPosition(self, chainName, space, position, fractionMaxSpeed, axisMask):
         """Moves an end-effector to DEPRECATED. Use setPositions function instead.
 
@@ -753,6 +786,7 @@ class ALMotion(object):
         """
         return self.proxy.setPosition(chainName, space, position, fractionMaxSpeed, axisMask)
 
+    @lazy_init
     def setPositions(self, names, spaces, positions, fractionMaxSpeed, axisMask):
         """Moves multiple end-effectors to the given position and orientation position6d. This is a non-blocking call.
 
@@ -764,6 +798,7 @@ class ALMotion(object):
         """
         return self.proxy.setPositions(names, spaces, positions, fractionMaxSpeed, axisMask)
 
+    @lazy_init
     def setPushRecoveryEnabled(self, pEnable):
         """Enable The push recovery protection for the robot.
 
@@ -771,6 +806,7 @@ class ALMotion(object):
         """
         return self.proxy.setPushRecoveryEnabled(pEnable)
 
+    @lazy_init
     def setSmartStiffnessEnabled(self, pEnable):
         """Enable Smart Stiffness for all the joints (True by default), the update take one motion cycle for updating. The smart Stiffness is a gestion of joint maximum torque. More description is available on the red documentation of ALMotion module.
 
@@ -778,6 +814,7 @@ class ALMotion(object):
         """
         return self.proxy.setSmartStiffnessEnabled(pEnable)
 
+    @lazy_init
     def setStiffnesses(self, names, stiffnesses):
         """Sets the stiffness of one or more joints. This is a non-blocking call.
 
@@ -786,6 +823,7 @@ class ALMotion(object):
         """
         return self.proxy.setStiffnesses(names, stiffnesses)
 
+    @lazy_init
     def setTangentialSecurityDistance(self, securityDistance):
         """Defines the tangential security distance used with external collision protection "Move".
 
@@ -793,6 +831,7 @@ class ALMotion(object):
         """
         return self.proxy.setTangentialSecurityDistance(securityDistance)
 
+    @lazy_init
     def setTransform(self, chainName, space, transform, fractionMaxSpeed, axisMask):
         """Moves an end-effector to DEPRECATED. Use setTransforms function instead.
 
@@ -804,6 +843,7 @@ class ALMotion(object):
         """
         return self.proxy.setTransform(chainName, space, transform, fractionMaxSpeed, axisMask)
 
+    @lazy_init
     def setTransforms(self, names, spaces, transforms, fractionMaxSpeed, axisMask):
         """Moves multiple end-effectors to the given position and orientation transforms. This is a non-blocking call.
 
@@ -815,6 +855,7 @@ class ALMotion(object):
         """
         return self.proxy.setTransforms(names, spaces, transforms, fractionMaxSpeed, axisMask)
 
+    @lazy_init
     def setWalkArmsEnabled(self, leftArmEnabled, rightArmEnabled):
         """DEPRECATED. Sets if Arms Motions are enabled during the Walk Process.
 
@@ -823,6 +864,7 @@ class ALMotion(object):
         """
         return self.proxy.setWalkArmsEnabled(leftArmEnabled, rightArmEnabled)
 
+    @lazy_init
     def setWalkTargetVelocity(self, x, y, theta, frequency):
         """DEPRECATED. Use moveToward() function instead.
 
@@ -833,6 +875,7 @@ class ALMotion(object):
         """
         return self.proxy.setWalkTargetVelocity(x, y, theta, frequency)
 
+    @lazy_init
     def setWalkTargetVelocity2(self, x, y, theta, frequency, feetGaitConfig):
         """DEPRECATED. Use moveToward() function instead.
 
@@ -844,6 +887,7 @@ class ALMotion(object):
         """
         return self.proxy.setWalkTargetVelocity(x, y, theta, frequency, feetGaitConfig)
 
+    @lazy_init
     def setWalkTargetVelocity3(self, x, y, theta, frequency, leftFootMoveConfig, rightFootMoveConfig):
         """DEPRECATED. Use moveToward() function instead.
 
@@ -856,6 +900,7 @@ class ALMotion(object):
         """
         return self.proxy.setWalkTargetVelocity(x, y, theta, frequency, leftFootMoveConfig, rightFootMoveConfig)
 
+    @lazy_init
     def stiffnessInterpolation(self, names, stiffnessLists, timeLists):
         """Interpolates one or multiple joints to a target stiffness or along timed trajectories of stiffness. This is a blocking call.
 
@@ -865,23 +910,19 @@ class ALMotion(object):
         """
         return self.proxy.stiffnessInterpolation(names, stiffnessLists, timeLists)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopMove(self):
         """Stop Move task safely as fast as possible. The move task is ended less brutally than killMove but more quickly than move(0.0, 0.0, 0.0). This is a blocking call.
         """
         return self.proxy.stopMove()
 
+    @lazy_init
     def stopWalk(self):
         """DEPRECATED. Use stopMove function instead.
         """
         return self.proxy.stopWalk()
 
+    @lazy_init
     def transformInterpolation(self, chainName, space, path, axisMask, duration, isAbsolute):
         """DEPRECATED. Use the other transformInterpolations function instead.
 
@@ -894,6 +935,7 @@ class ALMotion(object):
         """
         return self.proxy.transformInterpolation(chainName, space, path, axisMask, duration, isAbsolute)
 
+    @lazy_init
     def transformInterpolations(self, effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes, isAbsolute):
         """DEPRECATED. Use the other transformInterpolations function instead.
 
@@ -906,6 +948,7 @@ class ALMotion(object):
         """
         return self.proxy.transformInterpolations(effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes, isAbsolute)
 
+    @lazy_init
     def transformInterpolations2(self, effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes):
         """Moves end-effectors to the given positions and orientations over time. This is a blocking call.
 
@@ -917,6 +960,7 @@ class ALMotion(object):
         """
         return self.proxy.transformInterpolations(effectorNames, taskSpaceForAllPaths, paths, axisMasks, relativeTimes)
 
+    @lazy_init
     def updateTrackerTarget(self, pTargetPositionWy, pTargetPositionWz, pTimeSinceDetectionMs, pUseOfWholeBody):
         """Update the target to follow by the head of NAO. DEPRECATED Function. Please use ALTracker::lookAt.
 
@@ -927,6 +971,7 @@ class ALMotion(object):
         """
         return self.proxy.updateTrackerTarget(pTargetPositionWy, pTargetPositionWz, pTimeSinceDetectionMs, pUseOfWholeBody)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
@@ -934,35 +979,31 @@ class ALMotion(object):
         """
         return self.proxy.version()
 
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)
-
+    @lazy_init
     def waitUntilMoveIsFinished(self):
         """Waits until the move process is finished: This method can be used to block your script/code execution until the move task is totally finished.
         """
         return self.proxy.waitUntilMoveIsFinished()
 
+    @lazy_init
     def waitUntilWalkIsFinished(self):
         """DEPRECATED. Use waitUntilMoveIsFinished function instead.
         """
         return self.proxy.waitUntilWalkIsFinished()
 
+    @lazy_init
     def wakeUp(self):
         """The robot will wake up: set Motor ON and go to initial position if needed
         """
         return self.proxy.wakeUp()
 
+    @lazy_init
     def walkInit(self):
         """DEPRECATED. Use moveInit function instead.
         """
         return self.proxy.walkInit()
 
+    @lazy_init
     def walkIsActive(self):
         """DEPRECATED. Use moveIsActive function instead.
 
@@ -970,6 +1011,7 @@ class ALMotion(object):
         """
         return self.proxy.walkIsActive()
 
+    @lazy_init
     def walkTo(self, x, y, theta):
         """DEPRECATED. Use moveTo() function instead.
 
@@ -979,6 +1021,7 @@ class ALMotion(object):
         """
         return self.proxy.walkTo(x, y, theta)
 
+    @lazy_init
     def walkTo2(self, x, y, theta, feetGaitConfig):
         """DEPRECATED. Use moveTo() function instead.
 
@@ -989,6 +1032,7 @@ class ALMotion(object):
         """
         return self.proxy.walkTo(x, y, theta, feetGaitConfig)
 
+    @lazy_init
     def walkTo3(self, controlPoint):
         """DEPRECATED. Use moveTo() function instead.
 
@@ -996,6 +1040,7 @@ class ALMotion(object):
         """
         return self.proxy.walkTo(controlPoint)
 
+    @lazy_init
     def walkTo4(self, controlPoint, feetGaitConfig):
         """DEPRECATED. Use moveTo() function instead.
 
@@ -1004,6 +1049,7 @@ class ALMotion(object):
         """
         return self.proxy.walkTo(controlPoint, feetGaitConfig)
 
+    @lazy_init
     def wbEnable(self, isEnabled):
         """UserFriendly Whole Body API: enable Whole Body Balancer. It's a Generalized Inverse Kinematics which deals with cartesian control, balance, redundancy and task priority. The main goal is to generate and stabilized consistent motions without precomputed trajectories and adapt nao's behaviour to the situation. The generalized inverse kinematic problem takes in account equality constraints (keep foot fix), inequality constraints (joint limits, balance, ...) and quadratic minimization (cartesian / articular desired trajectories). We solve each step a quadratic programming on the robot.
 
@@ -1011,6 +1057,7 @@ class ALMotion(object):
         """
         return self.proxy.wbEnable(isEnabled)
 
+    @lazy_init
     def wbEnableBalanceConstraint(self, isEnable, supportLeg):
         """UserFriendly Whole Body API: enable to keep balance in support polygon.
 
@@ -1019,6 +1066,7 @@ class ALMotion(object):
         """
         return self.proxy.wbEnableBalanceConstraint(isEnable, supportLeg)
 
+    @lazy_init
     def wbEnableEffectorControl(self, effectorName, isEnabled):
         """UserFriendly Whole Body API: enable whole body cartesian control of an effector.
 
@@ -1027,6 +1075,7 @@ class ALMotion(object):
         """
         return self.proxy.wbEnableEffectorControl(effectorName, isEnabled)
 
+    @lazy_init
     def wbEnableEffectorOptimization(self, effectorName, isActive):
         """Advanced Whole Body API: enable to control an effector as an optimization.
 
@@ -1035,6 +1084,7 @@ class ALMotion(object):
         """
         return self.proxy.wbEnableEffectorOptimization(effectorName, isActive)
 
+    @lazy_init
     def wbFootState(self, stateName, supportLeg):
         """UserFriendly Whole Body API: set the foot state: fixed foot, constrained in a plane or free.
 
@@ -1043,6 +1093,7 @@ class ALMotion(object):
         """
         return self.proxy.wbFootState(stateName, supportLeg)
 
+    @lazy_init
     def wbGoToBalance(self, supportLeg, duration):
         """Advanced Whole Body API: "Com" go to a desired support polygon. This is a blocking call.
 
@@ -1051,6 +1102,7 @@ class ALMotion(object):
         """
         return self.proxy.wbGoToBalance(supportLeg, duration)
 
+    @lazy_init
     def wbSetEffectorControl(self, effectorName, targetCoordinate):
         """UserFriendly Whole Body API: set new target for controlled effector. This is a non-blocking call.
 

@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALFrameManager")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALFrameManager(object):
     def __init__(self):
-        self.proxy = ALProxy("ALFrameManager")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def behaviors(self):
         """List all behaviors currently handled by the frame manager.
 
@@ -24,11 +31,13 @@ class ALFrameManager(object):
         """
         return self.proxy.behaviors()
 
+    @lazy_init
     def cleanBehaviors(self):
         """Stop playing any behavior in FrameManager, and delete all of them.
         """
         return self.proxy.cleanBehaviors()
 
+    @lazy_init
     def completeBehavior(self, id):
         """It will play a behavior and block until the behavior is finished. Note that it can block forever if the behavior output is never called.
 
@@ -36,6 +45,7 @@ class ALFrameManager(object):
         """
         return self.proxy.completeBehavior(id)
 
+    @lazy_init
     def createTimeline(self, timelineContent):
         """Creates a timeline.
 
@@ -44,6 +54,7 @@ class ALFrameManager(object):
         """
         return self.proxy.createTimeline(timelineContent)
 
+    @lazy_init
     def deleteBehavior(self, id):
         """Deletes a behavior (meaning a box). Stop the whole behavior contained in this box first.
 
@@ -51,11 +62,7 @@ class ALFrameManager(object):
         """
         return self.proxy.deleteBehavior(id)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def exitBehavior(self, id):
         """Exit the reading of a timeline contained in a given box
 
@@ -63,6 +70,7 @@ class ALFrameManager(object):
         """
         return self.proxy.exitBehavior(id)
 
+    @lazy_init
     def getBehaviorPath(self, id):
         """Returns a playing behavior absolute path.
 
@@ -71,35 +79,7 @@ class ALFrameManager(object):
         """
         return self.proxy.getBehaviorPath(id)
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getMotionLength(self, id):
         """Returns in seconds, the duration of a given movement stored in a box. Returns 0 if the behavior has no motion layers.  DEPRECATED since 1.14
 
@@ -108,6 +88,7 @@ class ALFrameManager(object):
         """
         return self.proxy.getMotionLength(id)
 
+    @lazy_init
     def getTimelineFps(self, id):
         """Gets the FPS of a given timeline. DEPRECATED since 1.14
 
@@ -116,14 +97,7 @@ class ALFrameManager(object):
         """
         return self.proxy.getTimelineFps(id)
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def gotoAndPlay(self, id, frame):
         """Goes to a certain frame and continue playing. DEPRECATED since 1.14
 
@@ -132,6 +106,7 @@ class ALFrameManager(object):
         """
         return self.proxy.gotoAndPlay(id, frame)
 
+    @lazy_init
     def gotoAndPlay2(self, id, frame):
         """Goes to a certain frame and continue playing. DEPRECATED since 1.14
 
@@ -140,6 +115,7 @@ class ALFrameManager(object):
         """
         return self.proxy.gotoAndPlay(id, frame)
 
+    @lazy_init
     def gotoAndStop(self, id, frame):
         """Goes to a certain frame and pause. DEPRECATED since 1.14
 
@@ -148,6 +124,7 @@ class ALFrameManager(object):
         """
         return self.proxy.gotoAndStop(id, frame)
 
+    @lazy_init
     def gotoAndStop2(self, id, frame):
         """Goes to a certain frame and pause. DEPRECATED since 1.14
 
@@ -156,6 +133,7 @@ class ALFrameManager(object):
         """
         return self.proxy.gotoAndStop(id, frame)
 
+    @lazy_init
     def isBehaviorRunning(self, id):
         """Tells whether the behavior is running
 
@@ -164,14 +142,7 @@ class ALFrameManager(object):
         """
         return self.proxy.isBehaviorRunning(id)
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def newBehavior(self, path, xmlFile):
         """Creates a new behavior, from a box found in an xml file. Note that you have to give the xml file contents, so this method is not very user friendly. You have to open the file, and send the string that matches the file contents if you are working from a file. You probably want to use newBehaviorFromFile instead. DEPRECATED since 1.14
 
@@ -181,6 +152,7 @@ class ALFrameManager(object):
         """
         return self.proxy.newBehavior(path, xmlFile)
 
+    @lazy_init
     def newBehaviorFromChoregraphe(self):
         """Creates a new behavior, from the current Choregraphe behavior 0(uploaded to /tmp/currentChoregrapheBehavior/behavior.xar). DEPRECATED since 1.14
 
@@ -188,6 +160,7 @@ class ALFrameManager(object):
         """
         return self.proxy.newBehaviorFromChoregraphe()
 
+    @lazy_init
     def newBehaviorFromFile(self, xmlFilePath, behName):
         """Creates a new behavior, from a box found in an xml file stored in the robot.
 
@@ -197,13 +170,7 @@ class ALFrameManager(object):
         """
         return self.proxy.newBehaviorFromFile(xmlFilePath, behName)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -211,6 +178,7 @@ class ALFrameManager(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def playBehavior(self, id):
         """Starts a behavior
 
@@ -218,6 +186,7 @@ class ALFrameManager(object):
         """
         return self.proxy.playBehavior(id)
 
+    @lazy_init
     def playTimeline(self, id):
         """Starts playing a timeline contained in a given box. If the box is a flow diagram, it will look for the first onStart input of type Bang, and stimulate it ! DEPRECATED since 1.14
 
@@ -225,6 +194,7 @@ class ALFrameManager(object):
         """
         return self.proxy.playTimeline(id)
 
+    @lazy_init
     def setTimelineFps(self, id, fps):
         """Sets the FPS of a given timeline. DEPRECATED since 1.14
 
@@ -233,13 +203,7 @@ class ALFrameManager(object):
         """
         return self.proxy.setTimelineFps(id, fps)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopTimeline(self, id):
         """Stops playing a timeline contained in a given box, at the current frame. DEPRECATED since 1.14
 
@@ -247,18 +211,10 @@ class ALFrameManager(object):
         """
         return self.proxy.stopTimeline(id)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

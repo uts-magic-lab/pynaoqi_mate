@@ -6,13 +6,19 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALDebug")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALDebug(object):
     def __init__(self):
-        self.proxy = ALProxy("ALDebug")
-
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
+        self.proxy = None

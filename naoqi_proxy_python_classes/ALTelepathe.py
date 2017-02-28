@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALTelepathe")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALTelepathe(object):
     def __init__(self):
-        self.proxy = ALProxy("ALTelepathe")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def associateUser(self, login, password):
         """Associates the robot to the given Aldebaran Robotics user. The associated user is recalled in ALMemory as ALTelepathe/User
 
@@ -25,6 +32,7 @@ class ALTelepathe(object):
         """
         return self.proxy.associateUser(login, password)
 
+    @lazy_init
     def associatedUser(self):
         """Tells who is associated to the robot, if anyone. This simply accesses to the ALMemory key ALTelepathe/User
 
@@ -32,21 +40,25 @@ class ALTelepathe(object):
         """
         return self.proxy.associatedUser()
 
+    @lazy_init
     def connectNetwork(self):
         """Connects the robot to the messaging network. Returns once connected. Throws runtime error otherwise.
         """
         return self.proxy.connectNetwork()
 
+    @lazy_init
     def disconnectNetwork(self):
         """Disconnects the robot from the messaging network. Returns once disconnected. Does not throw.
         """
         return self.proxy.disconnectNetwork()
 
+    @lazy_init
     def dissociateUser(self):
         """Clears the login and password for accessing Aldebaran Robotics's network.Login can be tracked in the ALMemory key ALTelepathe/User
         """
         return self.proxy.dissociateUser()
 
+    @lazy_init
     def enableAutoconnection(self, enabled):
         """Enables autoconnection to the network, using the saved user login information if present.
 
@@ -54,6 +66,7 @@ class ALTelepathe(object):
         """
         return self.proxy.enableAutoconnection(enabled)
 
+    @lazy_init
     def enableRPC(self, enabled):
         """Enable / disable RPC handling for received messages.
 
@@ -61,18 +74,7 @@ class ALTelepathe(object):
         """
         return self.proxy.enableRPC(enabled)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
@@ -80,6 +82,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getCurrentPeriod()
 
+    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
@@ -87,6 +90,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getCurrentPrecision()
 
+    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
@@ -94,6 +98,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getEventList()
 
+    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
@@ -101,28 +106,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getMemoryKeyList()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
@@ -131,6 +115,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getMyPeriod(name)
 
+    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
@@ -139,6 +124,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getMyPrecision(name)
 
+    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
@@ -146,6 +132,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getOutputNames()
 
+    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
@@ -153,14 +140,7 @@ class ALTelepathe(object):
         """
         return self.proxy.getSubscribersInfo()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isAutoconnectionEnabled(self):
         """Says whether autoconnection is enabled or not.
 
@@ -168,6 +148,7 @@ class ALTelepathe(object):
         """
         return self.proxy.isAutoconnectionEnabled()
 
+    @lazy_init
     def isCalling(self):
         """Says whether a media call is currently established.
 
@@ -175,6 +156,7 @@ class ALTelepathe(object):
         """
         return self.proxy.isCalling()
 
+    @lazy_init
     def isConnected(self):
         """Gets the current connection status. Value is the same as in the ALMemory key ALTelepathe/Connected
 
@@ -182,6 +164,7 @@ class ALTelepathe(object):
         """
         return self.proxy.isConnected()
 
+    @lazy_init
     def isRPCEnabled(self):
         """Says whether RPC is enabled or not.
 
@@ -189,21 +172,7 @@ class ALTelepathe(object):
         """
         return self.proxy.isRPCEnabled()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -211,6 +180,7 @@ class ALTelepathe(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timestamp, buffer):
         """enable/disable the printing of some debug information
 
@@ -221,6 +191,7 @@ class ALTelepathe(object):
         """
         return self.proxy.processRemote(nbOfChannels, nbOfSamplesByChannel, timestamp, buffer)
 
+    @lazy_init
     def processSoundRemote(self, nbOfChannels, nbOfSamplesByChannel, buffer):
         """enable/disable the printing of some debug information
 
@@ -230,6 +201,7 @@ class ALTelepathe(object):
         """
         return self.proxy.processSoundRemote(nbOfChannels, nbOfSamplesByChannel, buffer)
 
+    @lazy_init
     def sendMessage(self, destination, message):
         """Sends a text message to the chosen destination.
 
@@ -238,6 +210,7 @@ class ALTelepathe(object):
         """
         return self.proxy.sendMessage(destination, message)
 
+    @lazy_init
     def sendRPC(self, destination, module, method, args, timeout):
         """Performs an Internet Remote Procedure Call. Returns once call has been received.Throws runtime error otherwise.
 
@@ -250,6 +223,7 @@ class ALTelepathe(object):
         """
         return self.proxy.sendRPC(destination, module, method, args, timeout)
 
+    @lazy_init
     def sendRPC2(self, destination, module, method, args):
         """Performs an Internet Remote Procedure Call. Returns once call has been received.Throws runtime error otherwise.
 
@@ -261,6 +235,7 @@ class ALTelepathe(object):
         """
         return self.proxy.sendRPC(destination, module, method, args)
 
+    @lazy_init
     def setDebugMode(self, bSetOrUnset):
         """enable/disable the printing of some debug information
 
@@ -268,6 +243,7 @@ class ALTelepathe(object):
         """
         return self.proxy.setDebugMode(bSetOrUnset)
 
+    @lazy_init
     def startCall(self, contact, audio, video):
         """Starts a media call.Returns once the call is accepted remotely.Throws runtime error if the call can't be established.Timeouts after 30 seconds if call not accepted remotely.
 
@@ -277,18 +253,13 @@ class ALTelepathe(object):
         """
         return self.proxy.startCall(contact, audio, video)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopCall(self):
         """Stops the current media call.
         """
         return self.proxy.stopCall()
 
+    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -298,6 +269,7 @@ class ALTelepathe(object):
         """
         return self.proxy.subscribe(name, period, precision)
 
+    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -305,6 +277,7 @@ class ALTelepathe(object):
         """
         return self.proxy.subscribe(name)
 
+    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
@@ -312,6 +285,7 @@ class ALTelepathe(object):
         """
         return self.proxy.unsubscribe(name)
 
+    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
@@ -320,6 +294,7 @@ class ALTelepathe(object):
         """
         return self.proxy.updatePeriod(name, period)
 
+    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
@@ -328,18 +303,10 @@ class ALTelepathe(object):
         """
         return self.proxy.updatePrecision(name, precision)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

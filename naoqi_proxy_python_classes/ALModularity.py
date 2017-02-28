@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALModularity")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALModularity(object):
     def __init__(self):
-        self.proxy = ALProxy("ALModularity")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def deleteFilter(self, name):
         """
 
@@ -25,6 +32,7 @@ class ALModularity(object):
         """
         return self.proxy.deleteFilter(name)
 
+    @lazy_init
     def deleteProcess(self, name):
         """
 
@@ -33,6 +41,7 @@ class ALModularity(object):
         """
         return self.proxy.deleteProcess(name)
 
+    @lazy_init
     def deleteSource(self, name):
         """
 
@@ -41,6 +50,7 @@ class ALModularity(object):
         """
         return self.proxy.deleteSource(name)
 
+    @lazy_init
     def disableProcess(self, name):
         """
 
@@ -49,6 +59,7 @@ class ALModularity(object):
         """
         return self.proxy.disableProcess(name)
 
+    @lazy_init
     def enableProcess(self, name):
         """
 
@@ -57,18 +68,7 @@ class ALModularity(object):
         """
         return self.proxy.enableProcess(name)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getData(self, sink):
         """
 
@@ -77,6 +77,7 @@ class ALModularity(object):
         """
         return self.proxy.getData(sink)
 
+    @lazy_init
     def getDotGraph(self, filter, level):
         """
 
@@ -86,6 +87,7 @@ class ALModularity(object):
         """
         return self.proxy.getDotGraph(filter, level)
 
+    @lazy_init
     def getFilterDescription(self, name):
         """
 
@@ -94,6 +96,7 @@ class ALModularity(object):
         """
         return self.proxy.getFilterDescription(name)
 
+    @lazy_init
     def getFilterInputs(self, name):
         """
 
@@ -102,6 +105,7 @@ class ALModularity(object):
         """
         return self.proxy.getFilterInputs(name)
 
+    @lazy_init
     def getFilterOutputs(self, name):
         """
 
@@ -110,6 +114,7 @@ class ALModularity(object):
         """
         return self.proxy.getFilterOutputs(name)
 
+    @lazy_init
     def getFilters(self):
         """
 
@@ -117,6 +122,7 @@ class ALModularity(object):
         """
         return self.proxy.getFilters()
 
+    @lazy_init
     def getImageLocal(self, sink):
         """
 
@@ -124,6 +130,7 @@ class ALModularity(object):
         """
         return self.proxy.getImageLocal(sink)
 
+    @lazy_init
     def getImageRemote(self, sink):
         """
 
@@ -132,6 +139,7 @@ class ALModularity(object):
         """
         return self.proxy.getImageRemote(sink)
 
+    @lazy_init
     def getInstrumentationResult(self):
         """
 
@@ -139,6 +147,7 @@ class ALModularity(object):
         """
         return self.proxy.getInstrumentationResult()
 
+    @lazy_init
     def getLastData(self, sink):
         """
 
@@ -147,33 +156,13 @@ class ALModularity(object):
         """
         return self.proxy.getLastData(sink)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
+    @lazy_init
     def getModularity(self):
         """
         """
         return self.proxy.getModularity()
 
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getProcessAggregatedSinks(self, name):
         """
 
@@ -182,6 +171,7 @@ class ALModularity(object):
         """
         return self.proxy.getProcessAggregatedSinks(name)
 
+    @lazy_init
     def getProcessDescription(self, name):
         """
 
@@ -190,6 +180,7 @@ class ALModularity(object):
         """
         return self.proxy.getProcessDescription(name)
 
+    @lazy_init
     def getProcessFrequency(self, name):
         """
 
@@ -198,6 +189,7 @@ class ALModularity(object):
         """
         return self.proxy.getProcessFrequency(name)
 
+    @lazy_init
     def getProcessPriority(self, name):
         """
 
@@ -206,6 +198,7 @@ class ALModularity(object):
         """
         return self.proxy.getProcessPriority(name)
 
+    @lazy_init
     def getProcessSinks(self, name):
         """
 
@@ -214,6 +207,7 @@ class ALModularity(object):
         """
         return self.proxy.getProcessSinks(name)
 
+    @lazy_init
     def getProcessSources(self, name):
         """
 
@@ -222,6 +216,7 @@ class ALModularity(object):
         """
         return self.proxy.getProcessSources(name)
 
+    @lazy_init
     def getProcesses(self):
         """
 
@@ -229,6 +224,7 @@ class ALModularity(object):
         """
         return self.proxy.getProcesses()
 
+    @lazy_init
     def getRobotHeightOffset(self):
         """
 
@@ -236,6 +232,7 @@ class ALModularity(object):
         """
         return self.proxy.getRobotHeightOffset()
 
+    @lazy_init
     def getScheduledJobs(self):
         """
 
@@ -243,6 +240,7 @@ class ALModularity(object):
         """
         return self.proxy.getScheduledJobs()
 
+    @lazy_init
     def getSourceFrequency(self, name):
         """
 
@@ -251,6 +249,7 @@ class ALModularity(object):
         """
         return self.proxy.getSourceFrequency(name)
 
+    @lazy_init
     def getSources(self):
         """
 
@@ -258,14 +257,7 @@ class ALModularity(object):
         """
         return self.proxy.getSources()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isProcessEnable(self, name):
         """
 
@@ -274,6 +266,7 @@ class ALModularity(object):
         """
         return self.proxy.isProcessEnable(name)
 
+    @lazy_init
     def isProcessZombie(self, name):
         """
 
@@ -282,6 +275,7 @@ class ALModularity(object):
         """
         return self.proxy.isProcessZombie(name)
 
+    @lazy_init
     def isProcesses(self, name):
         """
 
@@ -290,14 +284,7 @@ class ALModularity(object):
         """
         return self.proxy.isProcesses(name)
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isSourceBinded(self, name):
         """
 
@@ -306,6 +293,7 @@ class ALModularity(object):
         """
         return self.proxy.isSourceBinded(name)
 
+    @lazy_init
     def loadProgram(self, program):
         """
 
@@ -314,6 +302,7 @@ class ALModularity(object):
         """
         return self.proxy.loadProgram(program)
 
+    @lazy_init
     def loadProgramFromFile(self, arg1):
         """
 
@@ -322,13 +311,7 @@ class ALModularity(object):
         """
         return self.proxy.loadProgramFromFile(arg1)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -336,6 +319,7 @@ class ALModularity(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def resetProcess(self, name):
         """
 
@@ -344,6 +328,7 @@ class ALModularity(object):
         """
         return self.proxy.resetProcess(name)
 
+    @lazy_init
     def setProcessFrequency(self, name, priority):
         """
 
@@ -353,6 +338,7 @@ class ALModularity(object):
         """
         return self.proxy.setProcessFrequency(name, priority)
 
+    @lazy_init
     def setProcessPriority(self, name, priority):
         """
 
@@ -362,6 +348,7 @@ class ALModularity(object):
         """
         return self.proxy.setProcessPriority(name, priority)
 
+    @lazy_init
     def setRobotHeightOffset(self, heightOffset):
         """
 
@@ -370,6 +357,7 @@ class ALModularity(object):
         """
         return self.proxy.setRobotHeightOffset(heightOffset)
 
+    @lazy_init
     def startScheduler(self):
         """
 
@@ -377,13 +365,7 @@ class ALModularity(object):
         """
         return self.proxy.startScheduler()
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopScheduler(self):
         """
 
@@ -391,18 +373,10 @@ class ALModularity(object):
         """
         return self.proxy.stopScheduler()
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

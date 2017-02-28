@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALLeds")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALLeds(object):
     def __init__(self):
-        self.proxy = ALProxy("ALLeds")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def createGroup(self, groupName, ledNames):
         """Makes a group name for ease of setting multiple LEDs.
 
@@ -25,6 +32,7 @@ class ALLeds(object):
         """
         return self.proxy.createGroup(groupName, ledNames)
 
+    @lazy_init
     def earLedsSetAngle(self, degrees, duration, leaveOnAtEnd):
         """An animation to show a direction with the ears.
 
@@ -34,11 +42,7 @@ class ALLeds(object):
         """
         return self.proxy.earLedsSetAngle(degrees, duration, leaveOnAtEnd)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def fade(self, name, intensity, duration):
         """Sets the intensity of a LED or Group of LEDs within a given time.
 
@@ -48,6 +52,7 @@ class ALLeds(object):
         """
         return self.proxy.fade(name, intensity, duration)
 
+    @lazy_init
     def fadeListRGB(self, name, rgbList, timeList):
         """Chain a list of color for a device, as the motion.doMove command.
 
@@ -57,6 +62,7 @@ class ALLeds(object):
         """
         return self.proxy.fadeListRGB(name, rgbList, timeList)
 
+    @lazy_init
     def fadeRGB(self, name, red, green, blue, duration):
         """Sets the color of an RGB led.
 
@@ -68,6 +74,7 @@ class ALLeds(object):
         """
         return self.proxy.fadeRGB(name, red, green, blue, duration)
 
+    @lazy_init
     def fadeRGB2(self, name, colorName, duration):
         """Sets the color of an RGB led.
 
@@ -77,6 +84,7 @@ class ALLeds(object):
         """
         return self.proxy.fadeRGB(name, colorName, duration)
 
+    @lazy_init
     def fadeRGB3(self, name, rgb, duration):
         """Sets the color of an RGB led.
 
@@ -86,13 +94,7 @@ class ALLeds(object):
         """
         return self.proxy.fadeRGB(name, rgb, duration)
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getIntensity(self, name):
         """Gets the intensity of a LED or device
 
@@ -101,44 +103,7 @@ class ALLeds(object):
         """
         return self.proxy.getIntensity(name)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def listGroup(self, groupName):
         """Lists the devices in the group.
 
@@ -147,6 +112,7 @@ class ALLeds(object):
         """
         return self.proxy.listGroup(groupName)
 
+    @lazy_init
     def listGroups(self):
         """Lists available group names.
 
@@ -154,6 +120,7 @@ class ALLeds(object):
         """
         return self.proxy.listGroups()
 
+    @lazy_init
     def listLED(self, name):
         """Lists the devices aliased by a short LED name.
 
@@ -162,6 +129,7 @@ class ALLeds(object):
         """
         return self.proxy.listLED(name)
 
+    @lazy_init
     def listLEDs(self):
         """Lists the short LED names.
 
@@ -169,6 +137,7 @@ class ALLeds(object):
         """
         return self.proxy.listLEDs()
 
+    @lazy_init
     def off(self, name):
         """Switch to a minimum intensity a LED or Group of LEDs.
 
@@ -176,6 +145,7 @@ class ALLeds(object):
         """
         return self.proxy.off(name)
 
+    @lazy_init
     def on(self, name):
         """Switch to a maximum intensity a LED or Group of LEDs.
 
@@ -183,13 +153,7 @@ class ALLeds(object):
         """
         return self.proxy.on(name)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -197,6 +161,7 @@ class ALLeds(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def randomEyes(self, duration):
         """Launch a random animation in eyes
 
@@ -204,6 +169,7 @@ class ALLeds(object):
         """
         return self.proxy.randomEyes(duration)
 
+    @lazy_init
     def rasta(self, duration):
         """Launch a green/yellow/red rasta animation on all body.
 
@@ -211,6 +177,7 @@ class ALLeds(object):
         """
         return self.proxy.rasta(duration)
 
+    @lazy_init
     def reset(self, name):
         """Resets the state of the leds to default (for ex, eye LEDs are white and fully on by default).
 
@@ -218,6 +185,7 @@ class ALLeds(object):
         """
         return self.proxy.reset(name)
 
+    @lazy_init
     def rotateEyes(self, rgb, timeForRotation, totalDuration):
         """Launch a rotation using the leds of the eyes.
 
@@ -227,6 +195,7 @@ class ALLeds(object):
         """
         return self.proxy.rotateEyes(rgb, timeForRotation, totalDuration)
 
+    @lazy_init
     def setIntensity(self, name, intensity):
         """Sets the intensity of a LED or Group of LEDs.
 
@@ -235,25 +204,10 @@ class ALLeds(object):
         """
         return self.proxy.setIntensity(name, intensity)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

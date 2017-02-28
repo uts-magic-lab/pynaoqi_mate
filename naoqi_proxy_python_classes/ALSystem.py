@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALSystem")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALSystem(object):
     def __init__(self):
-        self.proxy = ALProxy("ALSystem")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def changePassword(self, old, snew):
         """Change the user password.
 
@@ -25,6 +32,7 @@ class ALSystem(object):
         """
         return self.proxy.changePassword(old, snew)
 
+    @lazy_init
     def diskFree(self, all):
         """Display free disk space
 
@@ -33,11 +41,7 @@ class ALSystem(object):
         """
         return self.proxy.diskFree(all)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def freeMemory(self):
         """Amount of available memory in heap
 
@@ -45,58 +49,7 @@ class ALSystem(object):
         """
         return self.proxy.freeMemory()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -104,6 +57,7 @@ class ALSystem(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def previousSystemVersion(self):
         """Previous system version before software update (empty if this is not the 1st boot after a software update)
 
@@ -111,11 +65,13 @@ class ALSystem(object):
         """
         return self.proxy.previousSystemVersion()
 
+    @lazy_init
     def reboot(self):
         """Reboot robot
         """
         return self.proxy.reboot()
 
+    @lazy_init
     def robotIcon(self):
         """Robot icon
 
@@ -123,6 +79,7 @@ class ALSystem(object):
         """
         return self.proxy.robotIcon()
 
+    @lazy_init
     def robotName(self):
         """System hostname
 
@@ -130,6 +87,7 @@ class ALSystem(object):
         """
         return self.proxy.robotName()
 
+    @lazy_init
     def setRobotName(self, name):
         """Set system hostname
 
@@ -138,6 +96,7 @@ class ALSystem(object):
         """
         return self.proxy.setRobotName(name)
 
+    @lazy_init
     def setTimezone(self, timezone):
         """Set current timezone
 
@@ -146,18 +105,13 @@ class ALSystem(object):
         """
         return self.proxy.setTimezone(timezone)
 
+    @lazy_init
     def shutdown(self):
         """Shutdown robot
         """
         return self.proxy.shutdown()
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def systemInfo(self):
         """Running system version
 
@@ -165,6 +119,7 @@ class ALSystem(object):
         """
         return self.proxy.systemInfo()
 
+    @lazy_init
     def systemVersion(self):
         """Running system version
 
@@ -172,6 +127,7 @@ class ALSystem(object):
         """
         return self.proxy.systemVersion()
 
+    @lazy_init
     def timezone(self):
         """Current timezone
 
@@ -179,6 +135,7 @@ class ALSystem(object):
         """
         return self.proxy.timezone()
 
+    @lazy_init
     def totalMemory(self):
         """Amount of total memory in heap
 
@@ -186,6 +143,7 @@ class ALSystem(object):
         """
         return self.proxy.totalMemory()
 
+    @lazy_init
     def upgrade(self, image, checksum):
         """Change the user password.
 
@@ -194,18 +152,10 @@ class ALSystem(object):
         """
         return self.proxy.upgrade(image, checksum)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

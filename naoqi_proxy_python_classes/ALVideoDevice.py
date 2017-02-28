@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALVideoDevice")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALVideoDevice(object):
     def __init__(self):
-        self.proxy = ALProxy("ALVideoDevice")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def closeCamera(self, arg1):
         """
 
@@ -25,11 +32,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.closeCamera(arg1)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def getActiveCamera(self):
         """Tells which camera is the default one
 
@@ -37,6 +40,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getActiveCamera()
 
+    @lazy_init
     def getActiveCamera2(self, name):
         """
 
@@ -45,6 +49,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getActiveCamera(name)
 
+    @lazy_init
     def getActiveCameras(self, name):
         """
 
@@ -53,6 +58,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getActiveCameras(name)
 
+    @lazy_init
     def getAngPosFromImgPos(self, arg1):
         """
 
@@ -61,6 +67,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getAngPosFromImgPos(arg1)
 
+    @lazy_init
     def getAngSizeFromImgSize(self, arg1):
         """
 
@@ -69,6 +76,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getAngSizeFromImgSize(arg1)
 
+    @lazy_init
     def getAngularPositionFromImagePosition(self, arg1, arg2):
         """
 
@@ -78,6 +86,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getAngularPositionFromImagePosition(arg1, arg2)
 
+    @lazy_init
     def getAngularSizeFromImageSize(self, arg1, arg2):
         """
 
@@ -87,13 +96,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getAngularSizeFromImageSize(arg1, arg2)
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCameraIndexes(self):
         """
 
@@ -101,6 +104,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCameraIndexes()
 
+    @lazy_init
     def getCameraModel(self, cameraIndex):
         """
 
@@ -109,6 +113,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCameraModel(cameraIndex)
 
+    @lazy_init
     def getCameraModelID(self):
         """
 
@@ -116,6 +121,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCameraModelID()
 
+    @lazy_init
     def getCameraName(self, cameraIndex):
         """
 
@@ -124,6 +130,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCameraName(cameraIndex)
 
+    @lazy_init
     def getCameraParameter(self, name, parameterId):
         """
 
@@ -133,6 +140,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCameraParameter(name, parameterId)
 
+    @lazy_init
     def getCameraParameterInfo(self, name, parameterId):
         """
 
@@ -142,6 +150,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCameraParameterInfo(name, parameterId)
 
+    @lazy_init
     def getCameraParameterRange(self, name, parameterId):
         """
 
@@ -151,6 +160,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCameraParameterRange(name, parameterId)
 
+    @lazy_init
     def getCamerasParameter(self, name, parameterId):
         """
 
@@ -160,6 +170,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getCamerasParameter(name, parameterId)
 
+    @lazy_init
     def getColorSpace(self, cameraIndex):
         """
 
@@ -168,6 +179,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getColorSpace(cameraIndex)
 
+    @lazy_init
     def getColorSpace2(self, name):
         """
 
@@ -176,6 +188,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getColorSpace(name)
 
+    @lazy_init
     def getColorSpaces(self, name):
         """
 
@@ -184,6 +197,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getColorSpaces(name)
 
+    @lazy_init
     def getDirectRawImageLocal(self, name):
         """Retrieves the latest image from the video source and returns a pointer to the locked ALImage, with data array pointing directly to raw data. There is no format conversion and no copy of the raw buffer. Warning: When image is not necessary anymore, a call to releaseDirectRawImage() is requested. Warning: When using this mode for several vision module, if they need raw data for more than 25ms check that you have strictly less modules in this mode than the amount of kernel buffers!! Warning: Release all kernel buffers before any action requesting a modification in camera running mode (e.g. resolution, switch between cameras).
 
@@ -191,6 +205,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getDirectRawImageLocal(name)
 
+    @lazy_init
     def getDirectRawImageRemote(self, name):
         """Fills an ALValue with data coming directly from raw buffer (no format conversion).
 
@@ -199,6 +214,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getDirectRawImageRemote(name)
 
+    @lazy_init
     def getDirectRawImagesLocal(self, name):
         """Retrieves the latest image from the video source and returns a pointer to the locked ALImage, with data array pointing directly to raw data. There is no format conversion and no copy of the raw buffer. Warning: When image is not necessary anymore, a call to releaseDirectRawImage() is requested. Warning: When using this mode for several vision module, if they need raw data for more than 25ms check that you have strictly less modules in this mode than the amount of kernel buffers!! Warning: Release all kernel buffers before any action requesting a modification in camera running mode (e.g. resolution, switch between cameras).
 
@@ -207,6 +223,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getDirectRawImagesLocal(name)
 
+    @lazy_init
     def getDirectRawImagesRemote(self, name):
         """Fills an ALValue with data coming directly from raw buffer (no format conversion).
 
@@ -215,6 +232,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getDirectRawImagesRemote(name)
 
+    @lazy_init
     def getExpectedImageParameters(self, cameraIndex):
         """called by the simulator to know expected image parameters
 
@@ -223,6 +241,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getExpectedImageParameters(cameraIndex)
 
+    @lazy_init
     def getExpectedImageParameters2(self):
         """called by the simulator to know expected image parameters
 
@@ -230,6 +249,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getExpectedImageParameters()
 
+    @lazy_init
     def getFrameRate(self, cameraIndex):
         """
 
@@ -238,6 +258,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getFrameRate(cameraIndex)
 
+    @lazy_init
     def getFrameRate2(self, name):
         """
 
@@ -246,6 +267,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getFrameRate(name)
 
+    @lazy_init
     def getGVMColorSpace(self, arg1):
         """
 
@@ -254,6 +276,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getGVMColorSpace(arg1)
 
+    @lazy_init
     def getGVMFrameRate(self, arg1):
         """
 
@@ -262,6 +285,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getGVMFrameRate(arg1)
 
+    @lazy_init
     def getGVMResolution(self, arg1):
         """
 
@@ -270,6 +294,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getGVMResolution(arg1)
 
+    @lazy_init
     def getHorizontalAperture(self, cameraIndex):
         """
 
@@ -278,6 +303,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getHorizontalAperture(cameraIndex)
 
+    @lazy_init
     def getHorizontalFOV(self, cameraIndex):
         """
 
@@ -286,6 +312,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getHorizontalFOV(cameraIndex)
 
+    @lazy_init
     def getImageInfoFromAngularInfo(self, arg1, arg2):
         """
 
@@ -295,6 +322,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImageInfoFromAngularInfo(arg1, arg2)
 
+    @lazy_init
     def getImageInfoFromAngularInfoWithResolution(self, arg1, arg2, arg3):
         """
 
@@ -305,6 +333,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImageInfoFromAngularInfoWithResolution(arg1, arg2, arg3)
 
+    @lazy_init
     def getImageLocal(self, name):
         """Applies transformations to the last image from video source and returns a pointer to a locked ALImage. When image is not necessary anymore, a call to releaseImage() is requested.
 
@@ -312,6 +341,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImageLocal(name)
 
+    @lazy_init
     def getImagePositionFromAngularPosition(self, arg1, arg2):
         """
 
@@ -321,6 +351,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImagePositionFromAngularPosition(arg1, arg2)
 
+    @lazy_init
     def getImageRemote(self, name):
         """Applies transformations to the last image from video source and fills pFrameOut.
 
@@ -329,6 +360,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImageRemote(name)
 
+    @lazy_init
     def getImageSizeFromAngularSize(self, arg1, arg2):
         """
 
@@ -338,6 +370,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImageSizeFromAngularSize(arg1, arg2)
 
+    @lazy_init
     def getImagesLocal(self, name):
         """Applies transformations to the last image from video source and returns a pointer to a locked ALImage. When image is not necessary anymore, a call to releaseImage() is requested.
 
@@ -346,6 +379,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImagesLocal(name)
 
+    @lazy_init
     def getImagesRemote(self, name):
         """Applies transformations to the last image from video source and fills pFrameOut.
 
@@ -354,6 +388,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImagesRemote(name)
 
+    @lazy_init
     def getImgInfoFromAngInfo(self, arg1):
         """
 
@@ -362,6 +397,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImgInfoFromAngInfo(arg1)
 
+    @lazy_init
     def getImgInfoFromAngInfoWithRes(self, arg1, arg2):
         """
 
@@ -371,6 +407,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImgInfoFromAngInfoWithRes(arg1, arg2)
 
+    @lazy_init
     def getImgPosFromAngPos(self, arg1):
         """
 
@@ -379,6 +416,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImgPosFromAngPos(arg1)
 
+    @lazy_init
     def getImgSizeFromAngSize(self, arg1):
         """
 
@@ -387,28 +425,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getImgSizeFromAngSize(arg1)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getParam(self, pParam):
         """
 
@@ -417,6 +434,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getParam(pParam)
 
+    @lazy_init
     def getParam2(self, pParam, pCameraIndex):
         """
 
@@ -426,6 +444,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getParam(pParam, pCameraIndex)
 
+    @lazy_init
     def getParameter(self, cameraIndex, parameterId):
         """
 
@@ -435,6 +454,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getParameter(cameraIndex, parameterId)
 
+    @lazy_init
     def getParameterInfo(self, cameraIndex, parameterId):
         """
 
@@ -444,6 +464,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getParameterInfo(cameraIndex, parameterId)
 
+    @lazy_init
     def getParameterRange(self, cameraIndex, parameterId):
         """
 
@@ -453,6 +474,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getParameterRange(cameraIndex, parameterId)
 
+    @lazy_init
     def getResolution(self, cameraIndex):
         """
 
@@ -461,6 +483,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getResolution(cameraIndex)
 
+    @lazy_init
     def getResolution2(self, name):
         """
 
@@ -469,6 +492,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getResolution(name)
 
+    @lazy_init
     def getResolutions(self, name):
         """
 
@@ -477,6 +501,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getResolutions(name)
 
+    @lazy_init
     def getSubscribers(self):
         """
 
@@ -484,14 +509,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getSubscribers()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getVIMColorSpace(self):
         """
 
@@ -499,6 +517,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getVIMColorSpace()
 
+    @lazy_init
     def getVIMFrameRate(self):
         """
 
@@ -506,6 +525,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getVIMFrameRate()
 
+    @lazy_init
     def getVIMResolution(self):
         """
 
@@ -513,6 +533,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getVIMResolution()
 
+    @lazy_init
     def getVerticalAperture(self, cameraIndex):
         """
 
@@ -521,6 +542,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getVerticalAperture(cameraIndex)
 
+    @lazy_init
     def getVerticalFOV(self, cameraIndex):
         """
 
@@ -529,6 +551,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.getVerticalFOV(cameraIndex)
 
+    @lazy_init
     def hasDepthCamera(self):
         """
 
@@ -536,6 +559,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.hasDepthCamera()
 
+    @lazy_init
     def isCameraOpen(self, arg1):
         """
 
@@ -544,6 +568,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.isCameraOpen(arg1)
 
+    @lazy_init
     def isCameraStarted(self, arg1):
         """
 
@@ -552,6 +577,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.isCameraStarted(arg1)
 
+    @lazy_init
     def isFrameGrabberOff(self, cameraIndex):
         """
 
@@ -560,6 +586,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.isFrameGrabberOff(cameraIndex)
 
+    @lazy_init
     def isFrameGrabberOff2(self):
         """Advanced method that asks if the framegrabber is off.
 
@@ -567,14 +594,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.isFrameGrabberOff()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def onClientDisconnected(self, eventName, eventContents, message):
         """Callback when client is disconnected
 
@@ -584,6 +604,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.onClientDisconnected(eventName, eventContents, message)
 
+    @lazy_init
     def openCamera(self, arg1):
         """
 
@@ -592,13 +613,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.openCamera(arg1)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -606,6 +621,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def putImage(self, cameraIndex, width, height, imageBuffer):
         """Allow image buffer pushing
 
@@ -617,6 +633,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.putImage(cameraIndex, width, height, imageBuffer)
 
+    @lazy_init
     def putImage2(self, imageBuffer):
         """Allow image buffer pushing
 
@@ -625,6 +642,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.putImage(imageBuffer)
 
+    @lazy_init
     def recordVideo(self, id, path, totalNumber, period):
         """Background record of an .arv raw format video from the images processed by a vision module Actualy it take picture each time the vision module call getDirectRawImageRemote().
 
@@ -636,6 +654,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.recordVideo(id, path, totalNumber, period)
 
+    @lazy_init
     def releaseDirectRawImage(self, name):
         """Release image buffer locked by getDirectRawImageLocal().
 
@@ -644,6 +663,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.releaseDirectRawImage(name)
 
+    @lazy_init
     def releaseDirectRawImages(self, name):
         """Release image buffer locked by getDirectRawImagesLocal().
 
@@ -652,6 +672,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.releaseDirectRawImages(name)
 
+    @lazy_init
     def releaseImage(self, name):
         """Release image buffer locked by getImageLocal(). If G.V.M. had no locked image buffer, does nothing.
 
@@ -660,6 +681,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.releaseImage(name)
 
+    @lazy_init
     def releaseImages(self, name):
         """Release image buffer locked by getImageLocal(). If G.V.M. had no locked image buffer, does nothing.
 
@@ -668,6 +690,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.releaseImages(name)
 
+    @lazy_init
     def resetCamera(self, arg1):
         """
 
@@ -676,6 +699,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.resetCamera(arg1)
 
+    @lazy_init
     def resolutionToSizes(self, arg1):
         """
 
@@ -684,6 +708,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.resolutionToSizes(arg1)
 
+    @lazy_init
     def setActiveCamera(self, activeCamera):
         """Set the active camera
 
@@ -692,6 +717,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setActiveCamera(activeCamera)
 
+    @lazy_init
     def setActiveCamera2(self, name, cameraIndex):
         """
 
@@ -701,6 +727,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setActiveCamera(name, cameraIndex)
 
+    @lazy_init
     def setActiveCameras(self, name, cameraIndexes):
         """
 
@@ -710,6 +737,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setActiveCameras(name, cameraIndexes)
 
+    @lazy_init
     def setAllCameraParametersToDefault(self, name):
         """
 
@@ -718,6 +746,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setAllCameraParametersToDefault(name)
 
+    @lazy_init
     def setAllParametersToDefault(self, cameraIndex):
         """
 
@@ -726,6 +755,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setAllParametersToDefault(cameraIndex)
 
+    @lazy_init
     def setCameraParameter(self, name, parameterId, value):
         """
 
@@ -736,6 +766,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setCameraParameter(name, parameterId, value)
 
+    @lazy_init
     def setCameraParameterToDefault(self, name, parameterId):
         """
 
@@ -745,6 +776,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setCameraParameterToDefault(name, parameterId)
 
+    @lazy_init
     def setCamerasParameter(self, name, parameterId, values):
         """
 
@@ -755,6 +787,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setCamerasParameter(name, parameterId, values)
 
+    @lazy_init
     def setCamerasParameterToDefault(self, name, parameterId):
         """
 
@@ -764,6 +797,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setCamerasParameterToDefault(name, parameterId)
 
+    @lazy_init
     def setColorSpace(self, name, colorSpace):
         """
 
@@ -773,6 +807,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setColorSpace(name, colorSpace)
 
+    @lazy_init
     def setColorSpaces(self, name, colorSpaces):
         """
 
@@ -782,6 +817,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setColorSpaces(name, colorSpaces)
 
+    @lazy_init
     def setFrameRate(self, name, frameRate):
         """
 
@@ -791,6 +827,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setFrameRate(name, frameRate)
 
+    @lazy_init
     def setParam(self, pParam, pNewValue):
         """Sets the value of a specific parameter for the video source.
 
@@ -799,6 +836,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setParam(pParam, pNewValue)
 
+    @lazy_init
     def setParam2(self, pParam, pNewValue, pCameraIndex):
         """Sets the value of a specific parameter for the video source.
 
@@ -808,6 +846,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setParam(pParam, pNewValue, pCameraIndex)
 
+    @lazy_init
     def setParamDefault(self, arg1):
         """
 
@@ -815,6 +854,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setParamDefault(arg1)
 
+    @lazy_init
     def setParameter(self, cameraIndex, parameterId, value):
         """
 
@@ -825,6 +865,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setParameter(cameraIndex, parameterId, value)
 
+    @lazy_init
     def setParameterToDefault(self, cameraIndex, parameterId):
         """
 
@@ -834,6 +875,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setParameterToDefault(cameraIndex, parameterId)
 
+    @lazy_init
     def setResolution(self, name, resolution):
         """
 
@@ -843,6 +885,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setResolution(name, resolution)
 
+    @lazy_init
     def setResolutions(self, name, resolutions):
         """
 
@@ -852,6 +895,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setResolutions(name, resolutions)
 
+    @lazy_init
     def setSimCamInputSize(self, width, height):
         """called by the simulator to know expected image parameters
 
@@ -861,6 +905,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.setSimCamInputSize(width, height)
 
+    @lazy_init
     def sizesToResolution(self, arg1, arg2):
         """
 
@@ -870,6 +915,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.sizesToResolution(arg1, arg2)
 
+    @lazy_init
     def startCamera(self, arg1):
         """
 
@@ -878,6 +924,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.startCamera(arg1)
 
+    @lazy_init
     def startFrameGrabber(self, cameraIndex):
         """
 
@@ -886,6 +933,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.startFrameGrabber(cameraIndex)
 
+    @lazy_init
     def startFrameGrabber2(self):
         """Advanced method that opens and initialize video source device if it was not before. Note that the first module subscribing to ALVideoDevice will launch it automatically.
 
@@ -893,13 +941,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.startFrameGrabber()
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopCamera(self, arg1):
         """
 
@@ -908,6 +950,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.stopCamera(arg1)
 
+    @lazy_init
     def stopFrameGrabber(self, cameraIndex):
         """
 
@@ -916,6 +959,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.stopFrameGrabber(cameraIndex)
 
+    @lazy_init
     def stopFrameGrabber2(self):
         """Advanced method that close video source device. Note that the last module unsubscribing to ALVideoDevice will launch it automatically.
 
@@ -923,6 +967,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.stopFrameGrabber()
 
+    @lazy_init
     def stopVideo(self, id):
         """Stop writing the video sequence
 
@@ -931,6 +976,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.stopVideo(id)
 
+    @lazy_init
     def subscribe(self, gvmName, resolution, colorSpace, fps):
         """Register to ALVideoDevice (formerly Video Input Module/V.I.M.). When a General Video Module(G.V.M.) registers to ALVideoDevice, a buffer of the requested image format is added to the buffers list. Returns the name under which the G.V.M. is registered to ALVideoDevice (useful when two G.V.M. try to register using the same name
 
@@ -942,6 +988,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.subscribe(gvmName, resolution, colorSpace, fps)
 
+    @lazy_init
     def subscribeCamera(self, name, cameraIndex, resolution, colorSpace, fps):
         """
 
@@ -954,6 +1001,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.subscribeCamera(name, cameraIndex, resolution, colorSpace, fps)
 
+    @lazy_init
     def subscribeCameras(self, name, cameraIndexes, resolutions, colorSpaces, fps):
         """
 
@@ -966,6 +1014,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.subscribeCameras(name, cameraIndexes, resolutions, colorSpaces, fps)
 
+    @lazy_init
     def unsubscribe(self, nameId):
         """
 
@@ -974,6 +1023,7 @@ class ALVideoDevice(object):
         """
         return self.proxy.unsubscribe(nameId)
 
+    @lazy_init
     def unsubscribeAllInstances(self, id):
         """Used to unsubscribe all instances for a given G.V.M. (e.g. VisionModule and VisionModule_5) from ALVideoDevice.
 
@@ -981,18 +1031,10 @@ class ALVideoDevice(object):
         """
         return self.proxy.unsubscribeAllInstances(id)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

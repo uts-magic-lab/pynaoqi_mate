@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALFileManager")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALFileManager(object):
     def __init__(self):
-        self.proxy = ALProxy("ALFileManager")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def dataFileExists(self, fileName):
         """Try to find if this file does exist on robot or not.
 
@@ -25,11 +32,7 @@ class ALFileManager(object):
         """
         return self.proxy.dataFileExists(fileName)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def fileExists(self, fileName):
         """Try to find if this file does exist on robot or not.
 
@@ -38,13 +41,7 @@ class ALFileManager(object):
         """
         return self.proxy.fileExists(fileName)
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getFileCompletePath(self, prefs):
         """Returns the complete path of the file if it does exist. Starts by looking in user's shared folder, then in system folder.
 
@@ -53,6 +50,7 @@ class ALFileManager(object):
         """
         return self.proxy.getFileCompletePath(prefs)
 
+    @lazy_init
     def getFileContents(self, prefs):
         """Returns the complete path of the file if it does exist. Starts by looking in user's shared folder, then in system folder.
 
@@ -61,28 +59,7 @@ class ALFileManager(object):
         """
         return self.proxy.getFileContents(prefs)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getSystemSharedFolderPath(self):
         """Get the current system shared folder path.
 
@@ -90,14 +67,7 @@ class ALFileManager(object):
         """
         return self.proxy.getSystemSharedFolderPath()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getUserSharedFolderPath(self):
         """Get the current user shared folder path.
 
@@ -105,21 +75,7 @@ class ALFileManager(object):
         """
         return self.proxy.getUserSharedFolderPath()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -127,6 +83,7 @@ class ALFileManager(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def setUserSharedFolderPath(self, fileName):
         """Set a new value of the user shared folder path.
 
@@ -134,25 +91,10 @@ class ALFileManager(object):
         """
         return self.proxy.setUserSharedFolderPath(fileName)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

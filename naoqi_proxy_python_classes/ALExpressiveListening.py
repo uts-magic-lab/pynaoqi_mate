@@ -6,51 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALExpressiveListening")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALExpressiveListening(object):
     def __init__(self):
-        self.proxy = ALProxy("ALExpressiveListening")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getParameter(self, parameter):
         """Get the specified parameter.
 
@@ -59,14 +32,7 @@ class ALExpressiveListening(object):
         """
         return self.proxy.getParameter(parameter)
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isListening(self):
         """Get the status (started or not) of the module.
 
@@ -74,6 +40,7 @@ class ALExpressiveListening(object):
         """
         return self.proxy.isListening()
 
+    @lazy_init
     def isNoddingEnabled(self):
         """Get status enabled/disabled for Nodding
 
@@ -81,6 +48,7 @@ class ALExpressiveListening(object):
         """
         return self.proxy.isNoddingEnabled()
 
+    @lazy_init
     def isPaused(self):
         """Get the pause status of the module.
 
@@ -88,14 +56,7 @@ class ALExpressiveListening(object):
         """
         return self.proxy.isPaused()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isTracking3DEnabled(self):
         """Get status enabled/disabled for tracking.
 
@@ -103,11 +64,13 @@ class ALExpressiveListening(object):
         """
         return self.proxy.isTracking3DEnabled()
 
+    @lazy_init
     def pauseListening(self):
         """Pause Expressive Listening.
         """
         return self.proxy.pauseListening()
 
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -115,11 +78,13 @@ class ALExpressiveListening(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def resumeListening(self):
         """Resume Expressive Listening.
         """
         return self.proxy.resumeListening()
 
+    @lazy_init
     def setNoddingEnabled(self, enable):
         """Enable/Disable nodding.
 
@@ -127,6 +92,7 @@ class ALExpressiveListening(object):
         """
         return self.proxy.setNoddingEnabled(enable)
 
+    @lazy_init
     def setParameter(self, parameter, value):
         """Set the specified parameter.
 
@@ -135,6 +101,7 @@ class ALExpressiveListening(object):
         """
         return self.proxy.setParameter(parameter, value)
 
+    @lazy_init
     def setTracking3DEnabled(self, enable):
         """Enable/Disable tracking.
 
@@ -142,35 +109,22 @@ class ALExpressiveListening(object):
         """
         return self.proxy.setTracking3DEnabled(enable)
 
+    @lazy_init
     def startListening(self):
         """Start Expressive Listening.
         """
         return self.proxy.startListening()
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopListening(self):
         """Stop Expressive Listening.
         """
         return self.proxy.stopListening()
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

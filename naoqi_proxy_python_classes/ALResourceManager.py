@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALResourceManager")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALResourceManager(object):
     def __init__(self):
-        self.proxy = ALProxy("ALResourceManager")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def acquireResource(self, resourceName, moduleName, callbackName, timeoutSeconds):
         """Wait and acquire a resource
 
@@ -27,6 +34,7 @@ class ALResourceManager(object):
         """
         return self.proxy.acquireResource(resourceName, moduleName, callbackName, timeoutSeconds)
 
+    @lazy_init
     def acquireResourcesTree(self, resourceName, moduleName, callbackName, timeoutSeconds):
         """Wait for resource tree. Parent and children are not in conflict. Local function
 
@@ -37,6 +45,7 @@ class ALResourceManager(object):
         """
         return self.proxy.acquireResourcesTree(resourceName, moduleName, callbackName, timeoutSeconds)
 
+    @lazy_init
     def areResourcesFree(self, resourceNames):
         """True if all resources are free
 
@@ -45,6 +54,7 @@ class ALResourceManager(object):
         """
         return self.proxy.areResourcesFree(resourceNames)
 
+    @lazy_init
     def areResourcesOwnedBy(self, resourceNameList, ownerName):
         """True if all the specified resources are owned by the owner
 
@@ -54,6 +64,7 @@ class ALResourceManager(object):
         """
         return self.proxy.areResourcesOwnedBy(resourceNameList, ownerName)
 
+    @lazy_init
     def checkStateResourceFree(self, resourceName):
         """check if all the state resource in the list are free
 
@@ -62,6 +73,7 @@ class ALResourceManager(object):
         """
         return self.proxy.checkStateResourceFree(resourceName)
 
+    @lazy_init
     def createResource(self, resourceName, parentResourceName):
         """Create a resource
 
@@ -70,6 +82,7 @@ class ALResourceManager(object):
         """
         return self.proxy.createResource(resourceName, parentResourceName)
 
+    @lazy_init
     def createResourcesList(self, resourceGroupName, resourceName):
         """True if a resource is in another parent resource
 
@@ -78,6 +91,7 @@ class ALResourceManager(object):
         """
         return self.proxy.createResourcesList(resourceGroupName, resourceName)
 
+    @lazy_init
     def deleteResource(self, resourceName, deleteChildResources):
         """Delete a root resource
 
@@ -86,6 +100,7 @@ class ALResourceManager(object):
         """
         return self.proxy.deleteResource(resourceName, deleteChildResources)
 
+    @lazy_init
     def enableStateResource(self, resourceName, enabled):
         """Enable or disable a state resource
 
@@ -94,40 +109,7 @@ class ALResourceManager(object):
         """
         return self.proxy.enableStateResource(resourceName, enabled)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getResources(self):
         """Get tree of resources
 
@@ -135,14 +117,7 @@ class ALResourceManager(object):
         """
         return self.proxy.getResources()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isInGroup(self, resourceGroupName, resourceName):
         """True if a resource is in another parent resource
 
@@ -152,6 +127,7 @@ class ALResourceManager(object):
         """
         return self.proxy.isInGroup(resourceGroupName, resourceName)
 
+    @lazy_init
     def isResourceFree(self, resourceNames):
         """True if the resource is free
 
@@ -160,14 +136,7 @@ class ALResourceManager(object):
         """
         return self.proxy.isResourceFree(resourceNames)
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def ownersGet(self):
         """The tree of the resources owners.
 
@@ -175,13 +144,7 @@ class ALResourceManager(object):
         """
         return self.proxy.ownersGet()
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -189,6 +152,7 @@ class ALResourceManager(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def releaseResource(self, resourceName, ownerName):
         """Release resource
 
@@ -197,6 +161,7 @@ class ALResourceManager(object):
         """
         return self.proxy.releaseResource(resourceName, ownerName)
 
+    @lazy_init
     def releaseResources(self, resourceNames, ownerName):
         """Release  resources list
 
@@ -205,13 +170,7 @@ class ALResourceManager(object):
         """
         return self.proxy.releaseResources(resourceNames, ownerName)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
@@ -219,15 +178,7 @@ class ALResourceManager(object):
         """
         return self.proxy.version()
 
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)
-
+    @lazy_init
     def waitForOptionalResourcesTree(self, arg1, arg2, arg3, arg4, arg5):
         """Wait resource
 
@@ -240,6 +191,7 @@ class ALResourceManager(object):
         """
         return self.proxy.waitForOptionalResourcesTree(arg1, arg2, arg3, arg4, arg5)
 
+    @lazy_init
     def waitForResource(self, resourceName, ownerName, callbackName, timeoutSeconds):
         """Wait resource
 
@@ -250,6 +202,7 @@ class ALResourceManager(object):
         """
         return self.proxy.waitForResource(resourceName, ownerName, callbackName, timeoutSeconds)
 
+    @lazy_init
     def waitForResourcesTree(self, resourceName, moduleName, callbackName, timeoutSeconds):
         """Wait for resource tree. Parent and children are not in conflict. Local function
 

@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALObjectDetection")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALObjectDetection(object):
     def __init__(self):
-        self.proxy = ALProxy("ALObjectDetection")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def analyzeFile(self, strImageFilename):
         """Detect things from image file, using previously set cascade
 
@@ -25,11 +32,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.analyzeFile(strImageFilename)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def getActiveCamera(self):
         """
 
@@ -37,13 +40,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getActiveCamera()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCascadeFile(self):
         """Returns the filename of the cascade file used for detection.
 
@@ -51,6 +48,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getCascadeFile()
 
+    @lazy_init
     def getCropMargin(self):
         """Returns the crop margins currently set for saving the detected objects' images.
 
@@ -58,6 +56,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getCropMargin()
 
+    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
@@ -65,6 +64,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getCurrentPeriod()
 
+    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
@@ -72,6 +72,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getCurrentPrecision()
 
+    @lazy_init
     def getFrameRate(self):
         """
 
@@ -79,21 +80,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getFrameRate()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
+    @lazy_init
     def getMinNeighbors(self):
         """Returns the minimum number of neighbors set for the algorithm.
 
@@ -101,6 +88,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getMinNeighbors()
 
+    @lazy_init
     def getMinSize(self):
         """Returns the minimum object size currently set for detection
 
@@ -108,13 +96,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getMinSize()
 
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
@@ -123,6 +105,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getMyPeriod(name)
 
+    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
@@ -131,6 +114,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getMyPrecision(name)
 
+    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
@@ -138,6 +122,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getOutputNames()
 
+    @lazy_init
     def getResolution(self):
         """
 
@@ -145,6 +130,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getResolution()
 
+    @lazy_init
     def getSavePath(self):
         """Returns the path currently set for saving the detected objects' images.
 
@@ -152,6 +138,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getSavePath()
 
+    @lazy_init
     def getScaleFactor(self):
         """Returns used scale factor.
 
@@ -159,6 +146,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getScaleFactor()
 
+    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
@@ -166,14 +154,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.getSubscribersInfo()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isDebugEnabled(self):
         """Returns true if debug is enabled, else returns false
 
@@ -181,6 +162,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.isDebugEnabled()
 
+    @lazy_init
     def isPaused(self):
         """
 
@@ -188,6 +170,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.isPaused()
 
+    @lazy_init
     def isProcessing(self):
         """
 
@@ -195,14 +178,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.isProcessing()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isSavingEnabled(self):
         """Returns true if saving is enabled, else returns false
 
@@ -210,6 +186,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.isSavingEnabled()
 
+    @lazy_init
     def pause(self, status):
         """
 
@@ -217,6 +194,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.pause(status)
 
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -224,6 +202,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def setActiveCamera(self, cameraID):
         """
 
@@ -232,6 +211,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setActiveCamera(cameraID)
 
+    @lazy_init
     def setCascadeFile(self, strCascadeFilename):
         """set the cascade file to use
 
@@ -239,6 +219,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setCascadeFile(strCascadeFilename)
 
+    @lazy_init
     def setCropMargin(self, nCropWidthMargin, nCropHeightMargin):
         """Set the crop margins for saving the detected objects' images.
 
@@ -247,6 +228,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setCropMargin(nCropWidthMargin, nCropHeightMargin)
 
+    @lazy_init
     def setDebugEnabled(self, bNewState):
         """Enable some outputting, helping testing and understanding.
 
@@ -254,6 +236,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setDebugEnabled(bNewState)
 
+    @lazy_init
     def setFrameRate(self, value):
         """
 
@@ -262,6 +245,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setFrameRate(value)
 
+    @lazy_init
     def setMinNeighbors(self, nMinNeighbors):
         """Sets the minimum number of underlying detections (acts like a confidence threshold)
 
@@ -269,6 +253,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setMinNeighbors(nMinNeighbors)
 
+    @lazy_init
     def setMinSize(self, nMinSizeX, nMinSizeY):
         """Sets the minimum object size for detection
 
@@ -277,6 +262,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setMinSize(nMinSizeX, nMinSizeY)
 
+    @lazy_init
     def setResolution(self, resolution):
         """
 
@@ -285,6 +271,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setResolution(resolution)
 
+    @lazy_init
     def setSavePath(self, strDestinationPath):
         """Set the path where to save the detected objects' images.
 
@@ -292,6 +279,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setSavePath(strDestinationPath)
 
+    @lazy_init
     def setSavingEnabled(self, bNewState):
         """Enable or disable the saving of each detected object's image.
 
@@ -299,6 +287,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setSavingEnabled(bNewState)
 
+    @lazy_init
     def setScaleFactor(self, rScaleFactor):
         """change some cascade parameter(s) (will be updated on the fly on next frame)
 
@@ -306,13 +295,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.setScaleFactor(rScaleFactor)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData(\"keyName\"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -322,6 +305,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.subscribe(name, period, precision)
 
+    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData(\"keyName\"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -329,6 +313,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.subscribe(name)
 
+    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
@@ -336,6 +321,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.unsubscribe(name)
 
+    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
@@ -344,6 +330,7 @@ class ALObjectDetection(object):
         """
         return self.proxy.updatePeriod(name, period)
 
+    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
@@ -352,18 +339,10 @@ class ALObjectDetection(object):
         """
         return self.proxy.updatePrecision(name, precision)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALWorldRepresentation")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALWorldRepresentation(object):
     def __init__(self):
-        self.proxy = ALProxy("ALWorldRepresentation")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def addAttributeToCategory(self, arg1, arg2, arg3):
         """Add an attribute to a category.
 
@@ -27,6 +34,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.addAttributeToCategory(arg1, arg2, arg3)
 
+    @lazy_init
     def clearObject(self, arg1):
         """Clear an object.
 
@@ -35,6 +43,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.clearObject(arg1)
 
+    @lazy_init
     def clearOldPositions(self, arg1, arg2):
         """Clear recording of old positions.
 
@@ -44,6 +53,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.clearOldPositions(arg1, arg2)
 
+    @lazy_init
     def createObjectCategory(self, arg1, arg2):
         """Create a new object category
 
@@ -53,6 +63,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.createObjectCategory(arg1, arg2)
 
+    @lazy_init
     def deleteObjectAttribute(self, arg1, arg2, arg3):
         """Delete an object attribute
 
@@ -63,11 +74,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.deleteObjectAttribute(arg1, arg2, arg3)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def findObject(self, arg1):
         """Check that an object is present.
 
@@ -76,6 +83,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.findObject(arg1)
 
+    @lazy_init
     def getAttributesFromCategory(self, arg1):
         """Get all attributes from a category if it exists.
 
@@ -84,13 +92,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getAttributesFromCategory(arg1)
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getChildrenNames(self, arg1):
         """Get the direct children of an object.
 
@@ -99,28 +101,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getChildrenNames(arg1)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getObjectAttributeValues(self, arg1, arg2, arg3):
         """
 
@@ -131,6 +112,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getObjectAttributeValues(arg1, arg2, arg3)
 
+    @lazy_init
     def getObjectAttributes(self, arg1):
         """
 
@@ -139,6 +121,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getObjectAttributes(arg1)
 
+    @lazy_init
     def getObjectCategory(self, arg1):
         """Get the name of the database where the object is stored.
 
@@ -147,6 +130,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getObjectCategory(arg1)
 
+    @lazy_init
     def getObjectLatestAttributes(self, arg1, arg2):
         """
 
@@ -156,6 +140,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getObjectLatestAttributes(arg1, arg2)
 
+    @lazy_init
     def getObjectNames(self):
         """Get the name of the objects.
 
@@ -163,6 +148,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getObjectNames()
 
+    @lazy_init
     def getObjectParentName(self, arg1):
         """
 
@@ -171,6 +157,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getObjectParentName(arg1)
 
+    @lazy_init
     def getObjectsInCategory(self, arg1):
         """Get the name of the objects stored in the database.
 
@@ -179,6 +166,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getObjectsInCategory(arg1)
 
+    @lazy_init
     def getPosition(self, arg1, arg2):
         """Get the position of an object with quaternion / translation.
 
@@ -188,6 +176,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getPosition(arg1, arg2)
 
+    @lazy_init
     def getPosition6D(self, arg1, arg2):
         """Get the position from one object to another.
 
@@ -197,6 +186,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getPosition6D(arg1, arg2)
 
+    @lazy_init
     def getPosition6DAtTime(self, arg1, arg2, arg3, arg4):
         """Get the interpolated position of an object
 
@@ -208,6 +198,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getPosition6DAtTime(arg1, arg2, arg3, arg4)
 
+    @lazy_init
     def getRootName(self):
         """
 
@@ -215,22 +206,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.getRootName()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def load(self):
         """
 
@@ -238,6 +214,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.load()
 
+    @lazy_init
     def objectCategoryExists(self, arg1):
         """Tells if an object category exists
 
@@ -246,13 +223,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.objectCategoryExists(arg1)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -260,6 +231,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def removeObjectCategory(self, arg1):
         """Remove an object category
 
@@ -268,6 +240,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.removeObjectCategory(arg1)
 
+    @lazy_init
     def save(self):
         """
 
@@ -275,6 +248,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.save()
 
+    @lazy_init
     def select(self, arg1, arg2, arg3, arg4):
         """Select information from a database.
 
@@ -286,6 +260,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.select(arg1, arg2, arg3, arg4)
 
+    @lazy_init
     def selectWithOrder(self, arg1, arg2, arg3, arg4, arg5):
         """Select ordered information from a database.
 
@@ -298,13 +273,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.selectWithOrder(arg1, arg2, arg3, arg4, arg5)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def storeObject(self, arg1, arg2, arg3, arg4, arg5):
         """
 
@@ -317,6 +286,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.storeObject(arg1, arg2, arg3, arg4, arg5)
 
+    @lazy_init
     def storeObjectAttribute(self, arg1, arg2, arg3):
         """
 
@@ -327,6 +297,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.storeObjectAttribute(arg1, arg2, arg3)
 
+    @lazy_init
     def storeObjectWithReference(self, arg1, arg2, arg3, arg4, arg5, arg6):
         """
 
@@ -340,6 +311,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.storeObjectWithReference(arg1, arg2, arg3, arg4, arg5, arg6)
 
+    @lazy_init
     def updateAttribute(self, arg1, arg2, arg3, arg4):
         """
 
@@ -351,6 +323,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.updateAttribute(arg1, arg2, arg3, arg4)
 
+    @lazy_init
     def updatePosition(self, arg1, arg2, arg3):
         """Update the position of an object.
 
@@ -361,6 +334,7 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.updatePosition(arg1, arg2, arg3)
 
+    @lazy_init
     def updatePositionWithReference(self, arg1, arg2, arg3, arg4):
         """Update the position of an object relative to another.
 
@@ -372,18 +346,10 @@ class ALWorldRepresentation(object):
         """
         return self.proxy.updatePositionWithReference(arg1, arg2, arg3, arg4)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

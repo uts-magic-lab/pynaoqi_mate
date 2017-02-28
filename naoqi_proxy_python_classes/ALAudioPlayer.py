@@ -6,29 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALAudioPlayer")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALAudioPlayer(object):
     def __init__(self):
-        self.proxy = ALProxy("ALAudioPlayer")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCurrentPosition(self, playId):
         """Returns the position in the file which is currently played
 
@@ -37,6 +32,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getCurrentPosition(playId)
 
+    @lazy_init
     def getFileLength(self, playId):
         """Returns the length of the file played
 
@@ -45,6 +41,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getFileLength(playId)
 
+    @lazy_init
     def getInstalledSoundSetsList(self):
         """
 
@@ -52,6 +49,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getInstalledSoundSetsList()
 
+    @lazy_init
     def getLoadedFilesIds(self):
         """returns an array containing the Ids of the currently loaded files
 
@@ -59,6 +57,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getLoadedFilesIds()
 
+    @lazy_init
     def getLoadedFilesNames(self):
         """returns an array containing the names of the currently loaded files
 
@@ -66,6 +65,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getLoadedFilesNames()
 
+    @lazy_init
     def getLoadedSoundSetsList(self):
         """
 
@@ -73,6 +73,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getLoadedSoundSetsList()
 
+    @lazy_init
     def getMasterVolume(self):
         """Returns the master volume of the player
 
@@ -80,28 +81,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getMasterVolume()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getSoundSetFileNames(self, setName):
         """Return the list of files contained in a sound set
 
@@ -110,14 +90,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getSoundSetFileNames(setName)
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getVolume(self, playId):
         """Returns the volume of the player
 
@@ -126,6 +99,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.getVolume(playId)
 
+    @lazy_init
     def goTo(self, playId, position):
         """Goes to a given position in a file which is playing.
 
@@ -134,14 +108,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.goTo(playId, position)
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isSoundSetFileInstalled(self, setName, soundName):
         """
 
@@ -151,6 +118,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.isSoundSetFileInstalled(setName, soundName)
 
+    @lazy_init
     def isSoundSetInstalled(self, setName):
         """
 
@@ -159,6 +127,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.isSoundSetInstalled(setName)
 
+    @lazy_init
     def loadFile(self, fileName):
         """Loads a file for ulterior playback
 
@@ -167,6 +136,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.loadFile(fileName)
 
+    @lazy_init
     def loadSoundSet(self, setName):
         """Load a sound set
 
@@ -174,13 +144,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.loadSoundSet(setName)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def pause(self, id):
         """Pause a play back
 
@@ -188,6 +152,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.pause(id)
 
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -195,6 +160,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def play(self, id):
         """Starts the playback of a file preloaded with the loadFile function.
 
@@ -202,6 +168,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.play(id)
 
+    @lazy_init
     def play2(self, id, volume, pan):
         """Starts the playback of a file preloaded with the loadFile function, with specific volume and audio balance
 
@@ -211,6 +178,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.play(id, volume, pan)
 
+    @lazy_init
     def playFile(self, fileName):
         """Plays a wav or mp3 file
 
@@ -218,6 +186,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playFile(fileName)
 
+    @lazy_init
     def playFile2(self, fileName, volume, pan):
         """Plays a wav or mp3 file, with specific volume and audio balance
 
@@ -227,6 +196,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playFile(fileName, volume, pan)
 
+    @lazy_init
     def playFileFromPosition(self, fileName, position):
         """Plays a wav or mp3 file from a given position in the file.
 
@@ -235,6 +205,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playFileFromPosition(fileName, position)
 
+    @lazy_init
     def playFileFromPosition2(self, fileName, position, volume, pan):
         """Plays a wav or mp3 file from a given position in the file, with specific volume and audio balance
 
@@ -245,6 +216,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playFileFromPosition(fileName, position, volume, pan)
 
+    @lazy_init
     def playFileInLoop(self, fileName):
         """Plays a wav or mp3 file in loop
 
@@ -252,6 +224,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playFileInLoop(fileName)
 
+    @lazy_init
     def playFileInLoop2(self, fileName, volume, pan):
         """Plays a wav or mp3 file in loop, with specific volume and audio balance
 
@@ -261,6 +234,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playFileInLoop(fileName, volume, pan)
 
+    @lazy_init
     def playInLoop(self, id):
         """Starts the playback in loop of a file preloaded with the loadFile function
 
@@ -268,6 +242,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playInLoop(id)
 
+    @lazy_init
     def playInLoop2(self, id, volume, pan):
         """Plays a wav or mp3 file in loop, with specific volume and audio balance
 
@@ -277,6 +252,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playInLoop(id, volume, pan)
 
+    @lazy_init
     def playSine(self, frequence, gain, pan, duration):
         """Play a sine wave which specified caracteristics.
 
@@ -287,6 +263,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playSine(frequence, gain, pan, duration)
 
+    @lazy_init
     def playSoundSetFile(self, fileName):
         """Plays a file contained in one of the sound sets loaded
 
@@ -294,6 +271,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playSoundSetFile(fileName)
 
+    @lazy_init
     def playSoundSetFile2(self, soundSetName, fileName):
         """Plays a file contained in a given sound set
 
@@ -302,6 +280,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playSoundSetFile(soundSetName, fileName)
 
+    @lazy_init
     def playSoundSetFile3(self, soundSetName, fileName, position, volume, pan, loop):
         """Plays a file contained in a given sound set
 
@@ -314,6 +293,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playSoundSetFile(soundSetName, fileName, position, volume, pan, loop)
 
+    @lazy_init
     def playSoundSetFile4(self, fileName, position, volume, pan, loop):
         """Plays a file contained in a given sound set
 
@@ -325,6 +305,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playSoundSetFile(fileName, position, volume, pan, loop)
 
+    @lazy_init
     def playWebStream(self, streamName, arg2, arg3):
         """Starts the playback of a wab audio stream
 
@@ -334,6 +315,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.playWebStream(streamName, arg2, arg3)
 
+    @lazy_init
     def setMasterVolume(self, volume):
         """Sets the master volume of the player
 
@@ -341,6 +323,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.setMasterVolume(volume)
 
+    @lazy_init
     def setPanorama(self, arg1):
         """sets the audio panorama : -1 for left speaker / 1 for right speaker
 
@@ -348,6 +331,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.setPanorama(arg1)
 
+    @lazy_init
     def setVolume(self, id, volume):
         """Sets the volume of the player
 
@@ -356,23 +340,19 @@ class ALAudioPlayer(object):
         """
         return self.proxy.setVolume(id, volume)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopAll(self):
         """Stops all the files that are currently playing.
         """
         return self.proxy.stopAll()
 
+    @lazy_init
     def unloadAllFiles(self):
         """unloads all the files already loaded.
         """
         return self.proxy.unloadAllFiles()
 
+    @lazy_init
     def unloadFile(self, id):
         """unloads a file previously loaded with the loadFile function
 
@@ -380,6 +360,7 @@ class ALAudioPlayer(object):
         """
         return self.proxy.unloadFile(id)
 
+    @lazy_init
     def unloadSoundSet(self, setName):
         """Unload a sound set
 
@@ -387,18 +368,10 @@ class ALAudioPlayer(object):
         """
         return self.proxy.unloadSoundSet(setName)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

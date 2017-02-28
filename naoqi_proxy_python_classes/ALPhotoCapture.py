@@ -6,29 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALPhotoCapture")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALPhotoCapture(object):
     def __init__(self):
-        self.proxy = ALProxy("ALPhotoCapture")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCameraID(self):
         """Returns current camera ID.
 
@@ -36,6 +31,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.getCameraID()
 
+    @lazy_init
     def getCaptureInterval(self):
         """Returns current delay between captures.
 
@@ -43,6 +39,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.getCaptureInterval()
 
+    @lazy_init
     def getColorSpace(self):
         """Returns current color space.
 
@@ -50,28 +47,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.getColorSpace()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getPictureFormat(self):
         """Returns current picture format.
 
@@ -79,6 +55,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.getPictureFormat()
 
+    @lazy_init
     def getResolution(self):
         """Returns current resolution.
 
@@ -86,14 +63,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.getResolution()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def halfPress(self):
         """Manually (un)subscribes to ALVideoDevice.
 
@@ -101,6 +71,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.halfPress()
 
+    @lazy_init
     def isHalfPressEnabled(self):
         """Returns True if the "half press" mode is on.
 
@@ -108,6 +79,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.isHalfPressEnabled()
 
+    @lazy_init
     def isHalfPressed(self):
         """Returns True if the "half press" mode is on.
 
@@ -115,21 +87,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.isHalfPressed()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -137,6 +95,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def setCameraID(self, cameraID):
         """Sets camera ID.
 
@@ -144,6 +103,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.setCameraID(cameraID)
 
+    @lazy_init
     def setCaptureInterval(self, captureInterval):
         """Sets delay between two captures.
 
@@ -151,6 +111,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.setCaptureInterval(captureInterval)
 
+    @lazy_init
     def setColorSpace(self, colorSpace):
         """Sets color space.
 
@@ -158,6 +119,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.setColorSpace(colorSpace)
 
+    @lazy_init
     def setHalfPressEnabled(self, enable):
         """Enables or disables the half-press mode.
 
@@ -165,6 +127,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.setHalfPressEnabled(enable)
 
+    @lazy_init
     def setPictureFormat(self, pictureFormat):
         """Sets picture extension.
 
@@ -172,6 +135,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.setPictureFormat(pictureFormat)
 
+    @lazy_init
     def setResolution(self, resolution):
         """Sets resolution.
 
@@ -179,13 +143,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.setResolution(resolution)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def takePicture(self, folderPath, fileName):
         """Takes one picture.
 
@@ -195,6 +153,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.takePicture(folderPath, fileName)
 
+    @lazy_init
     def takePicture2(self, folderPath, fileName, overwrite):
         """Takes one picture.
 
@@ -205,6 +164,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.takePicture(folderPath, fileName, overwrite)
 
+    @lazy_init
     def takePictures(self, numberOfPictures, folderPath, fileName):
         """Takes several pictures as quickly as possible
 
@@ -215,6 +175,7 @@ class ALPhotoCapture(object):
         """
         return self.proxy.takePictures(numberOfPictures, folderPath, fileName)
 
+    @lazy_init
     def takePictures2(self, numberOfPictures, folderPath, fileName, overwrite):
         """Takes several pictures as quickly as possible
 
@@ -226,18 +187,10 @@ class ALPhotoCapture(object):
         """
         return self.proxy.takePictures(numberOfPictures, folderPath, fileName, overwrite)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

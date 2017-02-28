@@ -6,22 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALMovementDetection")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALMovementDetection(object):
     def __init__(self):
-        self.proxy = ALProxy("ALMovementDetection")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def getActiveCamera(self):
         """Gets extractor active camera
 
@@ -29,13 +31,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getActiveCamera()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getColorSensitivity(self):
         """Gets the value of the color sensitivity
 
@@ -43,6 +39,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getColorSensitivity()
 
+    @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.
 
@@ -50,6 +47,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getCurrentPeriod()
 
+    @lazy_init
     def getCurrentPrecision(self):
         """Gets the current precision.
 
@@ -57,6 +55,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getCurrentPrecision()
 
+    @lazy_init
     def getDepthSensitivity(self):
         """gets the value of the depth sensitivity (in meters)
 
@@ -64,6 +63,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getDepthSensitivity()
 
+    @lazy_init
     def getEventList(self):
         """Get the list of events updated in ALMemory.
 
@@ -71,6 +71,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getEventList()
 
+    @lazy_init
     def getFrameRate(self):
         """Gets extractor framerate
 
@@ -78,6 +79,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getFrameRate()
 
+    @lazy_init
     def getMemoryKeyList(self):
         """Get the list of events updated in ALMemory.
 
@@ -85,28 +87,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getMemoryKeyList()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getMyPeriod(self, name):
         """Gets the period for a specific subscription.
 
@@ -115,6 +96,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getMyPeriod(name)
 
+    @lazy_init
     def getMyPrecision(self, name):
         """Gets the precision for a specific subscription.
 
@@ -123,6 +105,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getMyPrecision(name)
 
+    @lazy_init
     def getOutputNames(self):
         """Get the list of values updated in ALMemory.
 
@@ -130,6 +113,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getOutputNames()
 
+    @lazy_init
     def getResolution(self):
         """Gets extractor resolution
 
@@ -137,6 +121,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getResolution()
 
+    @lazy_init
     def getSubscribersInfo(self):
         """Gets the parameters given by the module.
 
@@ -144,14 +129,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.getSubscribersInfo()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isPaused(self):
         """Gets extractor pause status
 
@@ -159,6 +137,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.isPaused()
 
+    @lazy_init
     def isProcessing(self):
         """Gets extractor running status
 
@@ -166,21 +145,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.isProcessing()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def pause(self, status):
         """Changes the pause status of the extractor
 
@@ -188,6 +153,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.pause(status)
 
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -195,11 +161,13 @@ class ALMovementDetection(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def resetDetection(self):
         """Enables to reset the movement detection when desired
         """
         return self.proxy.resetDetection()
 
+    @lazy_init
     def setActiveCamera(self, cameraId):
         """Sets extractor active camera
 
@@ -208,6 +176,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.setActiveCamera(cameraId)
 
+    @lazy_init
     def setColorSensitivity(self, sensitivity):
         """Sets the value of the color sensitivity used for the 2D detection  of moving pixels in the image.
 
@@ -215,6 +184,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.setColorSensitivity(sensitivity)
 
+    @lazy_init
     def setDepthSensitivity(self, sensitivity):
         """Sets the value of the depth sensitivity (in meters) used for the detection 3D of moving pixels in the image.
 
@@ -222,6 +192,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.setDepthSensitivity(sensitivity)
 
+    @lazy_init
     def setFrameRate(self, value):
         """Sets extractor framerate
 
@@ -230,6 +201,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.setFrameRate(value)
 
+    @lazy_init
     def setResolution(self, resolution):
         """Sets extractor resolution
 
@@ -238,13 +210,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.setResolution(resolution)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def subscribe(self, name, period, precision):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -254,6 +220,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.subscribe(name, period, precision)
 
+    @lazy_init
     def subscribe2(self, name):
         """Subscribes to the extractor. This causes the extractor to start writing information to memory using the keys described by getOutputNames(). These can be accessed in memory using ALMemory.getData("keyName"). In many cases you can avoid calling subscribe on the extractor by just calling ALMemory.subscribeToEvent() supplying a callback method. This will automatically subscribe to the extractor for you.
 
@@ -261,6 +228,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.subscribe(name)
 
+    @lazy_init
     def unsubscribe(self, name):
         """Unsubscribes from the extractor.
 
@@ -268,6 +236,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.unsubscribe(name)
 
+    @lazy_init
     def updatePeriod(self, name, period):
         """Updates the period if relevant.
 
@@ -276,6 +245,7 @@ class ALMovementDetection(object):
         """
         return self.proxy.updatePeriod(name, period)
 
+    @lazy_init
     def updatePrecision(self, name, precision):
         """Updates the precision if relevant.
 
@@ -284,18 +254,10 @@ class ALMovementDetection(object):
         """
         return self.proxy.updatePrecision(name, precision)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

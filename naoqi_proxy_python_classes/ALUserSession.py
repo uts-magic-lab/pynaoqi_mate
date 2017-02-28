@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALUserSession")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALUserSession(object):
     def __init__(self):
-        self.proxy = ALProxy("ALUserSession")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def areUserSessionsOpen(self, user_list):
         """Check if users have an open session.
 
@@ -25,6 +32,7 @@ class ALUserSession(object):
         """
         return self.proxy.areUserSessionsOpen(user_list)
 
+    @lazy_init
     def doUsersExist(self, user_list):
         """Check if users exist in db.
 
@@ -33,6 +41,7 @@ class ALUserSession(object):
         """
         return self.proxy.doUsersExist(user_list)
 
+    @lazy_init
     def doesBindingSourceExist(self, binding_name):
         """Query if a particular has been applied to UserSession
 
@@ -41,6 +50,7 @@ class ALUserSession(object):
         """
         return self.proxy.doesBindingSourceExist(binding_name)
 
+    @lazy_init
     def doesUserDataSourceExist(self, source_name):
         """Check if a data source has been registered.
 
@@ -49,11 +59,7 @@ class ALUserSession(object):
         """
         return self.proxy.doesUserDataSourceExist(source_name)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def findUsersWithBinding(self, binding_name, binding_value):
         """Get the sources a user is bound to.
 
@@ -63,6 +69,7 @@ class ALUserSession(object):
         """
         return self.proxy.findUsersWithBinding(binding_name, binding_value)
 
+    @lazy_init
     def getBindingSources(self):
         """The list of binding sources  that have been applied to UserSession
 
@@ -70,13 +77,7 @@ class ALUserSession(object):
         """
         return self.proxy.getBindingSources()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getFocusedUser(self):
         """Get which user has the robot's focus.
 
@@ -84,28 +85,7 @@ class ALUserSession(object):
         """
         return self.proxy.getFocusedUser()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getNumUsers(self):
         """Get the count of users in db.
 
@@ -113,6 +93,7 @@ class ALUserSession(object):
         """
         return self.proxy.getNumUsers()
 
+    @lazy_init
     def getOpenUserSessions(self):
         """Get which users have an open session.
 
@@ -120,14 +101,7 @@ class ALUserSession(object):
         """
         return self.proxy.getOpenUserSessions()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getUserBinding(self, uid, binding_name):
         """Get the a specific source a user is bound to.
 
@@ -137,6 +111,7 @@ class ALUserSession(object):
         """
         return self.proxy.getUserBinding(uid, binding_name)
 
+    @lazy_init
     def getUserBindings(self, uid):
         """Get the sources a user is bound to.
 
@@ -145,6 +120,7 @@ class ALUserSession(object):
         """
         return self.proxy.getUserBindings(uid)
 
+    @lazy_init
     def getUserData(self, uid, data_name):
         """Get some data about a user.  Will throw if it does not exist
 
@@ -154,6 +130,7 @@ class ALUserSession(object):
         """
         return self.proxy.getUserData(uid, data_name)
 
+    @lazy_init
     def getUserData2(self, uid, data_name, source_name):
         """Get some data about a user.  Will throw if it does not exist
 
@@ -164,6 +141,7 @@ class ALUserSession(object):
         """
         return self.proxy.getUserData(uid, data_name, source_name)
 
+    @lazy_init
     def getUserDataSources(self):
         """Check what data sources have been registered.
 
@@ -171,6 +149,7 @@ class ALUserSession(object):
         """
         return self.proxy.getUserDataSources()
 
+    @lazy_init
     def getUserList(self):
         """Get a full list of the users.
 
@@ -178,21 +157,7 @@ class ALUserSession(object):
         """
         return self.proxy.getUserList()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -200,6 +165,7 @@ class ALUserSession(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def setUserData(self, uid, data_name, source_name, data):
         """Set some data about a user.  Will throw if user does not exist
 
@@ -210,25 +176,10 @@ class ALUserSession(object):
         """
         return self.proxy.setUserData(uid, data_name, source_name, data)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

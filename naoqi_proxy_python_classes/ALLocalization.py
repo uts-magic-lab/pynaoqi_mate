@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALLocalization")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALLocalization(object):
     def __init__(self):
-        self.proxy = ALProxy("ALLocalization")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def clear(self, pDirectory):
         """Delete all panoramas in a directory.
 
@@ -25,18 +32,7 @@ class ALLocalization(object):
         """
         return self.proxy.clear(pDirectory)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getCurrentPanoramaDescriptor(self):
         """Get some information about the current panorama.
 
@@ -44,6 +40,7 @@ class ALLocalization(object):
         """
         return self.proxy.getCurrentPanoramaDescriptor()
 
+    @lazy_init
     def getFrame(self, arg1, arg2):
         """Get a frame buffer.
 
@@ -53,6 +50,7 @@ class ALLocalization(object):
         """
         return self.proxy.getFrame(arg1, arg2)
 
+    @lazy_init
     def getMessageFromErrorCode(self, arg1):
         """
 
@@ -61,28 +59,7 @@ class ALLocalization(object):
         """
         return self.proxy.getMessageFromErrorCode(arg1)
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getRobotOrientation(self):
         """Get the robot orientation.
 
@@ -90,6 +67,7 @@ class ALLocalization(object):
         """
         return self.proxy.getRobotOrientation()
 
+    @lazy_init
     def getRobotOrientation2(self, arg1):
         """Get the robot orientation.
 
@@ -98,6 +76,7 @@ class ALLocalization(object):
         """
         return self.proxy.getRobotOrientation(arg1)
 
+    @lazy_init
     def getRobotPosition(self):
         """Get the robot position in world navigation.
 
@@ -105,6 +84,7 @@ class ALLocalization(object):
         """
         return self.proxy.getRobotPosition()
 
+    @lazy_init
     def getRobotPosition2(self, arg1):
         """Get the robot position in world navigation.
 
@@ -113,14 +93,7 @@ class ALLocalization(object):
         """
         return self.proxy.getRobotPosition(arg1)
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def goToHome(self):
         """Go to the robot home.
 
@@ -128,6 +101,7 @@ class ALLocalization(object):
         """
         return self.proxy.goToHome()
 
+    @lazy_init
     def goToPosition(self, arg1):
         """Go to a given position.
 
@@ -136,6 +110,7 @@ class ALLocalization(object):
         """
         return self.proxy.goToPosition(arg1)
 
+    @lazy_init
     def isDataAvailable(self):
         """
 
@@ -143,6 +118,7 @@ class ALLocalization(object):
         """
         return self.proxy.isDataAvailable()
 
+    @lazy_init
     def isInCurrentHome(self):
         """Is the robot in its home?
 
@@ -150,6 +126,7 @@ class ALLocalization(object):
         """
         return self.proxy.isInCurrentHome()
 
+    @lazy_init
     def isInGivenZone(self, arg1, arg2, arg3, arg4):
         """
 
@@ -161,6 +138,7 @@ class ALLocalization(object):
         """
         return self.proxy.isInGivenZone(arg1, arg2, arg3, arg4)
 
+    @lazy_init
     def isRelocalizationRequired(self):
         """
 
@@ -168,14 +146,7 @@ class ALLocalization(object):
         """
         return self.proxy.isRelocalizationRequired()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def learnHome(self):
         """Learn the robot home.
 
@@ -183,6 +154,7 @@ class ALLocalization(object):
         """
         return self.proxy.learnHome()
 
+    @lazy_init
     def load(self, pDirectory):
         """Loads panoramas from a directory in the default one.
 
@@ -191,13 +163,7 @@ class ALLocalization(object):
         """
         return self.proxy.load(pDirectory)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -205,6 +171,7 @@ class ALLocalization(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def save(self, pDirectory):
         """Save the temporary panoramas in a directory from the default one.
 
@@ -213,30 +180,16 @@ class ALLocalization(object):
         """
         return self.proxy.save(pDirectory)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopAll(self):
         """Stop all robot movements.
         """
         return self.proxy.stopAll()
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

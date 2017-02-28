@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALBehaviorManager")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALBehaviorManager(object):
     def __init__(self):
-        self.proxy = ALProxy("ALBehaviorManager")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def addDefaultBehavior(self, behavior):
         """Set the given behavior as default
 
@@ -24,11 +31,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.addDefaultBehavior(behavior)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def getBehaviorNames(self):
         """Get behaviors
 
@@ -36,6 +39,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getBehaviorNames()
 
+    @lazy_init
     def getBehaviorNature(self, behavior):
         """Get the nature of the given behavior.
 
@@ -44,6 +48,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getBehaviorNature(behavior)
 
+    @lazy_init
     def getBehaviorTags(self, behavior):
         """Get tags found on the given behavior.
 
@@ -52,6 +57,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getBehaviorTags(behavior)
 
+    @lazy_init
     def getBehaviorsByTag(self, tag):
         """Get installed behaviors directories names and filter it by tag.
 
@@ -60,13 +66,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getBehaviorsByTag(tag)
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getDefaultBehaviors(self):
         """Get default behaviors
 
@@ -74,6 +74,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getDefaultBehaviors()
 
+    @lazy_init
     def getInstalledBehaviors(self):
         """Get installed behaviors directories names
 
@@ -81,6 +82,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getInstalledBehaviors()
 
+    @lazy_init
     def getLoadedBehaviors(self):
         """Get loaded behaviors
 
@@ -88,28 +90,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getLoadedBehaviors()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getRunningBehaviors(self):
         """Get running behaviors
 
@@ -117,6 +98,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getRunningBehaviors()
 
+    @lazy_init
     def getSystemBehaviorNames(self):
         """Get system behaviors
 
@@ -124,6 +106,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getSystemBehaviorNames()
 
+    @lazy_init
     def getTagList(self):
         """Get tags found on installed behaviors.
 
@@ -131,14 +114,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getTagList()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def getUserBehaviorNames(self):
         """Get user's behaviors
 
@@ -146,6 +122,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.getUserBehaviorNames()
 
+    @lazy_init
     def installBehavior(self, localPath):
         """Install a behavior. Check the given local path for a valid behavior or package. On success, behavior added or updated signal is emitted. DEPRECATED in favor of PackageManager.install.
 
@@ -154,6 +131,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.installBehavior(localPath)
 
+    @lazy_init
     def installBehavior2(self, absolutePath, localPath, overwrite):
         """Install a behavior. Check and take the behavior found at the given absolute path andimport it to the given local path, relative to behaviors path. On success, behavior added signal is emitted before returning.DEPRECATED in favor of PackageManager.install.
 
@@ -164,6 +142,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.installBehavior(absolutePath, localPath, overwrite)
 
+    @lazy_init
     def isBehaviorInstalled(self, name):
         """Tell if supplied name corresponds to a behavior that has been installed
 
@@ -172,6 +151,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.isBehaviorInstalled(name)
 
+    @lazy_init
     def isBehaviorLoaded(self, behavior):
         """Tell if supplied name corresponds to a loaded behavior
 
@@ -180,6 +160,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.isBehaviorLoaded(behavior)
 
+    @lazy_init
     def isBehaviorPresent(self, prefixedBehavior):
         """Tell if the supplied namecorresponds to an existing behavior.
 
@@ -188,6 +169,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.isBehaviorPresent(prefixedBehavior)
 
+    @lazy_init
     def isBehaviorRunning(self, behavior):
         """Tell if supplied name corresponds to a running behavior
 
@@ -196,21 +178,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.isBehaviorRunning(behavior)
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -218,11 +186,13 @@ class ALBehaviorManager(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def playDefaultProject(self):
         """Play default behaviors
         """
         return self.proxy.playDefaultProject()
 
+    @lazy_init
     def preloadBehavior(self, behavior):
         """Load a behavior
 
@@ -231,6 +201,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.preloadBehavior(behavior)
 
+    @lazy_init
     def removeBehavior(self, behavior):
         """Remove a behavior from the filesystem. DEPRECATED in favor of PackageManager.remove.
 
@@ -239,6 +210,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.removeBehavior(behavior)
 
+    @lazy_init
     def removeDefaultBehavior(self, behavior):
         """Remove the given behavior from the default behaviors
 
@@ -246,6 +218,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.removeDefaultBehavior(behavior)
 
+    @lazy_init
     def resolveBehaviorName(self, name):
         """Find out the actual <package>/<behavior> path behind a behavior name.
 
@@ -254,6 +227,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.resolveBehaviorName(name)
 
+    @lazy_init
     def runBehavior(self, behavior):
         """Runs a behavior, returns when finished
 
@@ -261,6 +235,7 @@ class ALBehaviorManager(object):
         """
         return self.proxy.runBehavior(behavior)
 
+    @lazy_init
     def startBehavior(self, behavior):
         """Starts a behavior, returns when started.
 
@@ -268,18 +243,13 @@ class ALBehaviorManager(object):
         """
         return self.proxy.startBehavior(behavior)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopAllBehaviors(self):
         """Stop all behaviors
         """
         return self.proxy.stopAllBehaviors()
 
+    @lazy_init
     def stopBehavior(self, behavior):
         """Stop a behavior
 
@@ -287,18 +257,10 @@ class ALBehaviorManager(object):
         """
         return self.proxy.stopBehavior(behavior)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

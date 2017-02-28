@@ -6,22 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALAutonomousLife")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALAutonomousLife(object):
     def __init__(self):
-        self.proxy = ALProxy("ALAutonomousLife")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def focusedActivity(self):
         """Returns the currently focused activity
 
@@ -29,6 +31,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.focusedActivity()
 
+    @lazy_init
     def getActivityNature(self, activity_name):
         """Returns the nature of an activity
 
@@ -37,6 +40,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getActivityNature(activity_name)
 
+    @lazy_init
     def getActivityStatistics(self):
         """Get launch count, last completion time, etc for activities.
 
@@ -44,6 +48,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getActivityStatistics()
 
+    @lazy_init
     def getAutonomousActivityStatistics(self):
         """Get launch count, last completion time, etc for activities with autonomous launch trigger conditions.
 
@@ -51,13 +56,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getAutonomousActivityStatistics()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getEnabledLaunchpadPlugins(self):
         """Get a list of enabled AutonomousLaunchpad Plugins.  Enabled plugins will run when AutonomousLaunchpad is started
 
@@ -65,6 +64,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getEnabledLaunchpadPlugins()
 
+    @lazy_init
     def getFocusHistory(self):
         """Get a list of the order that activities that have been focused, and their time focused.
 
@@ -72,6 +72,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getFocusHistory()
 
+    @lazy_init
     def getFocusHistory2(self, depth):
         """Get a list of the order that activities that have been focused, and their time focused.
 
@@ -80,6 +81,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getFocusHistory(depth)
 
+    @lazy_init
     def getLaunchpadPluginsForGroup(self, group):
         """Get a list of AutonomousLaunchpad Plugins that belong to specified group
 
@@ -88,6 +90,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getLaunchpadPluginsForGroup(group)
 
+    @lazy_init
     def getLifeTime(self):
         """Get the time in seconds as life sees it.  Based on gettimeofday()
 
@@ -95,28 +98,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getLifeTime()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getRobotOffsetFromFloor(self):
         """Get the vertical offset (in meters) of the base of the robot with respect to the floor
 
@@ -124,6 +106,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getRobotOffsetFromFloor()
 
+    @lazy_init
     def getState(self):
         """Returns the current state of AutonomousLife
 
@@ -131,6 +114,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getState()
 
+    @lazy_init
     def getStateHistory(self):
         """Get a list of the order that states that have been entered, and their time entered.
 
@@ -138,6 +122,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getStateHistory()
 
+    @lazy_init
     def getStateHistory2(self, depth):
         """Get a list of the order that states that have been entered, and their time entered.
 
@@ -146,14 +131,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.getStateHistory(depth)
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isMonitoringLaunchpadConditions(self):
         """Gets running status of AutonomousLaunchpad
 
@@ -161,14 +139,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.isMonitoringLaunchpadConditions()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isSafeguardEnabled(self, name):
         """Get if a given safeguard will be handled by Autonomous Life or not.
 
@@ -177,13 +148,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.isSafeguardEnabled(name)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -191,6 +156,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def setLaunchpadPluginEnabled(self, plugin_name, enabled):
         """Temporarily enables/disables AutonomousLaunchpad Plugins
 
@@ -199,6 +165,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.setLaunchpadPluginEnabled(plugin_name, enabled)
 
+    @lazy_init
     def setRobotOffsetFromFloor(self, offset):
         """Set the vertical offset (in meters) of the base of the robot with respect to the floor
 
@@ -206,6 +173,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.setRobotOffsetFromFloor(offset)
 
+    @lazy_init
     def setSafeguardEnabled(self, name, enabled):
         """Set if a given safeguard will be handled by Autonomous Life or not.
 
@@ -214,6 +182,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.setSafeguardEnabled(name, enabled)
 
+    @lazy_init
     def setState(self, state):
         """Programatically control the state of Autonomous Life
 
@@ -221,33 +190,31 @@ class ALAutonomousLife(object):
         """
         return self.proxy.setState(state)
 
+    @lazy_init
     def startMonitoringLaunchpadConditions(self):
         """Start monitoring ALMemory and reporting conditional triggers with AutonomousLaunchpad.
         """
         return self.proxy.startMonitoringLaunchpadConditions()
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopAll(self):
         """Stops the focused activity and clears stack of activities
         """
         return self.proxy.stopAll()
 
+    @lazy_init
     def stopFocus(self):
         """Stops the focused activity. If another activity is stacked it will be started.
         """
         return self.proxy.stopFocus()
 
+    @lazy_init
     def stopMonitoringLaunchpadConditions(self):
         """Stop monitoring ALMemory and reporting conditional triggers with AutonomousLaunchpad.
         """
         return self.proxy.stopMonitoringLaunchpadConditions()
 
+    @lazy_init
     def switchFocus(self, activity_name, flags):
         """Set an activity as running with user focus
 
@@ -256,6 +223,7 @@ class ALAutonomousLife(object):
         """
         return self.proxy.switchFocus(activity_name, flags)
 
+    @lazy_init
     def switchFocus2(self, activity_name):
         """Set an activity as running with user focus
 
@@ -263,18 +231,10 @@ class ALAutonomousLife(object):
         """
         return self.proxy.switchFocus(activity_name)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

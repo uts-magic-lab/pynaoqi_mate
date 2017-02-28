@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("PackageManager")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class PackageManager(object):
     def __init__(self):
-        self.proxy = ALProxy("PackageManager")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def getPackage(self, arg1):
         """
 
@@ -25,6 +32,7 @@ class PackageManager(object):
         """
         return self.proxy.getPackage(arg1)
 
+    @lazy_init
     def getPackageIcon(self, arg1):
         """
 
@@ -33,6 +41,7 @@ class PackageManager(object):
         """
         return self.proxy.getPackageIcon(arg1)
 
+    @lazy_init
     def getPackages(self):
         """
 
@@ -40,6 +49,7 @@ class PackageManager(object):
         """
         return self.proxy.getPackages()
 
+    @lazy_init
     def hasPackage(self, arg1):
         """
 
@@ -48,6 +58,7 @@ class PackageManager(object):
         """
         return self.proxy.hasPackage(arg1)
 
+    @lazy_init
     def install(self, arg1):
         """
 
@@ -56,6 +67,7 @@ class PackageManager(object):
         """
         return self.proxy.install(arg1)
 
+    @lazy_init
     def install2(self, arg1, arg2):
         """
 
@@ -65,6 +77,7 @@ class PackageManager(object):
         """
         return self.proxy.install(arg1, arg2)
 
+    @lazy_init
     def install3(self, arg1, arg2, arg3):
         """
 
@@ -75,6 +88,7 @@ class PackageManager(object):
         """
         return self.proxy.install(arg1, arg2, arg3)
 
+    @lazy_init
     def installCheckMd5(self, arg1, arg2):
         """
 
@@ -84,6 +98,7 @@ class PackageManager(object):
         """
         return self.proxy.installCheckMd5(arg1, arg2)
 
+    @lazy_init
     def package(self, arg1):
         """
 
@@ -92,6 +107,7 @@ class PackageManager(object):
         """
         return self.proxy.package(arg1)
 
+    @lazy_init
     def package2(self, arg1):
         """
 
@@ -100,6 +116,7 @@ class PackageManager(object):
         """
         return self.proxy.package2(arg1)
 
+    @lazy_init
     def packageIcon(self, arg1):
         """
 
@@ -108,6 +125,7 @@ class PackageManager(object):
         """
         return self.proxy.packageIcon(arg1)
 
+    @lazy_init
     def packages(self):
         """
 
@@ -115,6 +133,7 @@ class PackageManager(object):
         """
         return self.proxy.packages()
 
+    @lazy_init
     def packages2(self):
         """
 
@@ -122,6 +141,7 @@ class PackageManager(object):
         """
         return self.proxy.packages2()
 
+    @lazy_init
     def remove(self, arg1):
         """
 
@@ -130,6 +150,7 @@ class PackageManager(object):
         """
         return self.proxy.remove(arg1)
 
+    @lazy_init
     def removePkg(self, arg1):
         """
 
@@ -137,6 +158,7 @@ class PackageManager(object):
         """
         return self.proxy.removePkg(arg1)
 
+    @lazy_init
     def setServiceDirectory(self, arg1):
         """
 

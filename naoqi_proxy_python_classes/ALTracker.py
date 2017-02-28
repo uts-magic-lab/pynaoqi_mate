@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALTracker")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALTracker(object):
     def __init__(self):
-        self.proxy = ALProxy("ALTracker")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def addEffector(self, pEffector):
         """DEPRECATED. Use setEffector instead. Add an end-effector to move for tracking.
 
@@ -24,6 +31,7 @@ class ALTracker(object):
         """
         return self.proxy.addEffector(pEffector)
 
+    @lazy_init
     def addTarget(self, pTarget, pParams):
         """DEPRECATED. Use registerTarget() instead. Add a predefined target. Subscribe to corresponding extractor if Tracker is running..
 
@@ -32,11 +40,7 @@ class ALTracker(object):
         """
         return self.proxy.addTarget(pTarget, pParams)
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
+    @lazy_init
     def getActiveTarget(self):
         """Return active target name.
 
@@ -44,6 +48,7 @@ class ALTracker(object):
         """
         return self.proxy.getActiveTarget()
 
+    @lazy_init
     def getAvailableModes(self):
         """Get the list of predefined mode.
 
@@ -51,13 +56,7 @@ class ALTracker(object):
         """
         return self.proxy.getAvailableModes()
 
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getEffector(self):
         """Get active effector.
 
@@ -65,6 +64,7 @@ class ALTracker(object):
         """
         return self.proxy.getEffector()
 
+    @lazy_init
     def getExtractorPeriod(self, pTarget):
         """Get the period of corresponding target name extractor.
 
@@ -73,6 +73,7 @@ class ALTracker(object):
         """
         return self.proxy.getExtractorPeriod(pTarget)
 
+    @lazy_init
     def getManagedTargets(self):
         """DEPRECATED. Use getRegisteredTargets() instead. Return a list of managed targets names.
 
@@ -80,6 +81,7 @@ class ALTracker(object):
         """
         return self.proxy.getManagedTargets()
 
+    @lazy_init
     def getMaximumDistanceDetection(self):
         """get the maximum distance for target detection in meter.
 
@@ -87,21 +89,7 @@ class ALTracker(object):
         """
         return self.proxy.getMaximumDistanceDetection()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
+    @lazy_init
     def getMode(self):
         """Get the tracker current mode.
 
@@ -109,13 +97,7 @@ class ALTracker(object):
         """
         return self.proxy.getMode()
 
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
+    @lazy_init
     def getMoveConfig(self):
         """Get the config for move modes.
 
@@ -123,6 +105,7 @@ class ALTracker(object):
         """
         return self.proxy.getMoveConfig()
 
+    @lazy_init
     def getRegisteredTargets(self):
         """Return a list of registered targets names.
 
@@ -130,6 +113,7 @@ class ALTracker(object):
         """
         return self.proxy.getRegisteredTargets()
 
+    @lazy_init
     def getRelativePosition(self):
         """Get the robot position relative to target in Move mode.
 
@@ -137,6 +121,7 @@ class ALTracker(object):
         """
         return self.proxy.getRelativePosition()
 
+    @lazy_init
     def getRobotPosition(self):
         """Only work with LandMarks target name. Returns the [x, y, z, wx, wy, wz] position of the robot in coordinate system setted with setMap API. This is done assuming an average target size, so it might not be very accurate.
 
@@ -144,6 +129,7 @@ class ALTracker(object):
         """
         return self.proxy.getRobotPosition()
 
+    @lazy_init
     def getSupportedTargets(self):
         """Return a list of supported targets names.
 
@@ -151,6 +137,7 @@ class ALTracker(object):
         """
         return self.proxy.getSupportedTargets()
 
+    @lazy_init
     def getTargetCoordinates(self):
         """Only work with LandMarks target name. Get objects coordinates. Could be [[first object coordinate], [second object coordinate]] [[x1, y1, z1], [x2, y2, z2]]
 
@@ -158,6 +145,7 @@ class ALTracker(object):
         """
         return self.proxy.getTargetCoordinates()
 
+    @lazy_init
     def getTargetNames(self):
         """DEPRECATED. Use getSupportedTargets() instead. Return a list of targets names.
 
@@ -165,6 +153,7 @@ class ALTracker(object):
         """
         return self.proxy.getTargetNames()
 
+    @lazy_init
     def getTargetPosition(self, pFrame):
         """Returns the [x, y, z] position of the target in FRAME_TORSO. This is done assuming an average target size, so it might not be very accurate.
 
@@ -173,6 +162,7 @@ class ALTracker(object):
         """
         return self.proxy.getTargetPosition(pFrame)
 
+    @lazy_init
     def getTargetPosition2(self):
         """DEPRECATED. Use pointAt with frame instead. Returns the [x, y, z] position of the target in FRAME_TORSO. This is done assuming an average target size, so it might not be very accurate.
 
@@ -180,6 +170,7 @@ class ALTracker(object):
         """
         return self.proxy.getTargetPosition()
 
+    @lazy_init
     def getTimeOut(self):
         """get the timeout parameter for target lost.
 
@@ -187,14 +178,7 @@ class ALTracker(object):
         """
         return self.proxy.getTimeOut()
 
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
+    @lazy_init
     def isActive(self):
         """Return true if Tracker is running.
 
@@ -202,6 +186,7 @@ class ALTracker(object):
         """
         return self.proxy.isActive()
 
+    @lazy_init
     def isNewTargetDetected(self):
         """Return true if a new target was detected.
 
@@ -209,14 +194,7 @@ class ALTracker(object):
         """
         return self.proxy.isNewTargetDetected()
 
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isSearchEnabled(self):
         """Return true if the target search process is enabled.
 
@@ -224,6 +202,7 @@ class ALTracker(object):
         """
         return self.proxy.isSearchEnabled()
 
+    @lazy_init
     def isTargetLost(self):
         """Return true if the target was lost.
 
@@ -231,6 +210,7 @@ class ALTracker(object):
         """
         return self.proxy.isTargetLost()
 
+    @lazy_init
     def lookAt(self, pPosition, pFrame, pFractionMaxSpeed, pUseWholeBody):
         """Look at the target position with head.
 
@@ -241,6 +221,7 @@ class ALTracker(object):
         """
         return self.proxy.lookAt(pPosition, pFrame, pFractionMaxSpeed, pUseWholeBody)
 
+    @lazy_init
     def lookAt2(self, pPosition, pFractionMaxSpeed, pUseWholeBody):
         """DEPRECATED. Use lookAt with frame instead. Look at the target position with head.
 
@@ -250,13 +231,7 @@ class ALTracker(object):
         """
         return self.proxy.lookAt(pPosition, pFractionMaxSpeed, pUseWholeBody)
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -264,6 +239,7 @@ class ALTracker(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def pointAt(self, pEffector, pPosition, pFrame, pFractionMaxSpeed):
         """Point at the target position with arms.
 
@@ -274,6 +250,7 @@ class ALTracker(object):
         """
         return self.proxy.pointAt(pEffector, pPosition, pFrame, pFractionMaxSpeed)
 
+    @lazy_init
     def pointAt2(self, pEffector, pPosition, pFractionMaxSpeed):
         """DEPRECATED. Use pointAt with frame instead. Point at the target position with arms.
 
@@ -283,6 +260,7 @@ class ALTracker(object):
         """
         return self.proxy.pointAt(pEffector, pPosition, pFractionMaxSpeed)
 
+    @lazy_init
     def registerTarget(self, pTarget, pParams):
         """Register a predefined target. Subscribe to corresponding extractor if Tracker is running..
 
@@ -291,11 +269,13 @@ class ALTracker(object):
         """
         return self.proxy.registerTarget(pTarget, pParams)
 
+    @lazy_init
     def removeAllTargets(self):
         """DEPRECATED. Use unregisterAllTargets() instead. Remove all managed targets except active target and stop corresponding extractor.
         """
         return self.proxy.removeAllTargets()
 
+    @lazy_init
     def removeEffector(self, pEffector):
         """DEPRECATED. Use setEffector("None") instead. Remove an end-effector from tracking.
 
@@ -303,6 +283,7 @@ class ALTracker(object):
         """
         return self.proxy.removeEffector(pEffector)
 
+    @lazy_init
     def removeTarget(self, pTarget):
         """DEPRECATED. Use unregisterTarget() instead. Remove target name and stop corresponding extractor.
 
@@ -310,6 +291,7 @@ class ALTracker(object):
         """
         return self.proxy.removeTarget(pTarget)
 
+    @lazy_init
     def removeTargets(self, pTarget):
         """DEPRECATED. Use unregisterTargets() instead. Remove a list of target names and stop corresponding extractor.
 
@@ -317,6 +299,7 @@ class ALTracker(object):
         """
         return self.proxy.removeTargets(pTarget)
 
+    @lazy_init
     def setEffector(self, pEffector):
         """Set an end-effector to move for tracking.
 
@@ -324,6 +307,7 @@ class ALTracker(object):
         """
         return self.proxy.setEffector(pEffector)
 
+    @lazy_init
     def setExtractorPeriod(self, pTarget, pPeriod):
         """Set a period for the corresponding target name extractor.
 
@@ -332,6 +316,7 @@ class ALTracker(object):
         """
         return self.proxy.setExtractorPeriod(pTarget, pPeriod)
 
+    @lazy_init
     def setMaximumDistanceDetection(self, pMaxDistance):
         """set the maximum target detection distance in meter.
 
@@ -339,6 +324,7 @@ class ALTracker(object):
         """
         return self.proxy.setMaximumDistanceDetection(pMaxDistance)
 
+    @lazy_init
     def setMode(self, pMode):
         """Set the tracker in the predefined mode.Could be "Head", "WholeBody" or "Move".
 
@@ -346,6 +332,7 @@ class ALTracker(object):
         """
         return self.proxy.setMode(pMode)
 
+    @lazy_init
     def setMoveConfig(self, config):
         """set a config for move modes.
 
@@ -353,6 +340,7 @@ class ALTracker(object):
         """
         return self.proxy.setMoveConfig(config)
 
+    @lazy_init
     def setRelativePosition(self, target):
         """Set the robot position relative to target in Move mode.
 
@@ -360,6 +348,7 @@ class ALTracker(object):
         """
         return self.proxy.setRelativePosition(target)
 
+    @lazy_init
     def setTargetCoordinates(self, pCoord):
         """Only work with LandMarks target name. Set objects coordinates. Could be [[first object coordinate], [second object coordinate]] [[x1, y1, z1], [x2, y2, z2]]
 
@@ -367,6 +356,7 @@ class ALTracker(object):
         """
         return self.proxy.setTargetCoordinates(pCoord)
 
+    @lazy_init
     def setTimeOut(self, pTimeMs):
         """set the timeout parameter for target lost.
 
@@ -374,18 +364,13 @@ class ALTracker(object):
         """
         return self.proxy.setTimeOut(pTimeMs)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopTracker(self):
         """Stop the tracker.
         """
         return self.proxy.stopTracker()
 
+    @lazy_init
     def toggleSearch(self, pSearch):
         """Enables/disables the target search process. Target search process occurs only when the target is lost.
 
@@ -393,6 +378,7 @@ class ALTracker(object):
         """
         return self.proxy.toggleSearch(pSearch)
 
+    @lazy_init
     def track(self, pTarget):
         """Set the predefided target to track and start the tracking process if not started.
 
@@ -400,6 +386,7 @@ class ALTracker(object):
         """
         return self.proxy.track(pTarget)
 
+    @lazy_init
     def trackEvent(self, pEventName):
         """Track event and start the tracking process if not started.
 
@@ -407,11 +394,13 @@ class ALTracker(object):
         """
         return self.proxy.trackEvent(pEventName)
 
+    @lazy_init
     def unregisterAllTargets(self):
         """Unregister all targets except active target and stop corresponding extractor.
         """
         return self.proxy.unregisterAllTargets()
 
+    @lazy_init
     def unregisterTarget(self, pTarget):
         """Unregister target name and stop corresponding extractor.
 
@@ -419,6 +408,7 @@ class ALTracker(object):
         """
         return self.proxy.unregisterTarget(pTarget)
 
+    @lazy_init
     def unregisterTargets(self, pTarget):
         """Unregister a list of target names and stop corresponding extractor.
 
@@ -426,18 +416,10 @@ class ALTracker(object):
         """
         return self.proxy.unregisterTargets(pTarget)
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)

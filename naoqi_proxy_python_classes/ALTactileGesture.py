@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALTactileGesture")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALTactileGesture(object):
     def __init__(self):
-        self.proxy = ALProxy("ALTactileGesture")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def createGesture(self, arg1):
         """Define touch gesture.          :param sensor_sequence: List of strings that represent the         sequence of the desired gesture. For example, SingleFront         would be the following: ['000', '100', '000']. NOTE: All         sequences must start with '000' and all non-hold sequences         must end with '000'. Hold gestures should end with the touch         sequence you will be holding. For example, a SingleFrontHold         would be the following: ['000', '100'].          :returns: If sequence is valid, the name of gesture to listen         for, RuntimeError otherwise.
 
@@ -25,6 +32,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.createGesture(arg1)
 
+    @lazy_init
     def createGesture2(self, arg1):
         """Define touch gesture.          :param sensor_sequence: Comma-separated string that represents         the sequence of the desired gesture. For example, SingleFront         would be the following: "000,100,000". NOTE: All sequences         must start with '000' and all non-hold sequences must end with         '000'. Hold gestures should end with the touch sequence you         will be holding. For example, a SingleFrontHold would be the         following: "000,100".          :returns: If sequence is valid, the name of gesture to listen         for, RuntimeError otherwise.
 
@@ -33,6 +41,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.createGesture(arg1)
 
+    @lazy_init
     def getGesture(self, arg1):
         """Get the sequence associated with a gesture name          :param sequence: Sequence you want the gesture name of          :returns: Sequence (as list of strings) if it exists, None otherwise
 
@@ -41,6 +50,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.getGesture(arg1)
 
+    @lazy_init
     def getGesture2(self, arg1):
         """Get the sequence associated with a gesture name          :param sequence: Sequence you want the gesture name of          :returns: Sequence (as list of strings) if it exists, None otherwise
 
@@ -49,6 +59,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.getGesture(arg1)
 
+    @lazy_init
     def getGestures(self):
         """Get all gestures that have been defined in the system          :returns: Dictionary (Map<String, List<String>>) of all gestures
 
@@ -56,6 +67,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.getGestures()
 
+    @lazy_init
     def getSequence(self, arg1):
         """Get the sequence associated with a gesture name          :param gesture_name: Name of gesture you want the sequence of          :returns: Sequence (as list of strings) if it exists, None otherwise
 
@@ -64,6 +76,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.getSequence(arg1)
 
+    @lazy_init
     def setHoldTime(self, arg1):
         """Set length of hold time.          :param hold_time: Desired hold time, in seconds (Default: 0.8s)          :returns: True if hold time successfully updated, RuntimeError otherwise.
 
@@ -72,6 +85,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.setHoldTime(arg1)
 
+    @lazy_init
     def setHoldTime2(self, arg1):
         """Set length of hold time.          :param hold_time: Desired hold time, in seconds (Default: 0.8s)          :returns: True if hold time successfully updated, RuntimeError otherwise.
 
@@ -80,6 +94,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.setHoldTime(arg1)
 
+    @lazy_init
     def setSequenceTime(self, arg1):
         """Set length of sequence time.          :param sequence_time: Desired sequence time, in seconds (Default: 0.2s)          :returns: True if sequence time successfully updated, RuntimeError otherwise.
 
@@ -88,6 +103,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.setSequenceTime(arg1)
 
+    @lazy_init
     def setSequenceTime2(self, arg1):
         """Update length of sequence time.          :param sequence_time: Desired sequence time, in seconds (Default: 0.2s)          :returns: True if sequence time successfully updated, RuntimeError otherwise.
 
@@ -96,6 +112,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.setSequenceTime(arg1)
 
+    @lazy_init
     def setSettleTime(self, arg1):
         """Update length of settling time.          :param settle_time: Desired settling time, in seconds (Default: 0.04s)          :returns: True if settle time successfully updated, RuntimeError otherwise.
 
@@ -104,6 +121,7 @@ class ALTactileGesture(object):
         """
         return self.proxy.setSettleTime(arg1)
 
+    @lazy_init
     def setSettleTime2(self, arg1):
         """Update length of settling time.          :param settle_time: Desired settling time, in seconds (Default: 0.04s)          :returns: True if settle time successfully updated, RuntimeError otherwise.
 

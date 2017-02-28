@@ -6,17 +6,24 @@
 from naoqi import ALProxy
 
 
+# To not instance network connections until we actually want to
+# do a proxy call
+def lazy_init(fn):
+    def init_if_needed(self, *args, **kwargs):
+        if not self.proxy:
+            self.proxy = ALProxy("ALMemoryWatcher")
+        return fn(self, *args, **kwargs)
+    # Preserve method name and docs
+    init_if_needed.__name__ = fn.__name__
+    init_if_needed.__doc__ = fn.__doc__
+    return init_if_needed
+
+
 class ALMemoryWatcher(object):
     def __init__(self):
-        self.proxy = ALProxy("ALMemoryWatcher")
+        self.proxy = None
 
-    def getGenericProxy(self):
-        """Gets the underlying generic proxy
-
-        :returns boost::shared_ptr<ALProxy>: 
-        """
-        return self.proxy.getGenericProxy()
-
+    @lazy_init
     def addListener(self, name, interval):
         """add an ALMemory key to the list of keys to listen to
 
@@ -25,6 +32,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.addListener(name, interval)
 
+    @lazy_init
     def addListener2(self, name):
         """add an ALMemory key to the list of keys to listen to
 
@@ -32,6 +40,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.addListener(name)
 
+    @lazy_init
     def addListeners(self, listNames, interval):
         """add a list of ALMemory keys to the list of keys to listen
 
@@ -40,6 +49,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.addListeners(listNames, interval)
 
+    @lazy_init
     def addListeners2(self, listNames):
         """add a list of ALMemory keys to the list of keys to listen
 
@@ -47,23 +57,13 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.addListeners(listNames)
 
+    @lazy_init
     def clearBuffer(self):
         """remove all buffered data.                                           The list of keys listened to keeps unchanged.
         """
         return self.proxy.clearBuffer()
 
-    def exit(self):
-        """Exits and unregisters the module.
-        """
-        return self.proxy.exit()
-
-    def getBrokerName(self):
-        """Gets the name of the parent broker.
-
-        :returns str: The name of the parent broker.
-        """
-        return self.proxy.getBrokerName()
-
+    @lazy_init
     def getData(self):
         """return an ALValue containing all buffered data                                       since the last call of getData().
 
@@ -71,44 +71,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.getData()
 
-    def getMethodHelp(self, methodName):
-        """Retrieves a method's description.
-
-        :param str methodName: The name of the method.
-        :returns AL::ALValue: A structure containing the method's description.
-        """
-        return self.proxy.getMethodHelp(methodName)
-
-    def getMethodList(self):
-        """Retrieves the module's method list.
-
-        :returns std::vector<std::string>: An array of method names.
-        """
-        return self.proxy.getMethodList()
-
-    def getModuleHelp(self):
-        """Retrieves the module's description.
-
-        :returns AL::ALValue: A structure describing the module.
-        """
-        return self.proxy.getModuleHelp()
-
-    def getUsage(self, name):
-        """Gets the method usage string. This summarises how to use the method.
-
-        :param str name: The name of the method.
-        :returns str: A string that summarises the usage of the method.
-        """
-        return self.proxy.getUsage(name)
-
-    def isRunning(self, id):
-        """Returns true if the method is currently running.
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :returns bool: True if the method is currently running
-        """
-        return self.proxy.isRunning(id)
-
+    @lazy_init
     def isWatching(self):
         """tells whether keys are watched and data being gathered.
 
@@ -116,6 +79,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.isWatching()
 
+    @lazy_init
     def listeners(self):
         """get the list of listened ALMemory keys
 
@@ -123,13 +87,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.listeners()
 
-    def pCall(self):
-        """NAOqi1 pCall method.
-
-        :returns AL::ALValue: 
-        """
-        return self.proxy.pCall()
-
+    @lazy_init
     def ping(self):
         """Just a ping. Always returns true
 
@@ -137,11 +95,13 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.ping()
 
+    @lazy_init
     def removeAllListeners(self):
         """remove all keys listened to
         """
         return self.proxy.removeAllListeners()
 
+    @lazy_init
     def removeListener(self, name):
         """remove a key from the list to listen to
 
@@ -149,6 +109,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.removeListener(name)
 
+    @lazy_init
     def removeListeners(self, listNames):
         """remove a list of key from the list to listen
 
@@ -156,6 +117,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.removeListeners(listNames)
 
+    @lazy_init
     def setPeriodMs(self, period):
         """edit "period" value between two buffering.
 
@@ -163,6 +125,7 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.setPeriodMs(period)
 
+    @lazy_init
     def startWatching(self, period):
         """start listening to selected keys from ALMemory
 
@@ -170,30 +133,16 @@ class ALMemoryWatcher(object):
         """
         return self.proxy.startWatching(period)
 
-    def stop(self, id):
-        """returns true if the method is currently running
-
-        :param int id: the ID of the method to wait for
-        """
-        return self.proxy.stop(id)
-
+    @lazy_init
     def stopWatching(self):
         """stop listening selected keys from ALMemory.                                    List of listened keys and associated buffers keep unchanged.
         """
         return self.proxy.stopWatching()
 
+    @lazy_init
     def version(self):
         """Returns the version of the module.
 
         :returns str: A string containing the version of the module.
         """
         return self.proxy.version()
-
-    def wait(self, id, timeoutPeriod):
-        """Wait for the end of a long running method that was called using 'post'
-
-        :param int id: The ID of the method that was returned when calling the method using 'post'
-        :param int timeoutPeriod: The timeout period in ms. To wait indefinately, use a timeoutPeriod of zero.
-        :returns bool: True if the timeout period terminated. False if the method returned.
-        """
-        return self.proxy.wait(id, timeoutPeriod)
