@@ -23,6 +23,9 @@ class ALFaceCharacteristics(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALFaceCharacteristics")
+
     @lazy_init
     def analyzeFaceCharacteristics(self, id):
         """Runs face analysis for a given person ID.

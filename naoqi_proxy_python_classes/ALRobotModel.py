@@ -23,6 +23,9 @@ class ALRobotModel(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALRobotModel")
+
     @lazy_init
     def getConfig(self):
         """Return the RobotConfig key/value pairs serialized in xml format

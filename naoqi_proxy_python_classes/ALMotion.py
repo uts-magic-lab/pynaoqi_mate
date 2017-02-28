@@ -23,6 +23,9 @@ class ALMotion(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALMotion")
+
     @lazy_init
     def angleInterpolation(self, names, angleLists, timeLists, isAbsolute):
         """Interpolates one or multiple joints to a target angle or along timed trajectories. This is a blocking call.

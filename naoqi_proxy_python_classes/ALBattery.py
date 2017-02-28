@@ -23,6 +23,9 @@ class ALBattery(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALBattery")
+
     @lazy_init
     def enablePowerMonitoring(self, Enable):
         """Enable power monitoring

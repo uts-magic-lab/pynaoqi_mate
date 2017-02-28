@@ -23,6 +23,9 @@ class ALAutomaticVolume(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALAutomaticVolume")
+
     @lazy_init
     def enableVolumeAdaptation(self, arg1):
         """This method will start the adaptation of the speaker volume from the background noise.

@@ -23,6 +23,9 @@ class ALSpeechRecognition(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALSpeechRecognition")
+
     @lazy_init
     def activateAllRules(self, contextName):
         """Activate all rules contained in the specified context.

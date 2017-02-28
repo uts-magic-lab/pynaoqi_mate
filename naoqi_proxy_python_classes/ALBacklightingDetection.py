@@ -23,6 +23,9 @@ class ALBacklightingDetection(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALBacklightingDetection")
+
     @lazy_init
     def getActiveCamera(self):
         """Gets extractor active camera

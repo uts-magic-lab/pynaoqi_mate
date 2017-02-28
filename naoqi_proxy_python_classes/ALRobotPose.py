@@ -23,6 +23,9 @@ class ALRobotPose(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALRobotPose")
+
     @lazy_init
     def getActualPoseAndTime(self):
         """Get the actual robot pose and the time since this pose was activate.

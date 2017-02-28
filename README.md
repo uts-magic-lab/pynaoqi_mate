@@ -5,15 +5,16 @@ No worries! Here comes your mate **pynaoqi_mate**.
 
 It's a set of generated classes with all the methods from the C++ SDK header files with docstrings to use the ALProxy modules as if they were normal Python classes even though they still execute remotely.
 
-**Note**: Further testing needed.
+And also a handy class called **Mate** to easily explore all the modules and methods.
+
 
 # Installation
-Clone this repository somewhere and add the path of the folder `naoqi_proxy_python_classes` to your `PYTHONPATH`. For example:
+Clone this repository somewhere and add the path of the main folder `pynaoqi_mate` to your `PYTHONPATH`. For example:
 
 ```
 cd ~
 git clone https://github.com/uts-magic-lab/pynaoqi_mate
-export PYTHONPATH=$PYTHONPATH:~/pynaoqi_mate/naoqi_proxy_python_classes
+export PYTHONPATH=$PYTHONPATH:~/pynaoqi_mate
 ```
 
 You may probably want to append it to your `.bashrc`.
@@ -21,85 +22,118 @@ You may probably want to append it to your `.bashrc`.
 And you may want to add it to your robot too if you want to run the scripts as they are from inside of the robot.
 
 # Usage
-Well, you have a big bunch of classes to choose from:
-
-```
-ALAnimatedSpeech.py           ALDialog.py               ALMotion.py                  ALSonar.py
-ALAudioDevice.py              ALEngagementZones.py      ALMotionRecorder.py          ALSoundDetection.py
-ALAudioPlayer.py              ALExpressiveListening.py  ALMovementDetection3D.py     ALSoundLocalization.py
-ALAudioRecorder.py            ALFaceCharacteristics.py  ALMovementDetection.py       ALSpeechRecognition.py
-ALAudioSourceLocalization.py  ALFaceDetection.py        ALNavigation.py              ALStore.py
-ALAutomaticVolume.py          ALFaceTracker.py          ALNotificationManager.py     ALSystem.py
-ALAutonomousLife.py           ALFastPersonTracking.py   ALObjectDetection.py         ALTactileGesture.py
-ALAutonomousMoves.py          ALFileManager.py          ALPanoramaCompass.py         ALTelepathe.py
-ALBacklightingDetection.py    ALFindPersonHead.py       ALPeoplePerception.py        ALTextToSpeech.py
-ALBarcodeReader.py            ALFrameManager.py         ALPhotoCapture.py            ALTouch.py
-ALBasicAwareness.py           ALFsr.py                  ALPreferenceManager.py       ALTracker.py
-ALBattery.py                  ALGazeAnalysis.py         ALPreferences.py             ALUserSession.py
-ALBehaviorManager.py          ALHeadPoseAnalysis.py     ALPwtiUpdate.py              ALVideoDevice.py
-ALBodyDetection3D.py          ALInfrared.py             ALPythonBridge.py            ALVideoRecorder.py
-ALBodyTemperature.py          ALLandMarkDetection.py    ALRedBallDetection.py        ALVisionRecognition.py
-ALBonjour.py                  ALLaser.py                ALRedBallTracker.py          ALVisionToolbox.py
-ALChestButton.py              ALLauncher.py             ALResourceManager.py         ALVisualCompass.py
-ALChoregrapheRecorder.py      ALLeds.py                 ALRobotModel.py              ALVisualSpaceHistory.py
-ALCloseObjectDetection.py     ALLocalization.py         ALRobotPose.py               ALWavingDetection.py
-ALColorBlobDetection.py       ALLogger.py               ALRobotPosture.py            ALWorldRepresentation.py
-ALConnectionManager.py        ALMecaLogger.py           ALSegmentation3D.py          AudioFilterLoader.py
-ALDarknessDetection.py        ALMemory.py               ALSensors.py                 class_skeleton.py
-ALDebug.py                    ALMemoryWatcher.py        ALServiceManager.py          DCM.py
-ALDiagnosis.py                ALModularity.py           ALSittingPeopleDetection.py  PackageManager.py
-```
-
-You could do for example (iPython output):
+Explore with iPython:
 
 ```python
-In [1]: from ALTextToSpeech import ALTextToSpeech 
+In [1]: from pynaoqi_mate import Mate
 
-In [2]: ALTextToSpeech.
-ALTextToSpeech.disableNotifications     ALTextToSpeech.locale
-ALTextToSpeech.enableNotifications      ALTextToSpeech.mro
-ALTextToSpeech.exit                     ALTextToSpeech.pCall
-ALTextToSpeech.getAvailableLanguages    ALTextToSpeech.ping
-ALTextToSpeech.getAvailableVoices       ALTextToSpeech.py
-ALTextToSpeech.getBrokerName            ALTextToSpeech.pyc
-ALTextToSpeech.getGenericProxy          ALTextToSpeech.resetSpeed
-ALTextToSpeech.getLanguage              ALTextToSpeech.say
-ALTextToSpeech.getLanguageEncoding      ALTextToSpeech.sayToFile
-ALTextToSpeech.getMethodHelp            ALTextToSpeech.sayToFileAndPlay
-ALTextToSpeech.getMethodList            ALTextToSpeech.setLanguage
-ALTextToSpeech.getModuleHelp            ALTextToSpeech.setLanguageDefaultVoice
-ALTextToSpeech.getParameter             ALTextToSpeech.setParameter
-ALTextToSpeech.getSupportedLanguages    ALTextToSpeech.setVoice
-ALTextToSpeech.getUsage                 ALTextToSpeech.setVolume
-ALTextToSpeech.getVoice                 ALTextToSpeech.stop
-ALTextToSpeech.getVolume                ALTextToSpeech.stopAll
-ALTextToSpeech.isRunning                ALTextToSpeech.version
-ALTextToSpeech.loadVoicePreference      ALTextToSpeech.wait
+In [2]: m = Mate("138.25.61.99", 9559)  # You need to connect to a robot
+inaoqi-broker: construct at 0.0.0.0:0, parent : 138.25.61.99:9559
+[I] 22566 qimessaging.session: Session listener created on tcp://0.0.0.0:0
+[I] 22566 qimessaging.transportserver: TransportServer will listen on: tcp://172.17.0.1:39688
+[I] 22566 qimessaging.transportserver: TransportServer will listen on: tcp://127.0.0.1:39688
+[I] 22566 qimessaging.transportserver: TransportServer will listen on: tcp://138.25.61.100:39688
 
-In [2]: ALTextToSpeech.say?
+In [3]: m.  # Pressing tab you get all the modules
+m.ALAnimatedSpeech           m.ALFindPersonHead           m.ALResourceManager
+m.ALAudioDevice              m.ALFrameManager             m.ALRobotModel
+m.ALAudioPlayer              m.ALFsr                      m.ALRobotPose
+m.ALAudioRecorder            m.ALGazeAnalysis             m.ALRobotPosture
+m.ALAudioSourceLocalization  m.ALHeadPoseAnalysis         m.ALSegmentation3D
+m.ALAutomaticVolume          m.ALInfrared                 m.ALSensors
+m.ALAutonomousLife           m.ALLandMarkDetection        m.ALServiceManager
+m.ALAutonomousMoves          m.ALLaser                    m.ALSittingPeopleDetection
+m.ALBacklightingDetection    m.ALLauncher                 m.ALSonar
+m.ALBarcodeReader            m.ALLeds                     m.ALSoundDetection
+m.ALBasicAwareness           m.ALLocalization             m.ALSoundLocalization
+m.ALBattery                  m.ALLogger                   m.ALSpeechRecognition
+m.ALBehaviorManager          m.ALMecaLogger               m.ALStore
+m.ALBodyDetection3D          m.ALMemory                   m.ALSystem
+m.ALBodyTemperature          m.ALMemoryWatcher            m.ALTactileGesture
+m.ALBonjour                  m.ALModularity               m.ALTelepathe
+m.ALChestButton              m.ALMotion                   m.ALTextToSpeech
+m.ALChoregrapheRecorder      m.ALMotionRecorder           m.ALTouch
+m.ALCloseObjectDetection     m.ALMovementDetection        m.ALTracker
+m.ALColorBlobDetection       m.ALMovementDetection3D      m.ALUserSession
+m.ALConnectionManager        m.ALNavigation               m.ALVideoDevice
+m.ALDarknessDetection        m.ALNotificationManager      m.ALVideoRecorder
+m.ALDebug                    m.ALObjectDetection          m.ALVisionRecognition
+m.ALDiagnosis                m.ALPanoramaCompass          m.ALVisionToolbox
+m.ALDialog                   m.ALPeoplePerception         m.ALVisualCompass
+m.ALEngagementZones          m.ALPhotoCapture             m.ALVisualSpaceHistory
+m.ALExpressiveListening      m.ALPreferenceManager        m.ALWavingDetection
+m.ALFaceCharacteristics      m.ALPreferences              m.ALWorldRepresentation
+m.ALFaceDetection            m.ALPwtiUpdate               m.AudioFilterLoader
+m.ALFaceTracker              m.ALPythonBridge             m.DCM
+m.ALFastPersonTracking       m.ALRedBallDetection         m.PackageManager
+m.ALFileManager              m.ALRedBallTracker           m.broker
+
+In [3]: m.ALTextToSpeech.  # Pressing tab you get all the methods
+m.ALTextToSpeech.disableNotifications     m.ALTextToSpeech.proxy
+m.ALTextToSpeech.enableNotifications      m.ALTextToSpeech.resetSpeed
+m.ALTextToSpeech.getAvailableLanguages    m.ALTextToSpeech.say
+m.ALTextToSpeech.getAvailableVoices       m.ALTextToSpeech.say2
+m.ALTextToSpeech.getLanguage              m.ALTextToSpeech.sayToFile
+m.ALTextToSpeech.getLanguageEncoding      m.ALTextToSpeech.sayToFileAndPlay
+m.ALTextToSpeech.getParameter             m.ALTextToSpeech.setLanguage
+m.ALTextToSpeech.getSupportedLanguages    m.ALTextToSpeech.setLanguageDefaultVoice
+m.ALTextToSpeech.getVoice                 m.ALTextToSpeech.setParameter
+m.ALTextToSpeech.getVolume                m.ALTextToSpeech.setVoice
+m.ALTextToSpeech.loadVoicePreference      m.ALTextToSpeech.setVolume
+m.ALTextToSpeech.locale                   m.ALTextToSpeech.stopAll
+m.ALTextToSpeech.ping                     m.ALTextToSpeech.version
+
+In [3]: m.ALTextToSpeech.getLa
+m.ALTextToSpeech.getLanguage          m.ALTextToSpeech.getLanguageEncoding  
+
+In [3]: m.ALTextToSpeech.getLanguage?  # With ? you get the docs
 Type:       instancemethod
-String Form:<unbound method ALTextToSpeech.say>
-File:       /home/sam/pynaoqi_mate/naoqi_proxy_python_classes/ALTextToSpeech.py
-Definition: ALTextToSpeech.say(self, stringToSay, language)
+String Form:<bound method ALTextToSpeech.getLanguage of <naoqi_proxy_python_classes.ALTextToSpeech.ALTextToSpeech object at 0x7f76c6051310>>
+File:       /home/sam/magiclab/nao_ws/pynaoqi_mate/naoqi_proxy_python_classes/ALTextToSpeech.py
+Definition: m.ALTextToSpeech.getLanguage(self, *args, **kwargs)
+Docstring:
+Returns the language currently used by the text-to-speech engine.
+
+:returns str: Language of the current voice.
+
+In [4]: m.ALTextToSpeech.getLanguage()
+Out[4]: 'English'
+
+In [5]: m.ALTextToSpeech.say
+m.ALTextToSpeech.say               m.ALTextToSpeech.sayToFile         
+m.ALTextToSpeech.say2              m.ALTextToSpeech.sayToFileAndPlay  
+
+In [5]: m.ALTextToSpeech.say?
+Type:       instancemethod
+String Form:<bound method ALTextToSpeech.say of <naoqi_proxy_python_classes.ALTextToSpeech.ALTextToSpeech object at 0x7f76c6051310>>
+File:       /home/sam/magiclab/nao_ws/pynaoqi_mate/naoqi_proxy_python_classes/ALTextToSpeech.py
+Definition: m.ALTextToSpeech.say(self, *args, **kwargs)
+Docstring:
+Performs the text-to-speech operations : it takes a std::string as input and outputs a sound in both speakers. String encoding must be UTF8.
+
+:param str stringToSay: Text to say, encoded in UTF-8.
+
+In [6]: m.ALTextToSpeech.say2?
+Type:       instancemethod
+String Form:<bound method ALTextToSpeech.say2 of <naoqi_proxy_python_classes.ALTextToSpeech.ALTextToSpeech object at 0x7f76c6051310>>
+File:       /home/sam/magiclab/nao_ws/pynaoqi_mate/naoqi_proxy_python_classes/ALTextToSpeech.py
+Definition: m.ALTextToSpeech.say2(self, *args, **kwargs)
 Docstring:
 Performs the text-to-speech operations in a specific language: it takes a std::string as input and outputs a sound in both speakers. String encoding must be UTF8. Once the text is said, the language is set back to its initial value.
 
 :param str stringToSay: Text to say, encoded in UTF-8.
 :param str language: Language used to say the text.
 
-In [3]: from naoqi import ALBroker
+In [7]: m.ALTextToSpeech.say('This is terrific!')
 
-In [4]: myBroker = ALBroker("myBroker", "0.0.0.0", 0, ROBOT_IP, NAOQI_PORT)
-
-In [5]: tts = ALTextToSpeech()
-
-In [6]: tts.say("This is cool!")
 
 ```
 
+Note that the first time you call a method of a module it will create the real `ALProxy` connection, so the first call _may_ be a bit slower. You can "warm up" the connection calling `force_connect()`.
+
 # Regeneration of the classes
 
-Just download the C++ SDK, localize the folder `naoqi-sdk-2.1.4.13-linux64/include/alproxies` and run `generate_python_classes.py` from inside of that folder (just copy the file in there). It will parse `*proxy.h` header files using `CppHeaderParser`.
+Just download the C++ SDK, localize the folder `naoqi-sdk-2.1.4.13-linux64/include/alproxies` and run `generate_python_classes.py` from inside of that folder (just copy the file in there) or giving it as the first parameter the folder path. It will parse `*proxy.h` header files using `CppHeaderParser`.
 
 You'll need to install it if you don't have it:
 
@@ -136,3 +170,5 @@ And has the methods (ignoring constructors and destructors):
        Returns: The intensity of the LED or Group.
                            ...
 ```
+
+Note that [some methods are "blacklisted"](https://github.com/uts-magic-lab/pynaoqi_mate/blob/master/generate_python_classes.py#L192-L205) in the generator as they have no use in Python or are relatively dangerous to be used by accident.

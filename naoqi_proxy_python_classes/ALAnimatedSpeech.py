@@ -23,6 +23,9 @@ class ALAnimatedSpeech(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALAnimatedSpeech")
+
     @lazy_init
     def addTagsToWords(self, tagsToWords):
         """Add some new links between tags and words.

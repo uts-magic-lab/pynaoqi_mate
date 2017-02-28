@@ -23,6 +23,9 @@ class ALTelepathe(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALTelepathe")
+
     @lazy_init
     def associateUser(self, login, password):
         """Associates the robot to the given Aldebaran Robotics user. The associated user is recalled in ALMemory as ALTelepathe/User

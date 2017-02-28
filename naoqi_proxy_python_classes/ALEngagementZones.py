@@ -23,6 +23,9 @@ class ALEngagementZones(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALEngagementZones")
+
     @lazy_init
     def computeEngagementZone(self, x, y, z):
         """Computes the engagement zone in which an object is from its position in FRAME_ROBOT

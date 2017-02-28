@@ -23,6 +23,9 @@ class ALBehaviorManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALBehaviorManager")
+
     @lazy_init
     def addDefaultBehavior(self, behavior):
         """Set the given behavior as default

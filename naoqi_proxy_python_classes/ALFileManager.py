@@ -23,6 +23,9 @@ class ALFileManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALFileManager")
+
     @lazy_init
     def dataFileExists(self, fileName):
         """Try to find if this file does exist on robot or not.

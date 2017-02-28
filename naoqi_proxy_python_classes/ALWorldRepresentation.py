@@ -23,6 +23,9 @@ class ALWorldRepresentation(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALWorldRepresentation")
+
     @lazy_init
     def addAttributeToCategory(self, arg1, arg2, arg3):
         """Add an attribute to a category.

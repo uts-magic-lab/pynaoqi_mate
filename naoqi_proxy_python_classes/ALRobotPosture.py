@@ -23,6 +23,9 @@ class ALRobotPosture(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALRobotPosture")
+
     @lazy_init
     def applyPosture(self, postureName, maxSpeedFraction):
         """Set the angle of the joints of the  robot to the choosen posture.

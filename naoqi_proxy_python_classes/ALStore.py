@@ -23,6 +23,9 @@ class ALStore(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALStore")
+
     @lazy_init
     def ping(self):
         """Just a ping. Always returns true

@@ -23,6 +23,9 @@ class ALInfrared(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALInfrared")
+
     @lazy_init
     def confRemoteRecordSave(self):
         """Rewrite the LIRC daemon configuration file (lircd.conf) with everyremotes configuration concatenated, and reload it in LIRC daemons

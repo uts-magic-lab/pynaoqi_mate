@@ -23,6 +23,9 @@ class ALVisualCompass(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALVisualCompass")
+
     @lazy_init
     def enableReferenceRefresh(self, refresh):
         """

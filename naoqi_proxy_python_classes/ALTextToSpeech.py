@@ -23,6 +23,9 @@ class ALTextToSpeech(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALTextToSpeech")
+
     @lazy_init
     def disableNotifications(self):
         """Disables the notifications puted in ALMemory during the synthesis (TextStarted, TextDone, CurrentBookMark, CurrentWord, ...)

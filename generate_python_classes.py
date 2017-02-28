@@ -99,6 +99,9 @@ class_skeleton = """
 class PROXYCLASSNAME(object):
     def __init__(self):
         self.proxy = None
+
+    def force_connect(self):
+        self.proxy = ALProxy("PROXYCLASSNAME")
 """
 
 method_skeleton = '''

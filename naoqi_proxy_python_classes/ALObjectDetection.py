@@ -23,6 +23,9 @@ class ALObjectDetection(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALObjectDetection")
+
     @lazy_init
     def analyzeFile(self, strImageFilename):
         """Detect things from image file, using previously set cascade

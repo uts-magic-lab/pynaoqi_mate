@@ -23,6 +23,9 @@ class ALPythonBridge(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALPythonBridge")
+
     @lazy_init
     def eval(self, stringToEvaluate):
         """eval script

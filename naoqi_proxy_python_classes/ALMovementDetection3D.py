@@ -23,6 +23,9 @@ class ALMovementDetection3D(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALMovementDetection3D")
+
     @lazy_init
     def getActiveCamera(self):
         """

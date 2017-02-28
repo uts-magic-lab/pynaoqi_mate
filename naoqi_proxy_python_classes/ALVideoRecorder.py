@@ -23,6 +23,9 @@ class ALVideoRecorder(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALVideoRecorder")
+
     @lazy_init
     def getCameraID(self):
         """Returns current camera ID.

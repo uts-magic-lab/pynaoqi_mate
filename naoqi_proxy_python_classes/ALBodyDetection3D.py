@@ -23,6 +23,9 @@ class ALBodyDetection3D(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALBodyDetection3D")
+
     @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.

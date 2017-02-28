@@ -23,6 +23,9 @@ class ALNavigation(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALNavigation")
+
     @lazy_init
     def getSecurityDistance(self):
         """Distance in meters fromwhich the robot should stop if there is an obstacle.

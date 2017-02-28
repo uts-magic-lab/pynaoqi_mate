@@ -23,6 +23,9 @@ class ALVisualSpaceHistory(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALVisualSpaceHistory")
+
     @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.

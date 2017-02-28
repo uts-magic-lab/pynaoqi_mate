@@ -23,6 +23,9 @@ class ALLeds(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALLeds")
+
     @lazy_init
     def createGroup(self, groupName, ledNames):
         """Makes a group name for ease of setting multiple LEDs.

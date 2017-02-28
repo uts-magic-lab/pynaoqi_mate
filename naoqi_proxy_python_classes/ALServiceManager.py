@@ -23,6 +23,9 @@ class ALServiceManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALServiceManager")
+
     @lazy_init
     def isServiceRunning(self, name):
         """Tell if a service is running or not

@@ -23,6 +23,9 @@ class ALRedBallTracker(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALRedBallTracker")
+
     @lazy_init
     def getPosition(self):
         """Return the position of the red ball in FRAME_TORSO.

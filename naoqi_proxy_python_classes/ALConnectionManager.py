@@ -23,6 +23,9 @@ class ALConnectionManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALConnectionManager")
+
     @lazy_init
     def connect(self, arg1):
         """

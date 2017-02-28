@@ -23,6 +23,9 @@ class ALChoregrapheRecorder(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALChoregrapheRecorder")
+
     @lazy_init
     def dataChanged(self, dataName, data, message):
         """Called by ALMemory when subcription data is updated.

@@ -23,6 +23,9 @@ class ALUserSession(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALUserSession")
+
     @lazy_init
     def areUserSessionsOpen(self, user_list):
         """Check if users have an open session.

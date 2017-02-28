@@ -23,6 +23,9 @@ class ALVisionToolbox(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALVisionToolbox")
+
     @lazy_init
     def backlighting(self):
         """Indicates if we might be in backlighting conditions.

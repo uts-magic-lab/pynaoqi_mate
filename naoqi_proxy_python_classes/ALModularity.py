@@ -23,6 +23,9 @@ class ALModularity(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALModularity")
+
     @lazy_init
     def deleteFilter(self, name):
         """

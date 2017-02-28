@@ -23,6 +23,9 @@ class ALTracker(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALTracker")
+
     @lazy_init
     def addEffector(self, pEffector):
         """DEPRECATED. Use setEffector instead. Add an end-effector to move for tracking.

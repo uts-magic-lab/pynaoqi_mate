@@ -23,6 +23,9 @@ class ALAudioDevice(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALAudioDevice")
+
     @lazy_init
     def closeAudioInputs(self):
         """Closes the audio device for capture. You can call this method if you want to have access to the alsa input buffers in another program than naoqi while naoqi is running (with arecord for example)

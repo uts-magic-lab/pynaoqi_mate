@@ -23,6 +23,9 @@ class ALExpressiveListening(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALExpressiveListening")
+
     @lazy_init
     def getParameter(self, parameter):
         """Get the specified parameter.

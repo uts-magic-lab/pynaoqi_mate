@@ -23,6 +23,9 @@ class ALDiagnosis(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALDiagnosis")
+
     @lazy_init
     def getActiveDiagnosis(self):
         """The actual state of the active diagnosis.

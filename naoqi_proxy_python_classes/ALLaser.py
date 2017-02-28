@@ -23,6 +23,9 @@ class ALLaser(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALLaser")
+
     @lazy_init
     def laserOFF(self):
         """Disable laser light

@@ -23,6 +23,9 @@ class ALMemoryWatcher(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALMemoryWatcher")
+
     @lazy_init
     def addListener(self, name, interval):
         """add an ALMemory key to the list of keys to listen to

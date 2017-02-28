@@ -23,6 +23,9 @@ class ALFrameManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALFrameManager")
+
     @lazy_init
     def behaviors(self):
         """List all behaviors currently handled by the frame manager.

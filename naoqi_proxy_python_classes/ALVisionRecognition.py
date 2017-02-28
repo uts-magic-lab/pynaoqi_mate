@@ -23,6 +23,9 @@ class ALVisionRecognition(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALVisionRecognition")
+
     @lazy_init
     def changeDatabase(self, databasePath, databaseName):
         """By default the database has the name "database" and is on the robot in /home/nao/naoqi/share/naoqi/vision/visionrecognition/current/ folder. This bound method allows to choose both another name and another folder for the database.

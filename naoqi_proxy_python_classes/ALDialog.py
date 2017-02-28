@@ -23,6 +23,9 @@ class ALDialog(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALDialog")
+
     @lazy_init
     def activateTag(self, arg1, arg2):
         """activate a tag

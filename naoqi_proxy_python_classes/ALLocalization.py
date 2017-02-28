@@ -23,6 +23,9 @@ class ALLocalization(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALLocalization")
+
     @lazy_init
     def clear(self, pDirectory):
         """Delete all panoramas in a directory.

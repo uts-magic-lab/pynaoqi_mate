@@ -23,6 +23,9 @@ class ALResourceManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALResourceManager")
+
     @lazy_init
     def acquireResource(self, resourceName, moduleName, callbackName, timeoutSeconds):
         """Wait and acquire a resource

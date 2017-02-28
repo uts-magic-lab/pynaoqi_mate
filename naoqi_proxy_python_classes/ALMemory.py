@@ -23,6 +23,9 @@ class ALMemory(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALMemory")
+
     @lazy_init
     def addMapping(self, service, signal, event):
         """Add a mapping between signal and event

@@ -23,6 +23,9 @@ class ALSystem(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALSystem")
+
     @lazy_init
     def changePassword(self, old, snew):
         """Change the user password.

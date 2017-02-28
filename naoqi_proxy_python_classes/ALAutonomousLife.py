@@ -23,6 +23,9 @@ class ALAutonomousLife(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALAutonomousLife")
+
     @lazy_init
     def focusedActivity(self):
         """Returns the currently focused activity

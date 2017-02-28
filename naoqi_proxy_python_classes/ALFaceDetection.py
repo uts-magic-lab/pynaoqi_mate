@@ -23,6 +23,9 @@ class ALFaceDetection(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALFaceDetection")
+
     @lazy_init
     def clearDatabase(self):
         """Remove all faces from the database.

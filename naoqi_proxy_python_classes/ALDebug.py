@@ -22,3 +22,6 @@ def lazy_init(fn):
 class ALDebug(object):
     def __init__(self):
         self.proxy = None
+
+    def force_connect(self):
+        self.proxy = ALProxy("ALDebug")

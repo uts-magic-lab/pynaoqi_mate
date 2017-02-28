@@ -23,6 +23,9 @@ class ALBasicAwareness(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALBasicAwareness")
+
     @lazy_init
     def engagePerson(self, engagePerson):
         """Force Engage Person.

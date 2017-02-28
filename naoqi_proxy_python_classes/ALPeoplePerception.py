@@ -23,6 +23,9 @@ class ALPeoplePerception(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALPeoplePerception")
+
     @lazy_init
     def getCurrentPeriod(self):
         """Gets the current period.

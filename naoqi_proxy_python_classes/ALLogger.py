@@ -23,6 +23,9 @@ class ALLogger(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALLogger")
+
     @lazy_init
     def debug(self, moduleName, message):
         """DEPRECATED. Use qiLogDebug instead.   Log a debug message.

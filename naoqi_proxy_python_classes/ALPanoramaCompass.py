@@ -23,6 +23,9 @@ class ALPanoramaCompass(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALPanoramaCompass")
+
     @lazy_init
     def clearAllPanoramas(self, arg1):
         """

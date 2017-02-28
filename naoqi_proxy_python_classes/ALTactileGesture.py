@@ -23,6 +23,9 @@ class ALTactileGesture(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALTactileGesture")
+
     @lazy_init
     def createGesture(self, arg1):
         """Define touch gesture.          :param sensor_sequence: List of strings that represent the         sequence of the desired gesture. For example, SingleFront         would be the following: ['000', '100', '000']. NOTE: All         sequences must start with '000' and all non-hold sequences         must end with '000'. Hold gestures should end with the touch         sequence you will be holding. For example, a SingleFrontHold         would be the following: ['000', '100'].          :returns: If sequence is valid, the name of gesture to listen         for, RuntimeError otherwise.

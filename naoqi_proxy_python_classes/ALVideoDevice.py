@@ -23,6 +23,9 @@ class ALVideoDevice(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALVideoDevice")
+
     @lazy_init
     def closeCamera(self, arg1):
         """

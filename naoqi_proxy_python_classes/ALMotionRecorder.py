@@ -23,6 +23,9 @@ class ALMotionRecorder(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALMotionRecorder")
+
     @lazy_init
     def dataChanged(self, dataName, data, message):
         """Called by ALMemory when subcription data is updated. INTERNAL

@@ -23,6 +23,9 @@ class PackageManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("PackageManager")
+
     @lazy_init
     def getPackage(self, arg1):
         """

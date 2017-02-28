@@ -23,6 +23,9 @@ class ALFindPersonHead(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALFindPersonHead")
+
     @lazy_init
     def getTrackingDistance(self):
         """Gets the distance (in meters) for the tracking

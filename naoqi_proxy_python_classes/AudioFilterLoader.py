@@ -23,6 +23,9 @@ class AudioFilterLoader(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("AudioFilterLoader")
+
     @lazy_init
     def ping(self):
         """Just a ping. Always returns true

@@ -23,6 +23,9 @@ class ALNotificationManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALNotificationManager")
+
     @lazy_init
     def add(self, notification):
         """Add a notification.

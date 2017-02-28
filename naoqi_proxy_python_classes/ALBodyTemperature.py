@@ -23,6 +23,9 @@ class ALBodyTemperature(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALBodyTemperature")
+
     @lazy_init
     def areNotificationsEnabled(self):
         """Return true if notifications are active.

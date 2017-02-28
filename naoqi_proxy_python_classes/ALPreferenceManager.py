@@ -23,6 +23,9 @@ class ALPreferenceManager(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALPreferenceManager")
+
     @lazy_init
     def getDomainList(self):
         """Get available preferences domain

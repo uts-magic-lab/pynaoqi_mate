@@ -23,6 +23,9 @@ class ALLauncher(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALLauncher")
+
     @lazy_init
     def getGlobalModuleList(self):
         """get the list of modules loaded on the robot and connected on the robot

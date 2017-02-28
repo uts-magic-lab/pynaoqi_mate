@@ -23,6 +23,9 @@ class ALAudioPlayer(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALAudioPlayer")
+
     @lazy_init
     def getCurrentPosition(self, playId):
         """Returns the position in the file which is currently played

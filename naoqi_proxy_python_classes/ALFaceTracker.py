@@ -23,6 +23,9 @@ class ALFaceTracker(object):
     def __init__(self):
         self.proxy = None
 
+    def force_connect(self):
+        self.proxy = ALProxy("ALFaceTracker")
+
     @lazy_init
     def getPosition(self):
         """Return the [x, y, z] position of the face in FRAME_TORSO. This is done assuming an average face size, so it might not be very accurate.  This invalidates the isNewData field of the tracker. See isNewData()) for more details.
