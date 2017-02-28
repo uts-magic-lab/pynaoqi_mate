@@ -3,6 +3,7 @@
 # Needed library:
 # sudo pip install CppHeaderParser
 
+import sys
 import CppHeaderParser
 import re
 import glob
@@ -91,23 +92,40 @@ method_skeleton = '''
     def METHOD_NAME(METHOD_ARGS):
         """DOCSTRING
         """
-        return self.proxy.METHOD_NAME(CALL_ARGS)
+        return self.proxy.ORIGINAL_NAME_OF_METHOD(CALL_ARGS)
 '''
 
 
-def create_python_class(header_file, class_name, methods):
-    with open(class_name + ".py", 'w') as f:
+def create_python_class(header_file, class_name, methods, path):
+    with open(path + class_name + ".py", 'w') as f:
         header = header_skeleton.replace('HEADERFILE', header_file)
         f.write(header)
 
         class_code = class_skeleton.replace('PROXYCLASSNAME', class_name)
         f.write(class_code)
 
+        method_names = []
         for m in methods:
+            # Deal with same-name methods
+            # because of different number or type of params
+            # adding method_nameX where X is a number starting on 2
+            if m['name'] not in method_names:
+                method_names.append(m['name'])
+            else:
+                counter = 2
+                new_name = m['name'] + str(counter)
+                while new_name in method_names:
+                    counter += 1
+                    new_name = m['name'] + str(counter)
+                method_names.append(new_name)
+                m['name_original'] = m['name']
+                m['name'] = new_name
             sphinx_docs = m['docs']['summary']
             if m['parameters'] or m['returns'] != 'void':
                 sphinx_docs += "\n\n"
             method_code = method_skeleton.replace('METHOD_NAME', m['name'])
+            method_code = method_code.replace(
+                'ORIGINAL_NAME_OF_METHOD', m.get('name_original', m['name']))
             if not m['parameters']:
                 method_code = method_code.replace('METHOD_ARGS', 'self')
                 method_code = method_code.replace('CALL_ARGS', '')
@@ -120,7 +138,8 @@ def create_python_class(header_file, class_name, methods):
 
                     t = p['raw_type']
                     typ = t if t != 'std::string' else "str"
-                    sphinx_docs += "        :param " + typ + " " + p['name'] + ": "
+                    sphinx_docs += "        :param " + \
+                        typ + " " + p['name'] + ": "
                     sphinx_docs += m['docs']['params'][idx]['param_description']
                     if p != m['parameters'][-1]:
                         sphinx_docs += "\n"
@@ -145,8 +164,15 @@ def create_python_class(header_file, class_name, methods):
 # All classes are inside of this, I believe
 classname = "ALPROXIES_API"
 
+if len(sys.argv) > 1:
+    path = sys.argv[1]
+    if not path.endswith('/'):
+        path += '/'
+else:
+    path = './'
+
 # Actually go and parse all the files
-header_files = glob.glob('./*proxy.h')
+header_files = glob.glob(path + '*proxy.h')
 for h in header_files:
     print("Analysing header file: " + h)
     try:
@@ -206,4 +232,4 @@ for h in header_files:
             methods_list_of_dicts.append(method_dict)
 
     create_python_class(header_file=h, class_name=remote_class_name,
-                        methods=methods_list_of_dicts)
+                        methods=methods_list_of_dicts, path=path)
