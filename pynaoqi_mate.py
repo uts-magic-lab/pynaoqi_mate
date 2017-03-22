@@ -62,6 +62,7 @@ from naoqi_proxy_python_classes.ALPreferenceManager import ALPreferenceManager
 from naoqi_proxy_python_classes.ALPreferences import ALPreferences
 from naoqi_proxy_python_classes.ALPwtiUpdate import ALPwtiUpdate
 from naoqi_proxy_python_classes.ALPythonBridge import ALPythonBridge
+from naoqi_proxy_python_classes.ALRecharge import ALRecharge
 from naoqi_proxy_python_classes.ALRedBallDetection import ALRedBallDetection
 from naoqi_proxy_python_classes.ALRedBallTracker import ALRedBallTracker
 from naoqi_proxy_python_classes.ALResourceManager import ALResourceManager
@@ -169,6 +170,7 @@ class Mate(object):
     ALPreferences = ALPreferences()
     ALPwtiUpdate = ALPwtiUpdate()
     ALPythonBridge = ALPythonBridge()
+    ALRecharge = ALRecharge()
     ALRedBallDetection = ALRedBallDetection()
     ALRedBallTracker = ALRedBallTracker()
     ALResourceManager = ALResourceManager()
