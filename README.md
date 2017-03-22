@@ -140,7 +140,7 @@ Note that the first time you call a method of a module it will create the real `
 
 # Regeneration of the classes
 
-Just download the C++ SDK, localize the folder `naoqi-sdk-2.1.4.13-linux64/include/alproxies` and run `generate_python_classes.py` from inside of that folder (just copy the file in there) or giving it as the first parameter the folder path. It will parse `*proxy.h` header files using `CppHeaderParser`.
+Just download the C++ SDK, localize the folder `naoqi-sdk-2.5.5.5-linux64/include/alproxies` and run `generate_python_classes.py` from inside of that folder (just copy the file in there) or giving it as the first parameter the folder path. It will parse `*proxy.h` header files using `CppHeaderParser`.
 
 You'll need to install it if you don't have it:
 
